@@ -1,7 +1,6 @@
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import SectionHeader from '../../components/SectionHeader';
-import AnimatedSection from '../../components/AnimatedSection';
 import ImageTextSection from '../../components/ImageTextSection';
 import HeroBanner from './HeroBanner';
 import Timeline from './Timeline';

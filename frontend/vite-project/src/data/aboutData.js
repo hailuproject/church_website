@@ -206,28 +206,7 @@ export const galleryData = [
   },
 ];
 
-export const scheduleData = [
-  { day: 'Sunday', time: '6:00 AM \u2013 12:00 PM', service: 'Holy Liturgy (Kidase)' },
-  { day: 'Monday', time: '6:00 AM \u2013 7:30 AM', service: 'Morning Prayer (S\u00E4w\u00E4)' },
-  { day: 'Wednesday', time: '6:00 AM \u2013 7:30 AM', service: 'Fasting Day Prayer' },
-  { day: 'Friday', time: '6:00 AM \u2013 7:30 AM', service: 'Fasting Day Prayer' },
-  { day: 'Saturday', time: '6:00 PM \u2013 8:00 PM', service: 'Evening Prayer & Bible Study' },
-  { day: 'Holy Days', time: 'Varies', service: 'Special Liturgical Services' },
-];
-
-export const contactData = [
-  { icon: 'location', label: 'Address', value: '123 Orthodox Way, Faith City, ST 12345' },
-  { icon: 'phone', label: 'Phone', value: '(555) 123-4567' },
-  { icon: 'email', label: 'Email', value: 'info@ethiopianorthodox.org' },
-];
-
 export const visitUsData = {
-  hero: {
-    title: 'Visit Us',
-    subtitle: 'Come & Worship',
-    description: 'Experience the beauty of the Ethiopian Orthodox Tewahedo Church. All are welcome.',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=1920&h=1080&fit=crop',
-  },
   intro: {
     title: 'Welcome to Our Church',
     paragraphs: [
