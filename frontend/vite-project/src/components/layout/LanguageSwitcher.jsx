@@ -22,7 +22,7 @@ export default function LanguageSwitcher() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted hover:text-text rounded-lg hover:bg-black/5 transition-colors duration-200"
+        className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted hover:text-text rounded-xs hover:bg-black/5 transition-colors duration-200"
         aria-label="Switch language"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -34,7 +34,7 @@ export default function LanguageSwitcher() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-lg border border-border overflow-hidden z-50"
+            className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xs shadow-lg border border-border overflow-hidden z-50"
             initial={{ opacity: 0, y: -8, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
