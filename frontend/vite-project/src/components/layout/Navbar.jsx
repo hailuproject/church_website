@@ -4,7 +4,6 @@ import { FiMenu } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
-import ThemeToggle from './ThemeToggle';
 import NavButton from './NavButton';
 import MobileMenu from './MobileMenu';
 
@@ -33,14 +32,14 @@ export default function Navbar() {
         className={`fixed top-0 inset-x-0 z-30 transition-all duration-300 ${
           scrolled
             ? 'bg-white/80 backdrop-blur-xl shadow-sm border-b border-border/50'
-            : 'bg-transparent'
+            : 'bg-white/40 backdrop-blur-sm'
         }`}
-        initial={{ y: -80 }}
+        initial={{ y: -64 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-18">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 md:h-16">
             {/* Left - Logo */}
             <Logo />
 
@@ -52,19 +51,18 @@ export default function Navbar() {
             {/* Right - Desktop actions */}
             <div className="hidden lg:flex items-center gap-2">
               <LanguageSwitcher />
-              <ThemeToggle />
               <NavButton variant="secondary" label="Watch Live" icon="watch" href="/live" />
               <NavButton variant="primary" label="Join Us" icon="join" href="/contact" />
             </div>
 
             {/* Mobile - Hamburger */}
             <button
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-black/5 text-text transition-colors duration-200"
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xs hover:bg-black/5 text-text transition-colors duration-200"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
               aria-expanded={mobileOpen}
             >
-              <FiMenu className="text-xl" />
+              <FiMenu className="text-lg" />
             </button>
           </div>
         </div>
