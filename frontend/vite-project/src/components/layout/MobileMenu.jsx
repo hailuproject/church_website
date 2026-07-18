@@ -3,7 +3,6 @@ import { FiX } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
-import ThemeToggle from './ThemeToggle';
 import NavButton from './NavButton';
 import { socialLinks } from '../../data/navigation';
 
@@ -50,7 +49,7 @@ export default function MobileMenu({ isOpen, onClose }) {
               <Logo collapsed />
               <button
                 onClick={onClose}
-                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface text-muted hover:text-text transition-colors duration-200"
+                className="w-9 h-9 flex items-center justify-center rounded-xs hover:bg-surface text-muted hover:text-text transition-colors duration-200"
                 aria-label="Close menu"
               >
                 <FiX className="text-xl" />
@@ -71,7 +70,6 @@ export default function MobileMenu({ isOpen, onClose }) {
             <div className="px-6 py-4 border-t border-border">
               <div className="flex items-center justify-between mb-4">
                 <LanguageSwitcher />
-                <ThemeToggle />
               </div>
 
               {/* Social */}
@@ -84,7 +82,7 @@ export default function MobileMenu({ isOpen, onClose }) {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-9 h-9 flex items-center justify-center rounded-lg bg-surface hover:bg-primary/10 text-muted hover:text-primary transition-colors duration-200"
+                      className="w-9 h-9 flex items-center justify-center rounded-xs bg-surface hover:bg-primary/10 text-muted hover:text-primary transition-colors duration-200"
                       aria-label={link.label}
                     >
                       <Icon className="text-base" />
