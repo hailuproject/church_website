@@ -10,7 +10,7 @@ export default function Button({
   ariaLabel,
 }) {
   const base =
-    'inline-flex items-center justify-center gap-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer';
+    'inline-flex items-center justify-center gap-2.5 rounded-xs font-medium transition-all duration-300 cursor-pointer';
 
   const variants = {
     primary: 'bg-primary text-white hover:bg-primary-dark shadow-lg hover:shadow-xl',
