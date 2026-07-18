@@ -15,7 +15,7 @@ export default function TimelineItem({ event, index }) {
     >
       {/* Content */}
       <div className="md:w-1/2 md:px-12">
-        <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-border group">
+        <div className="bg-white rounded-xs p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-border group">
           <span className="inline-block text-[11px] font-bold tracking-[0.15em] uppercase text-primary mb-2">
             {event.year}
           </span>

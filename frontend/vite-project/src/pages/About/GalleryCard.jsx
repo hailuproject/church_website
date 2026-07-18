@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 export default function GalleryCard({ image, title, category, delay = 0 }) {
   return (
     <motion.div
-      className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-sm"
+      className="group relative aspect-square rounded-xs overflow-hidden cursor-pointer shadow-sm"
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: '-40px' }}

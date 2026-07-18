@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 export default function ServiceHours({ schedule }) {
   return (
     <motion.div
-      className="bg-white rounded-2xl p-8 shadow-sm border border-border"
+      className="bg-white rounded-xs p-8 shadow-sm border border-border"
       initial={{ opacity: 0, x: -30 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-40px' }}

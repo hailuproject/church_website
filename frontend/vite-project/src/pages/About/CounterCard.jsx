@@ -41,7 +41,7 @@ export default function CounterCard({ value, suffix, label, icon, delay = 0 }) {
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-1">
+      <div className="w-12 h-12 rounded-xs bg-white/10 flex items-center justify-center mb-1">
         <Icon className="text-xl text-secondary" />
       </div>
       <span

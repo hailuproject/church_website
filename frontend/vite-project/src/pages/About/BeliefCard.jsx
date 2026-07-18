@@ -38,7 +38,7 @@ export default function BeliefCard({ icon, title, description, delay = 0 }) {
 
   return (
     <motion.div
-      className="group relative bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg border border-border hover:border-primary/20 transition-all duration-500 overflow-hidden"
+      className="group relative bg-white rounded-xs p-6 shadow-sm hover:shadow-lg border border-border hover:border-primary/20 transition-all duration-500 overflow-hidden"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -48,7 +48,7 @@ export default function BeliefCard({ icon, title, description, delay = 0 }) {
       <div className={`absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl ${gradient} rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
       <div className="relative z-10">
-        <div className="w-11 h-11 rounded-xl bg-surface group-hover:bg-primary/5 flex items-center justify-center mb-4 transition-colors duration-300">
+        <div className="w-11 h-11 rounded-xs bg-surface group-hover:bg-primary/5 flex items-center justify-center mb-4 transition-colors duration-300">
           <Icon className="text-lg text-primary" />
         </div>
         <h3 className="text-base font-bold text-text mb-2">{title}</h3>

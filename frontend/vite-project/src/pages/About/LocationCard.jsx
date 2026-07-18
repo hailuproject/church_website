@@ -10,7 +10,7 @@ const iconMap = {
 export default function LocationCard({ contactInfo }) {
   return (
     <motion.div
-      className="bg-white rounded-2xl p-8 shadow-sm border border-border"
+      className="bg-white rounded-xs p-8 shadow-sm border border-border"
       initial={{ opacity: 0, x: 30 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -23,7 +23,7 @@ export default function LocationCard({ contactInfo }) {
           const Icon = iconMap[item.icon] || FiMapPin;
           return (
             <div key={item.label} className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xs bg-secondary/10 flex items-center justify-center shrink-0">
                 <Icon className="text-secondary" />
               </div>
               <div>

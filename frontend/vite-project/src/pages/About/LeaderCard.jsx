@@ -10,7 +10,7 @@ export default function LeaderCard({ name, role, bio, image, delay = 0 }) {
 
   return (
     <motion.div
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-border transition-all duration-500"
+      className="group relative bg-white rounded-xs overflow-hidden shadow-sm hover:shadow-xl border border-border transition-all duration-500"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
