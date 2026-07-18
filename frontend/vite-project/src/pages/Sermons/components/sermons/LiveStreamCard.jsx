@@ -1,14 +1,15 @@
-import { useState, useEffect, memo } from 'react';
-import { motion } from 'framer-motion';
-import { FiPlay, FiCalendar, FiClock } from 'react-icons/fi';
-import ReactPlayer from 'react-player';
-import Button from '../../../../components/Button';
-import { liveStream } from '../../../../data/sermonsData';
+import { useState, useEffect, memo } from "react";
+import { motion } from "framer-motion";
+import { FiPlay, FiCalendar, FiClock } from "react-icons/fi";
+import ReactPlayer from "react-player";
+import Button from "../../../../components/Button";
+import { liveStream } from "../../../../data/sermonsData";
 
-const LIVE_THUMB = 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop';
+const LIVE_THUMB =
+  "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop";
 
 function CountdownTimer({ targetDate }) {
-  const [timeLeft, setTimeLeft] = useState('');
+  const [timeLeft, setTimeLeft] = useState("");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -20,12 +21,14 @@ function CountdownTimer({ targetDate }) {
       const diff = target - now;
 
       if (diff <= 0) {
-        setTimeLeft('Service starting soon');
+        setTimeLeft("Service starting soon");
         return;
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -44,7 +47,7 @@ function CountdownTimer({ targetDate }) {
   if (!isClient) return null;
 
   return (
-    <span className="font-mono text-lg font-bold tracking-wider text-white">
+    <span className=" text-lg font-bold tracking-wider text-text">
       {timeLeft}
     </span>
   );
@@ -55,12 +58,16 @@ const LiveStreamCard = memo(function LiveStreamCard() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <section id="live" className="py-20 md:py-28 bg-surface" aria-label="Live stream">
+    <section
+      id="live"
+      className="py-20 md:py-28 bg-surface"
+      aria-label="Live stream"
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="grid lg:grid-cols-2 gap-0 bg-white rounded-xs border border-border overflow-hidden shadow-lg"
         >
@@ -72,7 +79,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
                 height="100%"
                 playing
                 controls
-                style={{ position: 'absolute', top: 0, left: 0 }}
+                style={{ position: "absolute", top: 0, left: 0 }}
               />
             ) : (
               <div className="w-full h-full min-h-[280px] flex items-center justify-center relative">
@@ -113,15 +120,21 @@ const LiveStreamCard = memo(function LiveStreamCard() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
                 </span>
-                {stream.isLive ? 'LIVE' : 'Offline'}
+                {stream.isLive ? "LIVE" : "Offline"}
               </span>
               {stream.isLive && (
-                <span className="text-xs text-muted font-medium">{stream.startTime}</span>
+                <span className="text-xs text-muted font-medium">
+                  {stream.startTime}
+                </span>
               )}
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-bold text-text mb-3">{stream.title}</h2>
-            <p className="text-muted leading-relaxed mb-6 text-sm">{stream.description}</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-text mb-3">
+              {stream.title}
+            </h2>
+            <p className="text-muted leading-relaxed mb-6 text-sm">
+              {stream.description}
+            </p>
 
             <div className="space-y-3 mb-6">
               <div className="flex items-center gap-3 text-sm text-text">
