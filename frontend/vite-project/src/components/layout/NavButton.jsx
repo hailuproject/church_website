@@ -9,7 +9,7 @@ export default function NavButton({ variant = 'primary', label, icon, href = '#'
   const Icon = icon ? icons[icon] || FiPlay : null;
 
   const base =
-    'inline-flex items-center gap-2 rounded-xl font-medium transition-all duration-300 cursor-pointer text-sm';
+    'inline-flex items-center gap-2 rounded-xs font-medium transition-all duration-300 cursor-pointer text-sm';
 
   const variants = {
     primary:
