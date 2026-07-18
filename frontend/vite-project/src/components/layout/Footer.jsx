@@ -40,7 +40,7 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <div className="mb-5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 rounded-xs bg-primary flex items-center justify-center shadow-md">
                   <span className="text-2xl leading-none font-bold">☦</span>
                 </div>
                 <div className="flex flex-col leading-none">
@@ -68,7 +68,7 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-primary/20 text-gray-400 hover:text-primary transition-all duration-300"
+                    className="w-10 h-10 flex items-center justify-center rounded-xs bg-white/5 hover:bg-primary/20 text-gray-400 hover:text-primary transition-all duration-300"
                     aria-label={link.label}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -130,7 +130,7 @@ export default function Footer() {
                 const Icon = item.icon;
                 return (
                   <div key={item.label} className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-8 h-8 rounded-xs bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
                       <Icon className="text-secondary text-sm" />
                     </div>
                     <div>
@@ -165,7 +165,7 @@ export default function Footer() {
 
             {subscribed ? (
               <motion.div
-                className="bg-green-500/10 border border-green-500/20 rounded-xl px-6 py-4 text-green-400 text-sm"
+                className="bg-green-500/10 border border-green-500/20 rounded-xs px-6 py-4 text-green-400 text-sm"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -182,7 +182,7 @@ export default function Footer() {
                       setError('');
                     }}
                     placeholder="Enter your email address"
-                    className={`w-full px-5 py-3.5 rounded-xl bg-white/5 border ${
+                    className={`w-full px-5 py-3.5 rounded-xs bg-white/5 border ${
                       error ? 'border-red-500/50' : 'border-white/10'
                     } text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary/50 transition-all duration-200`}
                     aria-label="Email address for newsletter"
@@ -193,7 +193,7 @@ export default function Footer() {
                 </div>
                 <motion.button
                   type="submit"
-                  className="px-7 py-3.5 bg-secondary hover:bg-secondary-dark text-stone-900 font-medium rounded-xl text-sm transition-colors duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
+                  className="px-7 py-3.5 bg-secondary hover:bg-secondary-dark text-stone-900 font-medium rounded-xs text-sm transition-colors duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
