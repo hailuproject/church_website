@@ -5,7 +5,6 @@ import Footer from './components/layout/Footer';
 import ScrollToTop from './components/layout/ScrollToTop';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
-const VisitUsPage = lazy(() => import('./pages/VisitUs/VisitUsPage'));
 
 function Loading() {
   return (
@@ -63,7 +62,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/visit" element={<VisitUsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

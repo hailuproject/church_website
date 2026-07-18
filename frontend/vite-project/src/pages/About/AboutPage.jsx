@@ -11,8 +11,6 @@ import LeaderCard from './LeaderCard';
 import GalleryCard from './GalleryCard';
 import CounterCard from './CounterCard';
 import CTASection from './CTASection';
-import LocationCard from './LocationCard';
-import ServiceHours from './ServiceHours';
 import {
   historyBlocks,
   historyTimeline,
@@ -21,8 +19,7 @@ import {
   leadersData,
   statsData,
   galleryData,
-  scheduleData,
-  contactData,
+  visitUsData,
 } from '../../data/aboutData';
 
 function ChurchHistory() {
@@ -158,30 +155,46 @@ function LocationAndServices() {
       <Container>
         <SectionHeader
           subtitle="Visit Us"
-          title="Location & Service Hours"
+          title="Plan Your Visit"
           description="Join us for worship. All are welcome in our church family."
         />
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          <AnimatedSection direction="left">
-            <div className="relative rounded-xs overflow-hidden shadow-sm border border-border h-80 lg:h-full min-h-[320px]">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9663095343008!2d-74.00425878428698!3d40.74076794379132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259bf5c1654f3%3A0xc80f9cfce5383d5d!2sGoogle!5e0!3m2!1sen!2sus!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0, position: 'absolute', inset: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Church location on Google Maps"
-              />
-              <div className="absolute inset-0 pointer-events-none border border-border rounded-xs" />
-            </div>
-          </AnimatedSection>
-
-          <div className="flex flex-col gap-6">
-            <ServiceHours schedule={scheduleData} />
-            <LocationCard contactInfo={contactData} />
-          </div>
+        <div className="flex flex-col gap-20 lg:gap-28">
+          <ImageTextSection
+            title={visitUsData.intro.title}
+            paragraphs={visitUsData.intro.paragraphs}
+            image={visitUsData.intro.image}
+            imageAlt={visitUsData.intro.imageAlt}
+            imageLabel={visitUsData.intro.imageLabel}
+            reversed={false}
+          />
+          <ImageTextSection
+            title={visitUsData.mapSection.title}
+            paragraphs={visitUsData.mapSection.schedule.map(
+              (s) => `${s.day} \u2014 ${s.service} (${s.time})`
+            )}
+            image={visitUsData.ctaSection.image}
+            imageAlt={visitUsData.ctaSection.imageAlt}
+            imageLabel={visitUsData.ctaSection.imageLabel}
+            reversed={true}
+          />
+          <ImageTextSection
+            title={visitUsData.contactSection.title}
+            paragraphs={visitUsData.contactSection.items.map(
+              (item) => `${item.label}: ${item.value}`
+            )}
+            image={visitUsData.contactSection.image}
+            imageAlt={visitUsData.contactSection.imageAlt}
+            imageLabel={visitUsData.contactSection.imageLabel}
+            reversed={false}
+          />
+          <ImageTextSection
+            title={visitUsData.ctaSection.title}
+            paragraphs={visitUsData.ctaSection.paragraphs}
+            image={visitUsData.ctaSection.image}
+            imageAlt={visitUsData.ctaSection.imageAlt}
+            imageLabel={visitUsData.ctaSection.imageLabel}
+            reversed={true}
+          />
         </div>
       </Container>
     </Section>
