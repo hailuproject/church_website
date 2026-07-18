@@ -5,6 +5,7 @@ import Footer from './components/layout/Footer';
 import ScrollToTop from './components/layout/ScrollToTop';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
+const VisitUsPage = lazy(() => import('./pages/VisitUs/VisitUsPage'));
 
 function Loading() {
   return (
@@ -27,7 +28,7 @@ function HomePage() {
         <p className="text-muted mb-6">Welcome to our church website</p>
         <a
           href="/about"
-          className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors duration-300"
+          className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xs font-medium hover:bg-primary-dark transition-colors duration-300"
         >
           Learn About Us
         </a>
@@ -44,7 +45,7 @@ function NotFound() {
         <p className="text-muted mb-6">Page not found</p>
         <a
           href="/"
-          className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors duration-300"
+          className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xs font-medium hover:bg-primary-dark transition-colors duration-300"
         >
           Return Home
         </a>
@@ -62,6 +63,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/visit" element={<VisitUsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
