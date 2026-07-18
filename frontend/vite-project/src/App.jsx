@@ -6,6 +6,7 @@ import ScrollToTop from './components/layout/ScrollToTop';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
 const SermonsPage = lazy(() => import('./pages/Sermons/SermonsPage'));
+const SacramentsPage = lazy(() => import('./pages/Sacraments/SacramentsPage'));
 
 function Loading() {
   return (
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/sermons" element={<SermonsPage />} />
+          <Route path="/sacraments" element={<SacramentsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
