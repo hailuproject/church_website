@@ -8,6 +8,10 @@ const AboutPage = lazy(() => import('./pages/About/AboutPage'));
 const SermonsPage = lazy(() => import('./pages/Sermons/SermonsPage'));
 const SacramentsPage = lazy(() => import('./pages/Sacraments/SacramentsPage'));
 const EventsPage = lazy(() => import('./pages/Events/EventsPage'));
+const ResourcesPage = lazy(() => import('./pages/Resources/ResourcesPage'));
+const GalleryPage = lazy(() => import('./pages/Gallery/GalleryPage'));
+const ContactPage = lazy(() => import('./pages/Contact/ContactPage'));
+const DonatePage = lazy(() => import('./pages/Donate/DonatePage'));
 
 function Loading() {
   return (
@@ -68,6 +72,10 @@ export default function App() {
           <Route path="/sermons" element={<SermonsPage />} />
           <Route path="/sacraments" element={<SacramentsPage />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/donate" element={<DonatePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
