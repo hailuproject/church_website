@@ -1,23 +1,17 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import {
   FiUsers, FiBookOpen, FiMusic, FiHeart,
   FiCoffee, FiStar,
 } from 'react-icons/fi';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
 import { ministries } from '../../data/homeData';
 
-const iconMap = {
-  FiUsers,
-  FiBookOpen,
-  FiMusic,
-  FiHeart,
-  FiCoffee,
-  FiStar,
-};
+const iconMap = { FiUsers, FiBookOpen, FiMusic, FiHeart, FiCoffee, FiStar };
 
-function MinistryCard({ ministry, index }) {
+const MinistryCard = memo(function MinistryCard({ ministry, index }) {
   const Icon = iconMap[ministry.icon] || FiHeart;
 
   return (
@@ -38,7 +32,7 @@ function MinistryCard({ ministry, index }) {
       <p className="text-sm text-muted leading-relaxed">{ministry.description}</p>
     </motion.div>
   );
-}
+});
 
 export default function Ministries() {
   return (
@@ -50,8 +44,8 @@ export default function Ministries() {
           description="Discover the many ways to grow in faith and serve our community."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {ministries.map((ministry, i) => (
-            <MinistryCard key={ministry.id} ministry={ministry} index={i} />
+          {ministries.map((m, i) => (
+            <MinistryCard key={m.id} ministry={m} index={i} />
           ))}
         </div>
       </Container>

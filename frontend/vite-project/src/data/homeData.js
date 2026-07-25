@@ -36,43 +36,52 @@ export const welcomeData = {
   ],
 };
 
-export const highlights = [
+export const churchStats = [
   {
     icon: 'years',
     value: 1700,
     suffix: '+',
-    title: 'Years of Faith',
-    description: 'A rich heritage of unbroken Christian tradition dating back to the 4th century.',
+    label: 'Years of Faith',
   },
   {
     icon: 'members',
     value: 500,
     suffix: '+',
-    title: 'Parish Members',
-    description: 'A growing family of faithful united in worship, prayer, and community.',
+    label: 'Parish Members',
   },
   {
     icon: 'ministries',
     value: 50,
     suffix: '+',
-    title: 'Ministries & Volunteers',
-    description: 'Dedicated teams serving the church and the broader community with love.',
+    label: 'Ministries',
   },
   {
-    icon: 'feast',
-    value: 180,
+    icon: 'baptisms',
+    value: 120,
     suffix: '+',
-    title: 'Feast Days',
-    description: 'Sacred celebrations throughout the year honoring Christ, the Saints, and the Theotokos.',
+    label: 'Baptisms',
+  },
+  {
+    icon: 'sermons',
+    value: 200,
+    suffix: '+',
+    label: 'Sermons',
+  },
+  {
+    icon: 'events',
+    value: 30,
+    suffix: '+',
+    label: 'Events Yearly',
   },
 ];
 
-export const upcomingEvents = [
+export const featuredEvents = [
   {
     id: 1,
     image:
       'https://images.unsplash.com/photo-1549687880-f68be654594c?w=600&h=400&fit=crop',
-    date: { month: 'FEB', day: '15' },
+    badge: 'Feast Day',
+    date: 'February 15, 2026',
     title: 'Feast of St. Tekle Haymanot',
     description:
       'Join us for a special liturgical celebration honoring one of Ethiopia\'s most beloved saints with prayers, hymns, and community fellowship.',
@@ -83,7 +92,8 @@ export const upcomingEvents = [
     id: 2,
     image:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop',
-    date: { month: 'MAR', day: '03' },
+    badge: 'Season',
+    date: 'March 3, 2026',
     title: 'Great Lent Begins',
     description:
       'The sacred season of Hudadi commences with special evening prayers and the blessing of the faithful for the 55-day fasting journey.',
@@ -94,7 +104,8 @@ export const upcomingEvents = [
     id: 3,
     image:
       'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop',
-    date: { month: 'MAR', day: '20' },
+    badge: 'Youth',
+    date: 'March 20–22, 2026',
     title: 'Youth Spiritual Retreat',
     description:
       'A weekend retreat for young adults focusing on prayer, Scripture study, and building lasting faith connections.',
@@ -296,42 +307,6 @@ export const testimonials = [
     avatar:
       'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
     text: 'Singing in the choir connects me to centuries of Ethiopian Orthodox tradition. Every hymn is a prayer, and every service is a journey into the beauty of our ancient faith.',
-  },
-];
-
-export const statistics = [
-  { value: 500, suffix: '+', label: 'Members' },
-  { value: 120, suffix: '+', label: 'Baptisms' },
-  { value: 45, suffix: '+', label: 'Weddings' },
-  { value: 200, suffix: '+', label: 'Sermons' },
-  { value: 30, suffix: '+', label: 'Community Events' },
-  { value: 15, suffix: '', label: 'Years Serving' },
-];
-
-export const announcements = [
-  {
-    id: 1,
-    badge: 'Feast Day',
-    date: 'February 15, 2026',
-    title: 'Feast of St. Tekle Haymanot',
-    description:
-      'Join us for the annual celebration of St. Tekle Haymanot with special prayers, liturgical chanting, and a community gathering following the Divine Liturgy.',
-  },
-  {
-    id: 2,
-    badge: 'Youth',
-    date: 'March 20–22, 2026',
-    title: 'Youth Spiritual Retreat',
-    description:
-      'A weekend retreat for young adults aged 16–30 focused on prayer, Scripture study, and building lasting faith connections in nature.',
-  },
-  {
-    id: 3,
-    badge: 'Outreach',
-    date: 'April 5, 2026',
-    title: 'Community Charity Drive',
-    description:
-      'Our charity ministry is organizing a clothing and food drive for families in need. Donations can be dropped off at the church office throughout the week.',
   },
 ];
 

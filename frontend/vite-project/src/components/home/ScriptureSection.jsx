@@ -1,8 +1,6 @@
-import { motion } from 'framer-motion';
-import { FiBookOpen } from 'react-icons/fi';
-import Container from '../../components/Container';
-import AnimatedSection from '../../components/AnimatedSection';
-import Button from '../../components/Button';
+import Container from '../Container';
+import AnimatedSection from '../AnimatedSection';
+import Button from '../Button';
 import { dailyScripture } from '../../data/homeData';
 
 export default function ScriptureSection() {
@@ -23,7 +21,7 @@ export default function ScriptureSection() {
           <AnimatedSection>
             <div className="flex justify-center mb-8">
               <div className="w-16 h-16 rounded-xs bg-secondary/20 flex items-center justify-center">
-                <span className="text-4xl text-secondary">☦</span>
+                <span className="text-4xl text-secondary" aria-hidden="true">☦</span>
               </div>
             </div>
 
@@ -31,28 +29,15 @@ export default function ScriptureSection() {
               Today&apos;s Scripture
             </span>
 
-            <motion.blockquote
-              className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-snug mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <blockquote className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-snug mb-8">
               &ldquo;{dailyScripture.verse}&rdquo;
-            </motion.blockquote>
+            </blockquote>
 
-            <motion.p
-              className="text-lg text-secondary-light font-semibold mb-10"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
+            <p className="text-lg text-secondary-light font-semibold mb-10">
               — {dailyScripture.reference}
-            </motion.p>
+            </p>
 
             <Button href="/resources" variant="outline" size="md">
-              <FiBookOpen className="text-sm" />
               Read More Scriptures
             </Button>
           </AnimatedSection>

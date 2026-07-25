@@ -1,25 +1,18 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import {
   FiDroplet, FiBookOpen, FiHeart, FiHome,
   FiUsers, FiSunrise, FiStar,
 } from 'react-icons/fi';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
-import Button from '../../components/Button';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
+import Button from '../Button';
 import { sacraments } from '../../data/homeData';
 
-const iconMap = {
-  FiDroplet,
-  FiBookOpen,
-  FiHeart,
-  FiHome,
-  FiUsers,
-  FiSunrise,
-  FiStar,
-};
+const iconMap = { FiDroplet, FiBookOpen, FiHeart, FiHome, FiUsers, FiSunrise, FiStar };
 
-function SacramentCard({ sacrament, index }) {
+const SacramentCard = memo(function SacramentCard({ sacrament, index }) {
   const Icon = iconMap[sacrament.icon] || FiStar;
 
   return (
@@ -41,7 +34,7 @@ function SacramentCard({ sacrament, index }) {
       <p className="text-sm text-muted leading-relaxed">{sacrament.description}</p>
     </motion.div>
   );
-}
+});
 
 export default function SacramentsOverview() {
   return (

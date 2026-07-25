@@ -1,9 +1,9 @@
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
-import AnimatedSection from '../../components/AnimatedSection';
-import Button from '../../components/Button';
 import { FiCheck } from 'react-icons/fi';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
+import AnimatedSection from '../AnimatedSection';
+import Button from '../Button';
 import { welcomeData } from '../../data/homeData';
 
 export default function WelcomeSection() {
@@ -28,36 +28,21 @@ export default function WelcomeSection() {
 
           <AnimatedSection direction="right">
             <div className="flex flex-col gap-6">
-              <SectionHeader
-                subtitle="Welcome"
-                title={welcomeData.title}
-                align="left"
-              />
-              <p className="text-muted leading-relaxed">
-                {welcomeData.description}
-              </p>
-
+              <SectionHeader subtitle="Welcome" title={welcomeData.title} align="left" />
+              <p className="text-muted leading-relaxed">{welcomeData.description}</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {welcomeData.features.map((feature) => (
-                  <div
-                    key={feature}
-                    className="flex items-center gap-3"
-                  >
+                {welcomeData.features.map((f) => (
+                  <div key={f} className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xs bg-primary/10 flex items-center justify-center shrink-0">
                       <FiCheck className="text-sm text-primary" />
                     </div>
-                    <span className="text-sm font-medium text-text">{feature}</span>
+                    <span className="text-sm font-medium text-text">{f}</span>
                   </div>
                 ))}
               </div>
-
               <div className="flex flex-wrap gap-4 mt-4">
-                <Button href="/about" variant="primary">
-                  About Us
-                </Button>
-                <Button href="/contact" variant="outline-dark">
-                  Contact Us
-                </Button>
+                <Button href="/about" variant="primary">About Us</Button>
+                <Button href="/contact" variant="outline-dark">Contact Us</Button>
               </div>
             </div>
           </AnimatedSection>

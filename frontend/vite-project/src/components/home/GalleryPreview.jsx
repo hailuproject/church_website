@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
-import Button from '../../components/Button';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
+import Button from '../Button';
 import { galleryPreview } from '../../data/homeData';
 
 export default function GalleryPreview() {

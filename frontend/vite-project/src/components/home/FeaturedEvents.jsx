@@ -1,14 +1,15 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { FiClock, FiMapPin, FiArrowRight } from 'react-icons/fi';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
-import Button from '../../components/Button';
-import { upcomingEvents } from '../../data/homeData';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
+import Button from '../Button';
+import { featuredEvents } from '../../data/homeData';
 
-function EventCard({ event, index }) {
+const EventCard = memo(function EventCard({ event, index }) {
   return (
-    <motion.div
+    <motion.article
       className="group bg-white rounded-xs overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-500"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -25,11 +26,9 @@ function EventCard({ event, index }) {
         />
         <div className="absolute top-4 left-4 bg-white rounded-xs px-3 py-2 shadow-md text-center min-w-[60px]">
           <div className="text-[10px] font-bold text-secondary uppercase tracking-wider">
-            {event.date.month}
+            {event.badge}
           </div>
-          <div className="text-xl font-bold text-text leading-none">
-            {event.date.day}
-          </div>
+          <div className="text-xs font-semibold text-text">{event.date}</div>
         </div>
       </div>
 
@@ -58,11 +57,11 @@ function EventCard({ event, index }) {
           <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-200" />
         </a>
       </div>
-    </motion.div>
+    </motion.article>
   );
-}
+});
 
-export default function EventsPreview() {
+export default function FeaturedEvents() {
   return (
     <Section id="events" className="bg-white">
       <Container>
@@ -72,7 +71,7 @@ export default function EventsPreview() {
           description="Join us in celebration, worship, and community fellowship."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {upcomingEvents.map((event, i) => (
+          {featuredEvents.map((event, i) => (
             <EventCard key={event.id} event={event} index={i} />
           ))}
         </div>

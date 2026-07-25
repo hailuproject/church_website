@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import SectionHeader from '../../components/SectionHeader';
+import Accordion from '../../components/common/Accordion';
 import HeroBanner from './HeroBanner';
 import FeaturedResource from './FeaturedResource';
 import ResourceCategoryCard from './ResourceCategoryCard';
@@ -13,7 +14,6 @@ import LiturgicalTimeline from './LiturgicalTimeline';
 import FastingCalendar from './FastingCalendar';
 import SaintCard from './SaintCard';
 import DownloadCard from './DownloadCard';
-import FAQAccordion from './FAQAccordion';
 import VisitSection from './VisitSection';
 import CTASection from './CTASection';
 import {
@@ -152,12 +152,6 @@ function Downloads() {
 }
 
 function FAQ() {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  const handleToggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
     <Section id="faq" className="bg-surface">
       <Container>
@@ -166,16 +160,8 @@ function FAQ() {
           title="Frequently Asked Questions"
           description="Find answers to common questions about our resources and how to use them."
         />
-        <div className="max-w-3xl mx-auto flex flex-col gap-4">
-          {faqs.map((item, i) => (
-            <FAQAccordion
-              key={i}
-              item={item}
-              index={i}
-              isOpen={openIndex === i}
-              onToggle={() => handleToggle(i)}
-            />
-          ))}
+        <div className="max-w-3xl mx-auto">
+          <Accordion items={faqs} defaultOpen={-1} />
         </div>
       </Container>
     </Section>

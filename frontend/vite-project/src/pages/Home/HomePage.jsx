@@ -1,38 +1,32 @@
-import HeroSlider from './HeroSlider';
-import WelcomeSection from './WelcomeSection';
-import Highlights from './Highlights';
-import EventsPreview from './EventsPreview';
-import ScriptureSection from './ScriptureSection';
-import SermonsPreview from './SermonsPreview';
-import SacramentsOverview from './SacramentsOverview';
-import Ministries from './Ministries';
-import GalleryPreview from './GalleryPreview';
-import Testimonials from './Testimonials';
-import Statistics from './Statistics';
-import Announcements from './Announcements';
-import ServiceSchedule from './ServiceSchedule';
-import FAQSection from './FAQSection';
-import NewsletterSection from './NewsletterSection';
-import CTASection from './CTASection';
+import HeroSlider from '../../components/home/HeroSlider';
+import WelcomeSection from '../../components/home/WelcomeSection';
+import ChurchStats from '../../components/home/ChurchStats';
+import FeaturedEvents from '../../components/home/FeaturedEvents';
+import ScriptureSection from '../../components/home/ScriptureSection';
+import FeaturedSermons from '../../components/home/FeaturedSermons';
+import SacramentsOverview from '../../components/home/SacramentsOverview';
+import Ministries from '../../components/home/Ministries';
+import GalleryPreview from '../../components/home/GalleryPreview';
+import Testimonials from '../../components/home/Testimonials';
+import ServiceSchedule from '../../components/home/ServiceSchedule';
+import FAQSection from '../../components/home/FAQSection';
+import CTASection from '../../components/home/CTASection';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
       <HeroSlider />
       <WelcomeSection />
-      <Highlights />
-      <EventsPreview />
+      <ChurchStats />
+      <FeaturedEvents />
       <ScriptureSection />
-      <SermonsPreview />
+      <FeaturedSermons />
       <SacramentsOverview />
       <Ministries />
       <GalleryPreview />
       <Testimonials />
-      <Statistics />
-      <Announcements />
       <ServiceSchedule />
       <FAQSection />
-      <NewsletterSection />
       <CTASection />
     </main>
   );

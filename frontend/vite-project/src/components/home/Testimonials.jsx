@@ -1,28 +1,53 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight, FiMessageSquare } from 'react-icons/fi';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
 import { testimonials } from '../../data/homeData';
+
+const TestimonialCard = memo(function TestimonialCard({ testimonial }) {
+  return (
+    <div className="bg-white rounded-xs p-8 md:p-12 shadow-sm border border-border text-center">
+      <div className="flex justify-center mb-6">
+        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <FiMessageSquare className="text-primary" />
+        </div>
+      </div>
+      <p className="text-lg text-text leading-relaxed mb-8 italic">
+        &ldquo;{testimonial.text}&rdquo;
+      </p>
+      <div className="flex items-center justify-center gap-4">
+        <img
+          src={testimonial.avatar}
+          alt={testimonial.name}
+          className="w-12 h-12 rounded-full object-cover border-2 border-secondary"
+          loading="lazy"
+        />
+        <div className="text-left">
+          <h4 className="text-sm font-bold text-text">{testimonial.name}</h4>
+          <p className="text-xs text-muted">{testimonial.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+});
 
 export default function Testimonials() {
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
+    setCurrent((p) => (p + 1) % testimonials.length);
   }, []);
 
   const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
   }, []);
 
   useEffect(() => {
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
   }, [next]);
-
-  const t = testimonials[current];
 
   return (
     <Section id="testimonials" className="bg-surface">
@@ -37,38 +62,15 @@ export default function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
-              className="bg-white rounded-xs p-8 md:p-12 shadow-sm border border-border text-center"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex justify-center mb-6">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <FiMessageSquare className="text-primary" />
-                </div>
-              </div>
-
-              <p className="text-lg text-text leading-relaxed mb-8 italic">
-                &ldquo;{t.text}&rdquo;
-              </p>
-
-              <div className="flex items-center justify-center gap-4">
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-secondary"
-                  loading="lazy"
-                />
-                <div className="text-left">
-                  <h4 className="text-sm font-bold text-text">{t.name}</h4>
-                  <p className="text-xs text-muted">{t.role}</p>
-                </div>
-              </div>
+              <TestimonialCard testimonial={testimonials[current]} />
             </motion.div>
           </AnimatePresence>
 
-          {/* Controls */}
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={prev}
@@ -77,7 +79,7 @@ export default function Testimonials() {
             >
               <FiChevronLeft />
             </button>
-            <div className="flex gap-2">
+            <div className="flex gap-2" role="tablist" aria-label="Testimonial navigation">
               {testimonials.map((_, i) => (
                 <button
                   key={i}
@@ -85,7 +87,9 @@ export default function Testimonials() {
                   className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                     i === current ? 'w-8 bg-secondary' : 'w-2 bg-border hover:bg-muted'
                   }`}
-                  aria-label={`Go to testimonial ${i + 1}`}
+                  role="tab"
+                  aria-selected={i === current}
+                  aria-label={`Testimonial ${i + 1}`}
                 />
               ))}
             </div>

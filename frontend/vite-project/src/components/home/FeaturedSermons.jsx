@@ -1,14 +1,15 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { FiClock, FiArrowRight } from 'react-icons/fi';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
-import Button from '../../components/Button';
+import Container from '../Container';
+import Section from '../Section';
+import SectionHeader from '../SectionHeader';
+import Button from '../Button';
 import { featuredSermons } from '../../data/homeData';
 
-function SermonCard({ sermon, index }) {
+const SermonCard = memo(function SermonCard({ sermon, index }) {
   return (
-    <motion.div
+    <motion.article
       className="group bg-white rounded-xs overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-500"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -24,12 +25,9 @@ function SermonCard({ sermon, index }) {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-          <motion.div
-            className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            whileHover={{ scale: 1.1 }}
-          >
+          <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[12px] border-l-primary ml-1" />
-          </motion.div>
+          </div>
         </div>
         <div className="absolute top-4 left-4 bg-primary text-white text-[11px] font-semibold px-3 py-1 rounded-xs">
           {sermon.category}
@@ -40,9 +38,7 @@ function SermonCard({ sermon, index }) {
         <h3 className="text-lg font-bold text-text mb-3 group-hover:text-primary transition-colors duration-300">
           {sermon.title}
         </h3>
-        <div className="flex items-center gap-4 text-sm text-muted mb-4">
-          <span>{sermon.priest}</span>
-        </div>
+        <p className="text-sm text-muted mb-4">{sermon.priest}</p>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 text-xs text-muted">
             <span>{sermon.date}</span>
@@ -60,11 +56,11 @@ function SermonCard({ sermon, index }) {
           </a>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
-}
+});
 
-export default function SermonsPreview() {
+export default function FeaturedSermons() {
   return (
     <Section id="sermons" className="bg-surface">
       <Container>
