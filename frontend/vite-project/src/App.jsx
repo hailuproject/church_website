@@ -12,6 +12,7 @@ const ResourcesPage = lazy(() => import('./pages/Resources/ResourcesPage'));
 const GalleryPage = lazy(() => import('./pages/Gallery/GalleryPage'));
 const ContactPage = lazy(() => import('./pages/Contact/ContactPage'));
 const DonatePage = lazy(() => import('./pages/Donate/DonatePage'));
+const HomePage = lazy(() => import('./pages/Home/HomePage'));
 
 function Loading() {
   return (
@@ -19,25 +20,6 @@ function Loading() {
       <div className="flex flex-col items-center gap-4">
         <div className="w-12 h-12 border-4 border-secondary/30 border-t-secondary rounded-full animate-spin" />
         <p className="text-muted text-sm">Loading...</p>
-      </div>
-    </div>
-  );
-}
-
-function HomePage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-surface pt-20">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-text mb-4">
-          Ethiopian Orthodox Tewahedo Church
-        </h1>
-        <p className="text-muted mb-6">Welcome to our church website</p>
-        <a
-          href="/about"
-          className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xs font-medium hover:bg-primary-dark transition-colors duration-300"
-        >
-          Learn About Us
-        </a>
       </div>
     </div>
   );

@@ -22,6 +22,7 @@
     "react-player": "^3.4.0",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.10.0",
+    "swiper": "^14.0.6",
     "yet-another-react-lightbox": "^3.32.1"
   },
   "devDependencies": {
