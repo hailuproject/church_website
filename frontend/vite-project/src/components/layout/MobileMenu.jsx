@@ -3,7 +3,6 @@ import { FiX } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
-import NavButton from './NavButton';
 import { socialLinks } from '../../data/navigation';
 
 const overlay = {
@@ -59,11 +58,6 @@ export default function MobileMenu({ isOpen, onClose }) {
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto px-4 py-6">
               <NavLinks vertical onNavigate={onClose} />
-
-              <div className="mt-8 flex flex-col gap-3">
-                <NavButton variant="primary" label="Join Us" icon="join" href="/contact" />
-                <NavButton variant="secondary" label="Watch Live" icon="watch" href="/live" />
-              </div>
             </div>
 
             {/* Footer */}

@@ -1,13 +1,4 @@
 import {
-  FiHome,
-  FiBookOpen,
-  FiMic,
-  FiDroplet,
-  FiCalendar,
-  FiBook,
-  FiImage,
-  FiPhone,
-  FiHeart,
   FiFacebook,
   FiYoutube,
   FiSend,
@@ -15,15 +6,15 @@ import {
 } from 'react-icons/fi';
 
 export const navigationLinks = [
-  { label: 'Home', href: '/', icon: FiHome },
-  { label: 'About', href: '/about', icon: FiBookOpen },
-  { label: 'Sermons', href: '/sermons', icon: FiMic },
-  { label: 'Sacraments', href: '/sacraments', icon: FiDroplet },
-  { label: 'Events', href: '/events', icon: FiCalendar },
-  { label: 'Resources', href: '/resources', icon: FiBook },
-  { label: 'Gallery', href: '/gallery', icon: FiImage },
-  { label: 'Contact', href: '/contact', icon: FiPhone },
-  { label: 'Donate', href: '/donate', icon: FiHeart },
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Sermons', href: '/sermons' },
+  { label: 'Sacraments', href: '/sacraments' },
+  { label: 'Events', href: '/events' },
+  { label: 'Resources', href: '/resources' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Donate', href: '/donate' },
 ];
 
 export const footerQuickLinks = [

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMapPin, FiPhone, FiMail, FiClock, FiArrowRight } from 'react-icons/fi';
-import Logo from './Logo';
 import { footerQuickLinks, footerServices, socialLinks } from '../../data/navigation';
 
 const contactItems = [

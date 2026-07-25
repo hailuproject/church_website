@@ -4,7 +4,6 @@ import { FiMenu } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
-import NavButton from './NavButton';
 import MobileMenu from './MobileMenu';
 
 export default function Navbar() {
@@ -51,8 +50,6 @@ export default function Navbar() {
             {/* Right - Desktop actions */}
             <div className="hidden lg:flex items-center gap-2">
               <LanguageSwitcher />
-              <NavButton variant="secondary" label="Watch Live" icon="watch" href="/live" />
-              <NavButton variant="primary" label="Join Us" icon="join" href="/contact" />
             </div>
 
             {/* Mobile - Hamburger */}

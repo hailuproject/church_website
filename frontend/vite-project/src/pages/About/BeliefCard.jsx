@@ -4,7 +4,6 @@ import {
   FiBook,
   FiLayers,
   FiClock,
-  FiHash,
   FiHeart,
   FiCoffee,
   FiStar,

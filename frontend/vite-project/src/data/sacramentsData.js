@@ -219,15 +219,6 @@ export const scriptureData = {
   reference: 'John 3:5',
   explanation:
     'These words of our Lord Jesus Christ affirm the essential role of Baptism and the Holy Spirit in the life of every believer. The Holy Mysteries are the means by which God imparts His grace to transform and save the human soul.',
-  image:
-    'https://images.unsplash.com/photo-1552384851-6f681b7ebe7a?w=1920&h=800&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1552384851-6f681b7ebe7a?w=1920&h=800&fit=crop',
 };
-
-export const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Sacraments', href: '/sacraments' },
-  { label: 'Sermons', href: '/sermons' },
-  { label: 'Events', href: '/events' },
-  { label: 'Contact', href: '/contact' },
-];
