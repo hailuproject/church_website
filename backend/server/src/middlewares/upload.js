@@ -1,0 +1,69 @@
+import multer from 'multer';
+import config from '../config/index.js';
+import AppError from '../utils/AppError.js';
+import { FILE_MIME_TYPES, MEDIA_TYPES } from '../constants/index.js';
+
+const memoryStorage = multer.memoryStorage();
+
+const getMaxSize = (mediaType) => {
+  const limits = config.uploads;
+  switch (mediaType) {
+    case MEDIA_TYPES.IMAGE:
+      return limits.imageMb * 1024 * 1024;
+    case MEDIA_TYPES.AUDIO:
+      return limits.audioMb * 1024 * 1024;
+    case MEDIA_TYPES.VIDEO:
+      return limits.videoMb * 1024 * 1024;
+    case MEDIA_TYPES.PDF:
+      return limits.pdfMb * 1024 * 1024;
+    default:
+      return limits.imageMb * 1024 * 1024;
+  }
+};
+
+const buildFileFilter = (allowedMediaTypes) => {
+  const allowedMimes = allowedMediaTypes.flatMap((type) => FILE_MIME_TYPES[type] || []);
+  return (req, file, cb) => {
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(
+        new AppError(
+          `Invalid file type "${file.mimetype}". Allowed: ${allowedMediaTypes.join(', ')}.`,
+          400
+        ),
+        false
+      );
+    }
+  };
+};
+
+export const upload = (allowedMediaTypes, { fieldName = 'file', maxCount = 10 } = {}) => {
+  return multer({
+    storage: memoryStorage,
+    limits: { fileSize: getMaxSize(allowedMediaTypes[0]) },
+    fileFilter: buildFileFilter(allowedMediaTypes),
+  }).single(fieldName);
+};
+
+export const uploadMultiple = (allowedMediaTypes, { fieldName = 'files', maxCount = 10 } = {}) => {
+  return multer({
+    storage: memoryStorage,
+    limits: { fileSize: getMaxSize(allowedMediaTypes[0]), files: maxCount },
+    fileFilter: buildFileFilter(allowedMediaTypes),
+  }).array(fieldName, maxCount);
+};
+
+export const uploadMixed = (fields, allowedMediaTypes) => {
+  const allowedMimes = allowedMediaTypes.flatMap((type) => FILE_MIME_TYPES[type] || []);
+  return multer({
+    storage: memoryStorage,
+    limits: { fileSize: getMaxSize(allowedMediaTypes[0]) },
+    fileFilter: (req, file, cb) => {
+      if (allowedMimes.includes(file.mimetype)) cb(null, true);
+      else cb(new AppError(`Invalid file type "${file.mimetype}".`, 400), false);
+    },
+  }).fields(fields.map((field) => ({ name: field, maxCount: 1 })));
+};
+
+export default { upload, uploadMultiple, uploadMixed };

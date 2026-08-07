@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+server/src/logs/*.log
+server/src/logs/*.log.*
+
+# Uploads (temp files)
+server/src/uploads/*
+
+# Coverage
+coverage/
+
+# OS
+.DS_Store
+
+# Vite
+frontend/vite-project/dist/
+frontend/vite-project/node_modules/
