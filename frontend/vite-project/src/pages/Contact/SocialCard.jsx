@@ -5,10 +5,12 @@ import {
   FiYoutube,
   FiSend,
   FiInstagram,
+  FiTwitter,
 } from 'react-icons/fi';
 
 const platformIcons = {
   facebook: FiFacebook,
+  twitter: FiTwitter,
   youtube: FiYoutube,
   telegram: FiSend,
   instagram: FiInstagram,
@@ -16,6 +18,7 @@ const platformIcons = {
 
 const platformColors = {
   facebook: 'from-blue-500 to-blue-600',
+  twitter: 'from-sky-400 to-blue-600',
   youtube: 'from-red-500 to-red-600',
   telegram: 'from-blue-400 to-blue-500',
   instagram: 'from-pink-500 to-purple-600',

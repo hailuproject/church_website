@@ -17,16 +17,19 @@ import DownloadCard from './DownloadCard';
 import VisitSection from './VisitSection';
 import CTASection from './CTASection';
 import {
-  resourceCategories,
-  resources,
   resourceFilters,
   prayerResources,
   saints,
   downloads,
   faqs,
 } from '../../data/resourcesData';
+import {
+  useResourceCategoriesList,
+  useResourcesList,
+} from '../../hooks/useResourcesSections';
 
 function ResourceCategories() {
+  const resourceCategories = useResourceCategoriesList();
   return (
     <Section id="categories" className="bg-white">
       <Container>
@@ -47,6 +50,7 @@ function ResourceCategories() {
 
 function DigitalLibrary() {
   const [activeFilter, setActiveFilter] = useState('All');
+  const resources = useResourcesList();
 
   const filteredResources =
     activeFilter === 'All'

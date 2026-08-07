@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FiPlay, FiCalendar, FiClock } from "react-icons/fi";
 import ReactPlayer from "react-player";
 import Button from "../../../../components/Button";
-import { liveStream } from "../../../../data/sermonsData";
+import { useLiveStream } from "../../../../hooks/useSermonsSections";
 
 const LIVE_THUMB =
   "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop";
@@ -54,7 +54,7 @@ function CountdownTimer({ targetDate }) {
 }
 
 const LiveStreamCard = memo(function LiveStreamCard() {
-  const stream = liveStream;
+  const stream = useLiveStream();
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (

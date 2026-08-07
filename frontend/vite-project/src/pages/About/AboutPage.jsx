@@ -11,17 +11,21 @@ import GalleryCard from './GalleryCard';
 import CounterCard from './CounterCard';
 import CTASection from './CTASection';
 import {
-  historyBlocks,
-  historyTimeline,
   missionVisionValues,
-  beliefsData,
-  leadersData,
   statsData,
   galleryData,
   visitUsData,
 } from '../../data/aboutData';
+import {
+  useBeliefs,
+  useHistoryBlocks,
+  useHistoryTimeline,
+  useLeaders,
+} from '../../hooks/useAboutSections';
 
 function ChurchHistory() {
+  const historyBlocks = useHistoryBlocks();
+  const historyTimeline = useHistoryTimeline();
   return (
     <Section id="history" className="bg-surface">
       <Container>
@@ -74,6 +78,7 @@ function MissionVisionValues() {
 }
 
 function OurBeliefs() {
+  const beliefsData = useBeliefs();
   return (
     <Section id="beliefs" className="bg-surface">
       <Container>
@@ -93,6 +98,7 @@ function OurBeliefs() {
 }
 
 function Leadership() {
+  const leadersData = useLeaders();
   return (
     <Section id="leadership" className="bg-white">
       <Container>

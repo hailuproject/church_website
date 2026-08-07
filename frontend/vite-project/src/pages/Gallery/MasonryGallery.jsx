@@ -5,9 +5,11 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
-import { galleryImages, galleryFilterTabs } from '../../data/galleryData';
+import { galleryFilterTabs } from '../../data/galleryData';
+import { useMasonryImages } from '../../hooks/useGallerySections';
 
 export default function MasonryGallery() {
+  const galleryImages = useMasonryImages();
   const [activeFilter, setActiveFilter] = useState('All');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);

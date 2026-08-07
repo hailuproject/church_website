@@ -55,12 +55,13 @@ export const contactInfo = [
 ];
 
 export const contactCategories = [
-  'General Inquiry',
+  'General',
   'Prayer Request',
-  'Volunteer',
-  'Media Request',
-  'Sacrament Information',
   'Membership',
+  'Donation',
+  'Event',
+  'Bible Question',
+  'Support',
   'Other',
 ];
 

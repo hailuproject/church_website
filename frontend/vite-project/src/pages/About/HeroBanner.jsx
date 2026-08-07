@@ -2,8 +2,14 @@ import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/aboutData';
+import { useChurch } from '../../hooks/useHomeSections';
 
 export default function HeroBanner() {
+  const church = useChurch();
+  const hero = {
+    ...heroData,
+    churchName: church.name || heroData.churchName,
+  };
   return (
     <section
       className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
@@ -39,7 +45,7 @@ export default function HeroBanner() {
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-10">
           <ol className="flex items-center gap-2 text-sm text-white/50">
-            {heroData.breadcrumb.map((crumb, i) => (
+            {hero.breadcrumb.map((crumb, i) => (
               <li key={crumb.href} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 <a
@@ -60,7 +66,7 @@ export default function HeroBanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {heroData.churchName}
+            {hero.churchName}
           </motion.span>
 
           <motion.h1
@@ -69,7 +75,7 @@ export default function HeroBanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            {heroData.title}
+            {hero.title}
           </motion.h1>
 
           <motion.p
@@ -78,7 +84,7 @@ export default function HeroBanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
           >
-            {heroData.subtitle}
+            {hero.subtitle}
           </motion.p>
 
           <motion.div

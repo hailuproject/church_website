@@ -10,13 +10,18 @@ import Sidebar from './components/sermons/Sidebar';
 import CTASection from './components/sermons/CTASection';
 import SectionHeader from '../../components/SectionHeader';
 import {
-  sermons,
-  sermonCategories,
-  audioSermons,
   geEzResources,
 } from '../../data/sermonsData';
+import {
+  useAudioSermons,
+  useLatestSermons,
+  useSermonCategoriesList,
+} from '../../hooks/useSermonsSections';
 
 export default function SermonsPage() {
+  const sermons = useLatestSermons();
+  const sermonCategories = useSermonCategoriesList();
+  const audioSermons = useAudioSermons();
   return (
     <main className="min-h-screen">
       <HeroBanner />

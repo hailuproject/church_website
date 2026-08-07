@@ -3,9 +3,10 @@ import { FiCalendar, FiMapPin, FiImage, FiVideo } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
-import { featuredGallery } from '../../data/galleryData';
+import { useFeaturedAlbum } from '../../hooks/useGallerySections';
 
 export default function FeaturedGallery() {
+  const featuredGallery = useFeaturedAlbum();
   return (
     <Section id="featured" className="bg-surface">
       <Container>

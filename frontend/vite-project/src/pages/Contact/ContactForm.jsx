@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { FiSend, FiSmile, FiHeart, FiClock, FiUsers } from 'react-icons/fi';
+import { useSubmitContact } from '../../hooks/usePublicData';
 import { contactCategories, quickHighlights } from '../../data/contactData';
 
 const highlightIcons = {
@@ -13,6 +15,7 @@ const highlightIcons = {
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const submitContact = useSubmitContact();
   const {
     register,
     handleSubmit,
@@ -20,10 +23,22 @@ export default function ContactForm() {
     reset,
   } = useForm();
 
-  const onSubmit = (_data) => {
-    setSubmitted(true);
-    reset();
-    setTimeout(() => setSubmitted(false), 5000);
+  const onSubmit = async (data) => {
+    try {
+      await submitContact.mutateAsync({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || undefined,
+        subject: data.subject,
+        message: data.message,
+        category: data.category,
+      });
+      setSubmitted(true);
+      reset();
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (error) {
+      toast.error(error.message || 'Failed to send message. Please try again.');
+    }
   };
 
   return (
@@ -242,10 +257,10 @@ export default function ContactForm() {
               className="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-primary text-white px-8 py-3.5 rounded-xs font-medium hover:bg-primary-dark shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || submitContact.isPending}
             >
               <FiSend className="text-base" />
-              {isSubmitting ? 'Sending...' : 'Send Message'}
+              {isSubmitting || submitContact.isPending ? 'Sending...' : 'Send Message'}
             </motion.button>
           </form>
         )}

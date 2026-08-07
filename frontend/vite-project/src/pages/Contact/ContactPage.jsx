@@ -18,8 +18,46 @@ import {
   socialLinks,
   faqs,
 } from '../../data/contactData';
+import { useChurch } from '../../hooks/useHomeSections';
+
+const platformMeta = {
+  facebook: { platform: 'Facebook', description: 'Follow us for event updates, photos, and community news.', icon: 'facebook' },
+  twitter: { platform: 'Twitter', description: 'Follow us for updates and announcements.', icon: 'twitter' },
+  youtube: { platform: 'YouTube', description: 'Watch live services, sermons, and choir performances.', icon: 'youtube' },
+  telegram: { platform: 'Telegram', description: 'Join our channel for announcements and prayer requests.', icon: 'telegram' },
+  instagram: { platform: 'Instagram', description: 'Beautiful photos from worship, feasts, and community life.', icon: 'instagram' },
+  tiktok: { platform: 'TikTok', description: 'Short clips from our community and worship.', icon: 'tiktok' },
+};
+
+const socialIcons = Object.keys(platformMeta);
 
 function ContactInformation() {
+  const church = useChurch();
+  const hasLiveContact = church.address || church.phone || church.email;
+  const cards = hasLiveContact
+    ? [
+        {
+          id: 'address',
+          title: 'Visit Us',
+          icon: 'location',
+          details: [{ label: 'Address', value: church.address }].filter((d) => d.value),
+        },
+        {
+          id: 'phone',
+          title: 'Call Us',
+          icon: 'phone',
+          details: [{ label: 'Church Office', value: church.phone }].filter((d) => d.value),
+        },
+        {
+          id: 'email',
+          title: 'Email Us',
+          icon: 'email',
+          details: [{ label: 'General', value: church.email }].filter((d) => d.value),
+        },
+        contactInfo[3],
+      ].filter((card) => card.details.length)
+    : contactInfo;
+
   return (
     <Section id="info" className="bg-surface">
       <Container>
@@ -29,7 +67,7 @@ function ContactInformation() {
           description="Multiple ways to connect with our church community. We are here to serve you."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {contactInfo.map((info, i) => (
+          {cards.map((info, i) => (
             <ContactCard key={info.id} info={info} index={i} />
           ))}
         </div>
@@ -99,6 +137,17 @@ function FAQSection() {
 }
 
 function ConnectWithUs() {
+  const church = useChurch();
+  const liveLinks = Object.entries(church.socialLinks || {})
+    .filter(([, url]) => url)
+    .map(([key, url]) => ({
+      id: key,
+      url,
+      ...(platformMeta[key] || { platform: key, description: `Follow us on ${key}.`, icon: key }),
+    }))
+    .filter((link) => socialIcons.includes(link.icon));
+  const links = liveLinks.length ? liveLinks : socialLinks;
+
   return (
     <Section id="social" className="bg-surface">
       <Container>
@@ -108,7 +157,7 @@ function ConnectWithUs() {
           description="Follow us on social media for event updates, live services, and community news."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {socialLinks.map((link, i) => (
+          {links.map((link, i) => (
             <SocialCard key={link.id} link={link} index={i} />
           ))}
         </div>

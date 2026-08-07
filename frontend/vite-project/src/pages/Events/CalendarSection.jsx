@@ -6,7 +6,7 @@ import { FiX, FiCalendar, FiClock, FiMapPin, FiChevronLeft, FiChevronRight } fro
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
-import { calendarEvents } from '../../data/eventsData';
+import { useCalendarEvents } from '../../hooks/useEventsSections';
 
 const locales = {
   'en-US': {
@@ -32,6 +32,7 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function CalendarSection() {
+  const calendarEvents = useCalendarEvents();
   const [currentView, setCurrentView] = useState(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1));
   const [selectedEvent, setSelectedEvent] = useState(null);

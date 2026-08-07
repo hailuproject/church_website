@@ -11,9 +11,11 @@ import MinistryCard from './MinistryCard';
 import CategoryCard from './CategoryCard';
 import VisitSection from './VisitSection';
 import CTASection from './CTASection';
-import { events, feastDays, ministries, categories } from '../../data/eventsData';
+import { feastDays, ministries, categories } from '../../data/eventsData';
+import { useUpcomingEventsList } from '../../hooks/useEventsSections';
 
 function UpcomingEvents() {
+  const events = useUpcomingEventsList();
   return (
     <Section id="upcoming" className="bg-surface">
       <Container>

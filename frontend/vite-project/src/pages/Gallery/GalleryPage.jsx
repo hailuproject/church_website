@@ -17,11 +17,14 @@ import ShareSection from './ShareSection';
 import CTASection from './CTASection';
 import {
   galleryCategories,
-  albums,
-  videos,
   sacredMoments,
   communityHighlights,
 } from '../../data/galleryData';
+import {
+  useAlbums,
+  useMasonryImages,
+  useVideoItems,
+} from '../../hooks/useGallerySections';
 
 function GalleryCategories() {
   return (
@@ -43,6 +46,7 @@ function GalleryCategories() {
 }
 
 function FeaturedAlbums() {
+  const albums = useAlbums();
   return (
     <Section id="albums" className="bg-surface">
       <Container>
@@ -63,6 +67,7 @@ function FeaturedAlbums() {
 
 function VideoGallery() {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const videos = useVideoItems();
 
   const handlePlay = (video) => {
     setSelectedVideo(video);

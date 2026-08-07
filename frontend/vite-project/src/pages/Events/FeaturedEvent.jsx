@@ -3,9 +3,10 @@ import { FiCalendar, FiClock, FiMapPin, FiArrowRight, FiCheckCircle } from 'reac
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
-import { featuredEvent } from '../../data/eventsData';
+import { useFeaturedEvent } from '../../hooks/useEventsSections';
 
 export default function FeaturedEvent() {
+  const featuredEvent = useFeaturedEvent();
   return (
     <Section id="featured" className="bg-surface">
       <Container>

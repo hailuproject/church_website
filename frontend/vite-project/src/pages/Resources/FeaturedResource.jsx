@@ -3,9 +3,10 @@ import { FiDownload, FiBookOpen, FiGlobe, FiFileText, FiCalendar } from 'react-i
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
-import { featuredResource } from '../../data/resourcesData';
+import { useFeaturedResource } from '../../hooks/useResourcesSections';
 
 export default function FeaturedResource() {
+  const featuredResource = useFeaturedResource();
   return (
     <Section id="featured" className="bg-surface">
       <Container>
