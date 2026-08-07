@@ -30,7 +30,7 @@ export const getAuditSummary = asyncHandler(async (req, res) => {
 });
 
 export const clearOldAuditLogs = asyncHandler(async (req, res) => {
-  const days = parseInt(req.query.days, 10) || parseInt(req.body.days, 10);
+  const days = parseInt(req.query.days, 10) || parseInt(req.body?.days, 10);
   if (!days || days < 1) throw new AppError('days is required and must be at least 1', 400);
   const removed = await auditService.clearOlderThan(days, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: `Audit logs cleared`, data: { removed } });
