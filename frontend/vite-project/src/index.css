@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #8B0000;
   --color-primary-dark: #6B0000;
@@ -14,6 +16,21 @@
   --color-border: #E5E7EB;
 
   --font-lexend: 'Lexend Deca', system-ui, sans-serif;
+  --font-sans: 'Lexend Deca', system-ui, sans-serif;
+
+  /* Church maroon scale shared by the admin dashboard */
+  --color-primary-50: #FBF2F2;
+  --color-primary-100: #F6E1E1;
+  --color-primary-200: #EBC2C2;
+  --color-primary-300: #DC9999;
+  --color-primary-400: #C96A6A;
+  --color-primary-500: #B53F3F;
+  --color-primary-600: #8B0000;
+  --color-primary-700: #6B0000;
+  --color-primary-800: #550000;
+  --color-primary-900: #3E0000;
+
+  --color-surface-dark: #0f1216;
 }
 
 @layer base {
@@ -179,4 +196,61 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Admin dashboard shared styles */
+.dark body {
+  background-color: var(--color-surface-dark);
+  color: #e5e7eb;
+}
+
+::selection {
+  background-color: var(--color-primary-500);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 8px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #374151;
+}
+
+.ql-container {
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  border-radius: 0 0 0.5rem 0.5rem !important;
+}
+
+.ql-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+  border-color: #d1d5db !important;
+}
+
+.dark .ql-toolbar,
+.dark .ql-container {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .ql-picker-label,
+.dark .ql-snow .ql-stroke {
+  color: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+.dark .ql-snow .ql-fill {
+  fill: #e5e7eb !important;
 }

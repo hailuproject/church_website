@@ -2,7 +2,9 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import AdminEntry from './components/layout/AdminEntry';
 import ScrollToTop from './components/layout/ScrollToTop';
+import AdminApp from './admin/AdminApp';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
 const SermonsPage = lazy(() => import('./pages/Sermons/SermonsPage'));
@@ -42,9 +44,10 @@ function NotFound() {
   );
 }
 
-export default function App() {
+function PublicSite() {
   return (
-    <BrowserRouter>
+    <>
+      <AdminEntry />
       <Header />
       <ScrollToTop />
       <Suspense fallback={<Loading />}>
@@ -62,6 +65,17 @@ export default function App() {
         </Routes>
       </Suspense>
       <Footer />
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="/*" element={<PublicSite />} />
+      </Routes>
     </BrowserRouter>
   );
 }
