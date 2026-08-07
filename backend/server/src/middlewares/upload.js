@@ -2,6 +2,7 @@ import multer from 'multer';
 import config from '../config/index.js';
 import AppError from '../utils/AppError.js';
 import { FILE_MIME_TYPES, MEDIA_TYPES } from '../constants/index.js';
+import { parseBracketedFields } from './parseBody.js';
 
 const memoryStorage = multer.memoryStorage();
 
@@ -38,25 +39,35 @@ const buildFileFilter = (allowedMediaTypes) => {
   };
 };
 
+const runMulter = (req, res, next, middleware) => {
+  middleware(req, res, (err) => {
+    if (err) return next(err);
+    req.body = parseBracketedFields(req.body);
+    next();
+  });
+};
+
 export const upload = (allowedMediaTypes, { fieldName = 'file', maxCount = 10 } = {}) => {
-  return multer({
+  const middleware = multer({
     storage: memoryStorage,
     limits: { fileSize: getMaxSize(allowedMediaTypes[0]) },
     fileFilter: buildFileFilter(allowedMediaTypes),
   }).single(fieldName);
+  return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
 export const uploadMultiple = (allowedMediaTypes, { fieldName = 'files', maxCount = 10 } = {}) => {
-  return multer({
+  const middleware = multer({
     storage: memoryStorage,
     limits: { fileSize: getMaxSize(allowedMediaTypes[0]), files: maxCount },
     fileFilter: buildFileFilter(allowedMediaTypes),
   }).array(fieldName, maxCount);
+  return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
 export const uploadMixed = (fields, allowedMediaTypes) => {
   const allowedMimes = allowedMediaTypes.flatMap((type) => FILE_MIME_TYPES[type] || []);
-  return multer({
+  const middleware = multer({
     storage: memoryStorage,
     limits: { fileSize: getMaxSize(allowedMediaTypes[0]) },
     fileFilter: (req, file, cb) => {
@@ -64,6 +75,7 @@ export const uploadMixed = (fields, allowedMediaTypes) => {
       else cb(new AppError(`Invalid file type "${file.mimetype}".`, 400), false);
     },
   }).fields(fields.map((field) => ({ name: field, maxCount: 1 })));
+  return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
 export default { upload, uploadMultiple, uploadMixed };

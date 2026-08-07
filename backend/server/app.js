@@ -14,6 +14,7 @@ import routes from './src/routes/index.js';
 import { notFound, globalErrorHandler } from './src/middlewares/errorHandler.js';
 import { apiLimiter } from './src/middlewares/rateLimiter.js';
 import { requestLogger } from './src/utils/logger.js';
+import { normalizeBody } from './src/middlewares/parseBody.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +41,7 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
+app.use(normalizeBody);
 
 if (config.isDev) {
   app.use(morgan('dev'));

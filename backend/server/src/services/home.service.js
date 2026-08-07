@@ -63,21 +63,21 @@ class HomeService {
       if (slides[0]?.image?.publicId) await deleteMedia(slides[0].image.publicId);
       const first = slides[0] || {};
       slides[0] = { ...first, image: uploaded };
-      payload.hero = { ...hero, slides };
+      payload.hero = { ...hero, ...(payload.hero || {}), slides };
     }
 
     if (files.welcomeImage) {
       const uploaded = await uploadMedia(files.welcomeImage, { folder: CLOUDINARY_FOLDERS.HOME });
       const welcome = toObject(current.welcome) || {};
       if (welcome.image?.publicId) await deleteMedia(welcome.image.publicId);
-      payload.welcome = { ...(payload.welcome || {}), image: uploaded };
+      payload.welcome = { ...welcome, ...(payload.welcome || {}), image: uploaded };
     }
 
     if (files.priestImage) {
       const uploaded = await uploadMedia(files.priestImage, { folder: CLOUDINARY_FOLDERS.HOME });
       const priest = toObject(current.priestWelcome) || {};
       if (priest.priestImage?.publicId) await deleteMedia(priest.priestImage.publicId);
-      payload.priestWelcome = { ...(payload.priestWelcome || {}), priestImage: uploaded };
+      payload.priestWelcome = { ...priest, ...(payload.priestWelcome || {}), priestImage: uploaded };
     }
 
     const updated = await homeRepository.updateSingleton(payload);
@@ -204,6 +204,32 @@ class HomeService {
       module: 'home',
       documentId: updated._id,
       oldData: { event: 'quick_link_removed', index },
+      ...reqMeta,
+    });
+
+    return updated;
+  }
+
+  async updateQuickLink(index, data, actor, reqMeta) {
+    const current = await homeRepository.getSingleton();
+    const quickLinks = [...(current.quickLinks || [])];
+    if (index < 0 || index >= quickLinks.length) throw new AppError('Invalid quick link index', 400);
+    quickLinks[index] = {
+      ...quickLinks[index],
+      label: data.label ?? quickLinks[index].label,
+      labelAm: data.labelAm ?? quickLinks[index].labelAm,
+      url: data.url ?? quickLinks[index].url,
+      icon: data.icon ?? quickLinks[index].icon,
+      order: data.order ?? quickLinks[index].order,
+    };
+    const updated = await homeRepository.updateSingleton({ quickLinks });
+
+    await createAuditLog({
+      admin: actor,
+      action: 'update',
+      module: 'home',
+      documentId: updated._id,
+      newData: { event: 'quick_link_updated', index, label: data.label },
       ...reqMeta,
     });
 
