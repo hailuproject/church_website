@@ -4,10 +4,10 @@ import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import AnimatedSection from '../AnimatedSection';
 import Button from '../Button';
-import { welcomeData } from '../../data/homeData';
+import { useWelcomeData } from '../../hooks/useHomeSections';
 
 export default function WelcomeSection() {
-  return (
+  const welcomeData = useWelcomeData();  return (
     <Section id="welcome" className="bg-white">
       <Container>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">

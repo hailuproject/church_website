@@ -5,7 +5,7 @@ import Container from '../Container';
 import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
-import { featuredSermons } from '../../data/homeData';
+import { useFeaturedSermons } from '../../hooks/useHomeSections';
 
 const SermonCard = memo(function SermonCard({ sermon, index }) {
   return (
@@ -61,6 +61,7 @@ const SermonCard = memo(function SermonCard({ sermon, index }) {
 });
 
 export default function FeaturedSermons() {
+  const featuredSermons = useFeaturedSermons();
   return (
     <Section id="sermons" className="bg-surface">
       <Container>

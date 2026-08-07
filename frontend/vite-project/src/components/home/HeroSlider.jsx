@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight, FiArrowDown } from 'react-icons/fi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
-import { heroSlides } from '../../data/homeData';
+import { useHeroSlides } from '../../hooks/useHomeSections';
 import Button from '../Button';
 
 import 'swiper/css';
@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
 export default function HeroSlider() {
+  const heroSlides = useHeroSlides();
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiperRef, setSwiperRef] = useState(null);
 

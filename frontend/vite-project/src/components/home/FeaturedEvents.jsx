@@ -5,7 +5,7 @@ import Container from '../Container';
 import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
-import { featuredEvents } from '../../data/homeData';
+import { useFeaturedEvents } from '../../hooks/useHomeSections';
 
 const EventCard = memo(function EventCard({ event, index }) {
   return (
@@ -62,6 +62,7 @@ const EventCard = memo(function EventCard({ event, index }) {
 });
 
 export default function FeaturedEvents() {
+  const featuredEvents = useFeaturedEvents();
   return (
     <Section id="events" className="bg-white">
       <Container>

@@ -3,9 +3,10 @@ import Container from '../Container';
 import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
-import { galleryPreview } from '../../data/homeData';
+import { useGalleryPreview } from '../../hooks/useHomeSections';
 
 export default function GalleryPreview() {
+  const galleryPreview = useGalleryPreview();
   return (
     <Section id="gallery" className="bg-white">
       <Container>
