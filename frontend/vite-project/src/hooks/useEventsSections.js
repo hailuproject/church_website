@@ -7,9 +7,9 @@ import {
 import { formatDate, formatTimeRange, mediaUrl } from '../lib/publicMappers';
 
 export function useUpcomingEventsList() {
-  const { data } = useUpcomingEvents({ limit: 9 });
+  const { data, isError } = useUpcomingEvents({ limit: 9 });
   const items = data?.items || [];
-  if (!items.length) return staticEvents;
+  if (!items.length && isError) return staticEvents;
   return items.map((event) => ({
     id: event._id,
     date: (event.date || '').slice(0, 10),
@@ -23,9 +23,10 @@ export function useUpcomingEventsList() {
 }
 
 export function useFeaturedEvent() {
-  const { data } = useFeaturedEvents();
+  const { data, isError } = useFeaturedEvents();
   const items = data?.items || [];
-  if (!items.length) return staticFeatured;
+  if (!items.length && isError) return staticFeatured;
+  if (!items.length) return null;
   const event = items[0];
   const dateObj = new Date(event.date);
   const diff = Math.max(0, dateObj.getTime() - Date.now());
@@ -45,9 +46,9 @@ export function useFeaturedEvent() {
 }
 
 export function useCalendarEvents() {
-  const { data } = useEvents({ limit: 100 });
+  const { data, isError } = useEvents({ limit: 100 });
   const items = data?.items || [];
-  if (!items.length) return staticCalendar;
+  if (!items.length && isError) return staticCalendar;
   return items.map((event) => ({
     start: new Date(event.date),
     end: new Date(event.date),

@@ -10,9 +10,9 @@ import { formatDate, mediaUrl } from '../lib/publicMappers';
 const masonryHeights = [240, 320, 280, 360, 300, 260, 340, 220];
 
 export function useAlbums() {
-  const { data } = useGalleryAlbums({ limit: 6 });
+  const { data, isError } = useGalleryAlbums({ limit: 6 });
   const items = data?.items || [];
-  if (!items.length) return staticAlbums;
+  if (!items.length && isError) return staticAlbums;
   return items.map((album) => ({
     id: album._id,
     coverImage: mediaUrl(album.coverImage) || mediaUrl(album.images?.[0]),
@@ -26,21 +26,22 @@ export function useAlbums() {
 }
 
 export function useFeaturedAlbum() {
-  const { data } = useGalleryAlbums({ limit: 1 });
+  const { data, isError } = useGalleryAlbums({ limit: 1 });
   const items = data?.items || [];
-  if (!items.length) return staticFeatured;
+  if (!items.length && isError) return staticFeatured;
+  if (!items.length) return null;
   const album = items[0];
   return {
-    ...staticFeatured,
-    title: album.albumName || staticFeatured.title,
-    description: album.description || staticFeatured.description,
-    image: mediaUrl(album.coverImage) || mediaUrl(album.images?.[0]) || staticFeatured.image,
-    imageAlt: album.albumName || staticFeatured.imageAlt,
-    category: album.category || staticFeatured.category,
+    title: album.albumName || '',
+    description: album.description || '',
+    image: mediaUrl(album.coverImage) || mediaUrl(album.images?.[0]) || '',
+    imageAlt: album.albumName || '',
+    category: album.category || 'Gallery',
     photos: album.images?.length || 0,
     videos: album.videos?.length || 0,
-    eventDate: formatDate(album.createdAt) || staticFeatured.eventDate,
-    location: staticFeatured.location,
+    eventDate: formatDate(album.createdAt),
+    location: '',
+    countdown: null,
   };
 }
 
@@ -56,12 +57,12 @@ export function useMasonryImages() {
       category: album.category || 'Gallery',
     }))
   );
-  if (!images.length) return staticImages;
+  if (!images.length && isError) return staticImages;
   return images;
 }
 
 export function useVideoItems() {
-  const { data } = useGalleryAlbums({ limit: 6 });
+  const { data, isError } = useGalleryAlbums({ limit: 6 });
   const albums = data?.items || [];
   const videos = albums.flatMap((album) =>
     (album.videos || []).map((video, i) => ({
@@ -74,6 +75,6 @@ export function useVideoItems() {
       url: mediaUrl(video),
     }))
   );
-  if (!videos.length) return staticVideos;
+  if (!videos.length && isError) return staticVideos;
   return videos;
 }

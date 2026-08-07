@@ -7,6 +7,7 @@ import { useFeaturedEvent } from '../../hooks/useEventsSections';
 
 export default function FeaturedEvent() {
   const featuredEvent = useFeaturedEvent();
+  if (!featuredEvent) return null;
   return (
     <Section id="featured" className="bg-surface">
       <Container>

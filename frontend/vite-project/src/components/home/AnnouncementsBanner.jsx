@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FiBell, FiX } from 'react-icons/fi';
 import { useAnnouncements } from '../../hooks/useHomeSections';
 import { useAnnouncementsRealtime } from '../../hooks/useAnnouncementsRealtime';
+import { stripHtml } from '../../lib/publicMappers';
 
 export default function AnnouncementsBanner() {
   const announcements = useAnnouncements();
@@ -41,7 +42,7 @@ export default function AnnouncementsBanner() {
               className="text-sm"
             >
               <span className="font-semibold">{announcement.title}: </span>
-              <span className="text-white/90">{announcement.description}</span>
+              <span className="text-white/90">{stripHtml(announcement.description)}</span>
             </motion.div>
           </AnimatePresence>
         </div>

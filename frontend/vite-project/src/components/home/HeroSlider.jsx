@@ -27,6 +27,8 @@ export default function HeroSlider() {
     return () => window.removeEventListener('keydown', onKey);
   }, [handlePrev, handleNext]);
 
+  if (!heroSlides.length) return null;
+
   return (
     <section className="relative w-full h-screen min-h-[600px]" aria-label="Hero slider">
       <Swiper

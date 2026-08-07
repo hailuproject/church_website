@@ -23,28 +23,38 @@ export function useChurch() {
 }
 
 export function useHeroSlides() {
-  const { data: home } = useHomeData();
-  return mapHeroSlides(home) || staticHeroSlides;
+  const { data: home, isError } = useHomeData();
+  const slides = mapHeroSlides(home);
+  if (slides) return slides;
+  return isError ? staticHeroSlides : [];
 }
 
 export function useWelcomeData() {
-  const { data: home } = useHomeData();
-  return mapWelcome(home, staticWelcome) || staticWelcome;
+  const { data: home, isError } = useHomeData();
+  const welcome = mapWelcome(home, isError ? staticWelcome : {});
+  if (welcome) return welcome;
+  return isError ? staticWelcome : { title: '', description: '', image: '', scripture: '', features: [] };
 }
 
 export function useFeaturedEvents() {
-  const { data: home } = useHomeData();
-  return mapFeaturedEvents(home?.upcomingEvents) || staticEvents;
+  const { data: home, isError } = useHomeData();
+  const events = mapFeaturedEvents(home?.upcomingEvents);
+  if (events) return events;
+  return isError ? staticEvents : [];
 }
 
 export function useFeaturedSermons() {
-  const { data: home } = useHomeData();
-  return mapFeaturedSermons(home?.recentSermons) || staticSermons;
+  const { data: home, isError } = useHomeData();
+  const sermons = mapFeaturedSermons(home?.recentSermons);
+  if (sermons) return sermons;
+  return isError ? staticSermons : [];
 }
 
 export function useGalleryPreview() {
-  const { data } = useGalleryAlbums({ limit: 6 });
-  return mapGalleryPreview(data?.items) || staticGallery;
+  const { data, isError } = useGalleryAlbums({ limit: 6 });
+  const preview = mapGalleryPreview(data?.items);
+  if (preview) return preview;
+  return isError ? staticGallery : [];
 }
 
 export function useAnnouncements() {

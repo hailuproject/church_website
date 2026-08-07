@@ -34,7 +34,7 @@ const localizer = dateFnsLocalizer({
 export default function CalendarSection() {
   const calendarEvents = useCalendarEvents();
   const [currentView, setCurrentView] = useState(Views.MONTH);
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1));
+  const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
 

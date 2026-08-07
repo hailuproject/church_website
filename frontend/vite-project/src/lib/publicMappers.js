@@ -86,6 +86,18 @@ export const mapGalleryPreview = (albums = [], limit = 6) => {
   }));
 };
 
+export const stripHtml = (html = '') =>
+  String(html)
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+
 export const mapAnnouncements = (announcements = []) => {
   if (!announcements.length) return null;
   return announcements.map((announcement, index) => ({
@@ -109,9 +121,9 @@ export const formatAddress = (address) => {
 };
 
 export const mapChurch = (church = {}) => ({
-  name: church.churchName || 'Ethiopian Orthodox',
-  nameAm: church.churchNameAm || '',
-  tagline: church.tagline || 'Tewahedo Church',
+  name: church.name || church.churchName || '',
+  nameAm: church.nameAm || church.churchNameAm || '',
+  tagline: church.tagline || '',
   taglineAm: church.taglineAm || '',
   address: formatAddress(church.address),
   phone: church.phone || '',

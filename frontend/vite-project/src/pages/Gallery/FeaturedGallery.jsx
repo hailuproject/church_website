@@ -7,6 +7,7 @@ import { useFeaturedAlbum } from '../../hooks/useGallerySections';
 
 export default function FeaturedGallery() {
   const featuredGallery = useFeaturedAlbum();
+  if (!featuredGallery) return null;
   return (
     <Section id="featured" className="bg-surface">
       <Container>

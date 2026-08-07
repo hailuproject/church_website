@@ -7,6 +7,7 @@ import { useFeaturedResource } from '../../hooks/useResourcesSections';
 
 export default function FeaturedResource() {
   const featuredResource = useFeaturedResource();
+  if (!featuredResource) return null;
   return (
     <Section id="featured" className="bg-surface">
       <Container>

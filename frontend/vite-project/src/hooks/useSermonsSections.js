@@ -10,9 +10,9 @@ import { useHomeFlags } from './useHomeSections';
 import { useChurch } from './useHomeSections';
 
 export function useLatestSermons() {
-  const { data } = usePublishedSermons({ limit: 4 });
+  const { data, isError } = usePublishedSermons({ limit: 4 });
   const items = data?.items || [];
-  if (!items.length) return staticSermons;
+  if (!items.length && isError) return staticSermons;
   return items.map((sermon) => ({
     id: sermon._id,
     thumbnail: mediaUrl(sermon.thumbnail),
@@ -25,9 +25,9 @@ export function useLatestSermons() {
 }
 
 export function useAudioSermons() {
-  const { data } = usePublishedSermons({ limit: 4 });
+  const { data, isError } = usePublishedSermons({ limit: 4 });
   const items = (data?.items || []).filter((sermon) => mediaUrl(sermon.audioUrl));
-  if (!items.length) return staticAudio;
+  if (!items.length && isError) return staticAudio;
   return items.map((sermon) => ({
     id: sermon._id,
     title: sermon.title,
@@ -38,8 +38,8 @@ export function useAudioSermons() {
 }
 
 export function useSermonCategoriesList() {
-  const { data } = useSermonCategories();
-  if (!Array.isArray(data) || !data.length) return staticCategories;
+  const { data, isError } = useSermonCategories();
+  if (!Array.isArray(data) || !data.length) return isError ? staticCategories : [];
   return data.map((cat) => ({
     id: cat._id,
     icon: 'bible',
@@ -58,5 +58,11 @@ export function useLiveStream() {
     ...staticLiveStream,
     isLive: true,
     videoUrl: url,
+    title: church.name || 'Live Service',
+    description: '',
+    startTime: '',
+    nextService: '',
+    nextServiceDate: '',
+    thumbnail: '',
   };
 }
