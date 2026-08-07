@@ -13,11 +13,7 @@ export const UserAvatarModal = ({ open, onClose, user }) => {
   const [file, setFile] = useState(null);
 
   const mutation = useMutation({
-    mutationFn: ({ id, file }) => {
-      const formData = new FormData();
-      formData.append('avatar', file);
-      return userService.uploadAvatar(id, formData);
-    },
+    mutationFn: ({ id, file }) => userService.uploadAvatar(id, file),
     onSuccess: () => {
       toast.success('Avatar updated');
       setFile(null);

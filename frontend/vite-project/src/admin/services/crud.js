@@ -33,11 +33,14 @@ export const toFormData = (payload) => {
 };
 
 export const createCrudService = (resource, { uploadFields = [] } = {}) => {
-  const send = (payload, hasFile = false) => {
-    if (hasFile) {
-      return { data: toFormData(payload), headers: { 'Content-Type': 'multipart/form-data' } };
-    }
-    return { data: payload };
+  const hasFile = (payload) =>
+    uploadFields.some((field) => payload?.[field] instanceof File || payload?.[field] instanceof Blob);
+
+  const request = (method, url, payload) => {
+    const multipart = hasFile(payload);
+    const body = multipart ? toFormData(payload) : payload;
+    const config = multipart ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined;
+    return client[method](url, body, config);
   };
 
   return {
@@ -54,17 +57,12 @@ export const createCrudService = (resource, { uploadFields = [] } = {}) => {
     },
 
     create: async (payload) => {
-      const hasFile = uploadFields.some((field) => payload?.[field] instanceof File || payload?.[field] instanceof Blob);
-      const response = await client.post(`/${resource}`, ...(hasFile ? [{ data: toFormData(payload), headers: { 'Content-Type': 'multipart/form-data' } }] : [payload]));
+      const response = await request('post', `/${resource}`, payload);
       return unwrapData(response);
     },
 
     update: async (id, payload) => {
-      const hasFile = uploadFields.some((field) => payload?.[field] instanceof File || payload?.[field] instanceof Blob);
-      const response = await client.patch(
-        `/${resource}/${id}`,
-        ...(hasFile ? [{ data: toFormData(payload), headers: { 'Content-Type': 'multipart/form-data' } }] : [payload])
-      );
+      const response = await request('patch', `/${resource}/${id}`, payload);
       return unwrapData(response);
     },
 

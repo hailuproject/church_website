@@ -18,7 +18,7 @@ export const sermonService = {
   },
 
   create: async (payload) => {
-    const hasFile = payload?.thumbnail instanceof File;
+    const hasFile = payload?.thumbnail instanceof File || payload?.thumbnail instanceof Blob;
     const body = hasFile ? (() => {
       const fd = new FormData();
       Object.entries(payload).forEach(([k, v]) => {
@@ -31,7 +31,7 @@ export const sermonService = {
   },
 
   update: async (id, payload) => {
-    const hasFile = payload?.thumbnail instanceof File;
+    const hasFile = payload?.thumbnail instanceof File || payload?.thumbnail instanceof Blob;
     const body = hasFile ? (() => {
       const fd = new FormData();
       Object.entries(payload).forEach(([k, v]) => {

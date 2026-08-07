@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from './useDebounce';
-import { unwrapList } from '../utils/api';
 
 export const useListQuery = ({ key, fetcher, initialFilters = {}, initialLimit = 10, enabled = true }) => {
   const [page, setPage] = useState(1);
@@ -27,10 +26,7 @@ export const useListQuery = ({ key, fetcher, initialFilters = {}, initialLimit =
 
   const query = useQuery({
     queryKey: [key, params],
-    queryFn: async () => {
-      const response = await fetcher(params);
-      return unwrapList(response);
-    },
+    queryFn: () => fetcher(params),
     enabled,
     placeholderData: (previous) => previous,
   });

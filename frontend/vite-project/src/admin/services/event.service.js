@@ -13,7 +13,7 @@ export const eventService = {
   },
 
   create: async (payload) => {
-    const hasFile = payload?.coverImage instanceof File;
+    const hasFile = payload?.coverImage instanceof File || payload?.coverImage instanceof Blob;
     const body = hasFile ? (() => {
       const fd = new FormData();
       Object.entries(payload).forEach(([k, v]) => {
@@ -26,7 +26,7 @@ export const eventService = {
   },
 
   update: async (id, payload) => {
-    const hasFile = payload?.coverImage instanceof File;
+    const hasFile = payload?.coverImage instanceof File || payload?.coverImage instanceof Blob;
     const body = hasFile ? (() => {
       const fd = new FormData();
       Object.entries(payload).forEach(([k, v]) => {

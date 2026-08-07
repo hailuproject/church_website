@@ -37,6 +37,11 @@ export const homeService = {
     return unwrapData(response);
   },
 
+  updateQuickLink: async (index, payload) => {
+    const response = await client.patch(`/home/quick-links/${index}`, payload);
+    return unwrapData(response);
+  },
+
   removeQuickLink: async (index) => {
     const response = await client.delete(`/home/quick-links/${index}`);
     return unwrapData(response);
