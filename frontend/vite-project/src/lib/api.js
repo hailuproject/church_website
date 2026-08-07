@@ -79,6 +79,9 @@ client.interceptors.response.use(
     }
 
     if (!response) {
+      if (axios.isCancel(error) || error.code === 'ERR_CANCELED') {
+        return Promise.reject(new Error('Request cancelled'));
+      }
       if (config && !config._retry && (config.method === 'get' || config.method === 'GET')) {
         config._retry = true;
         await new Promise((resolve) => setTimeout(resolve, 800));
