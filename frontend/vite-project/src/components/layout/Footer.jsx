@@ -4,6 +4,7 @@ import { FiMapPin, FiPhone, FiMail, FiClock, FiArrowRight } from 'react-icons/fi
 import { FiFacebook, FiYoutube, FiSend, FiInstagram, FiTwitter } from 'react-icons/fi';
 import { footerQuickLinks, footerServices } from '../../data/navigation';
 import { useChurch } from '../../hooks/useHomeSections';
+import { publicService } from '../../services/publicService';
 
 const socialIcons = {
   facebook: FiFacebook,
@@ -18,6 +19,7 @@ export default function Footer() {
   const church = useChurch();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
   const [error, setError] = useState('');
 
   const contactItems = [
@@ -36,7 +38,7 @@ export default function Footer() {
     ? `https://maps.google.com/?q=${encodeURIComponent(church.address)}`
     : 'https://maps.google.com';
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     setError('');
     if (!email.trim()) {
@@ -47,8 +49,22 @@ export default function Footer() {
       setError('Please enter a valid email address.');
       return;
     }
-    setSubscribed(true);
-    setEmail('');
+    setSubscribing(true);
+    try {
+      await publicService.submitContact({
+        name: 'Newsletter Subscriber',
+        email,
+        category: 'General',
+        subject: 'Newsletter subscription request',
+        message: `Please add ${email} to the church newsletter mailing list.`,
+      });
+      setSubscribed(true);
+      setEmail('');
+    } catch (err) {
+      setError(err?.message || 'Unable to subscribe right now. Please try again.');
+    } finally {
+      setSubscribing(false);
+    }
   };
 
   return (
@@ -221,11 +237,12 @@ export default function Footer() {
                 </div>
                 <motion.button
                   type="submit"
-                  className="px-7 py-3.5 bg-secondary hover:bg-secondary-dark text-stone-900 font-medium rounded-xs text-sm transition-colors duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
+                  disabled={subscribing}
+                  className="px-7 py-3.5 bg-secondary hover:bg-secondary-dark text-stone-900 font-medium rounded-xs text-sm transition-colors duration-300 shadow-sm hover:shadow-md whitespace-nowrap disabled:opacity-60"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  Subscribe
+                  {subscribing ? 'Subscribing...' : 'Subscribe'}
                 </motion.button>
               </form>
             )}
@@ -243,15 +260,6 @@ export default function Footer() {
             Built with <span className="text-primary mx-1">&hearts;</span> for the Church
           </div>
           <div className="flex items-center gap-5">
-            <a href="/privacy" className="text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200">
-              Privacy Policy
-            </a>
-            <a href="/terms" className="text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200">
-              Terms
-            </a>
-            <a href="/accessibility" className="text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200">
-              Accessibility
-            </a>
             <span className="text-gray-600" aria-hidden="true">|</span>
             <a href="/admin/login" className="text-sm text-gray-500 hover:text-secondary transition-colors duration-200">
               Admin Login

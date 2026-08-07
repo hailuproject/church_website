@@ -146,4 +146,9 @@ export const publicService = {
     const response = await client.post('/contact/prayer-request', payload);
     return unwrapData(response);
   },
+
+  createDonation: async (payload) => {
+    const response = await client.post('/donations', payload);
+    return unwrapData(response);
+  },
 };

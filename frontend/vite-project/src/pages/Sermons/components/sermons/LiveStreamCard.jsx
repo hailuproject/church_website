@@ -16,6 +16,11 @@ function CountdownTimer({ targetDate }) {
     setIsClient(true);
     const target = new Date(targetDate).getTime();
 
+    if (Number.isNaN(target)) {
+      setTimeLeft("");
+      return undefined;
+    }
+
     function update() {
       const now = new Date().getTime();
       const diff = target - now;
@@ -144,10 +149,14 @@ const LiveStreamCard = memo(function LiveStreamCard() {
               <div className="flex items-center gap-3 text-sm text-text">
                 <FiClock className="text-secondary shrink-0" />
                 <div>
-                  <span className="font-medium">{stream.nextService}</span>
-                  <div className="mt-1">
-                    <CountdownTimer targetDate={stream.nextServiceDate} />
-                  </div>
+                  {stream.nextService && (
+                    <span className="font-medium">{stream.nextService}</span>
+                  )}
+                  {stream.nextServiceDate && (
+                    <div className="mt-1">
+                      <CountdownTimer targetDate={stream.nextServiceDate} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -159,7 +168,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
                   Watch Live
                 </Button>
               )}
-              <Button href="/schedule" variant="outline-dark">
+              <Button href="/events" variant="outline-dark">
                 <FiCalendar className="text-lg" />
                 {stream.scheduleLabel}
               </Button>

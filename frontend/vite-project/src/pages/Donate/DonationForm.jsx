@@ -10,6 +10,7 @@ import {
   FiSend,
 } from 'react-icons/fi';
 import { donationTypes, frequencyOptions, trustFeatures } from '../../data/donationData';
+import { publicService } from '../../services/publicService';
 
 const trustIcons = {
   lock: FiLock,
@@ -22,6 +23,7 @@ const trustIcons = {
 export default function DonationForm() {
   const [submitted, setSubmitted] = useState(false);
   const [customAmount, setCustomAmount] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const {
     register,
     handleSubmit,
@@ -29,11 +31,33 @@ export default function DonationForm() {
     reset,
   } = useForm();
 
-  const onSubmit = (_data) => {
-    setSubmitted(true);
-    reset();
-    setCustomAmount('');
-    setTimeout(() => setSubmitted(false), 5000);
+  const onSubmit = async (data) => {
+    setSubmitError('');
+    if (!customAmount || Number(customAmount) <= 0) {
+      setSubmitError('Please enter a donation amount.');
+      return;
+    }
+    try {
+      await publicService.createDonation({
+        donorName: data.donorName,
+        email: data.donorEmail,
+        phone: data.donorPhone || undefined,
+        amount: Number(customAmount),
+        currency: 'etb',
+        campaign:
+          data.frequency === 'One Time'
+            ? data.donationType
+            : `${data.donationType} - ${data.frequency}`,
+        paymentMethod: 'cash',
+        isAnonymous: data.anonymous,
+      });
+      setSubmitted(true);
+      reset();
+      setCustomAmount('');
+      setTimeout(() => setSubmitted(false), 8000);
+    } catch (error) {
+      setSubmitError(error?.message || 'Unable to record your donation. Please try again.');
+    }
   };
 
   return (
@@ -101,8 +125,8 @@ export default function DonationForm() {
             </div>
             <h3 className="text-xl font-bold text-text">Thank You for Your Gift!</h3>
             <p className="text-muted text-sm">
-              Your generous donation has been recorded. A receipt will be sent to your email
-              shortly.
+              Your donation has been recorded. Our team will follow up with you to arrange
+              payment and issue your receipt.
             </p>
           </motion.div>
         ) : (
@@ -250,11 +274,15 @@ export default function DonationForm() {
                     type="tel"
                     {...register('donorPhone')}
                     className="rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
-                    placeholder="(555) 000-0000"
+                    placeholder="Your phone number"
                   />
                 </div>
               </div>
             </div>
+
+            {submitError && (
+              <p className="text-sm text-red-500 mt-4">{submitError}</p>
+            )}
 
             <div className="flex flex-col gap-1.5 mt-5">
               <label htmlFor="prayerRequest" className="text-sm font-semibold text-text">
@@ -296,11 +324,8 @@ export default function DonationForm() {
                   className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 accent-primary"
                 />
                 <span className="text-xs text-muted">
-                  I agree to the{' '}
-                  <a href="#" className="text-primary hover:text-primary-dark underline">
-                    terms and conditions
-                  </a>{' '}
-                  and consent to my donation being processed.
+                  I agree to the church&apos;s terms and conditions and consent to my donation
+                  being processed.
                 </span>
               </label>
               {errors.terms && (
@@ -317,8 +342,7 @@ export default function DonationForm() {
             >
               <FiSend className="text-base" />
               {isSubmitting ? 'Processing...' : 'Donate Now'}
-            </motion.button>
-          </form>
+            </motion.button>          </form>
         )}
       </motion.div>
     </div>

@@ -53,7 +53,9 @@ export function useLiveStream() {
   const church = useChurch();
   const { liveStreamURL } = useHomeFlags();
   const url = liveStreamURL || church.liveStreamURL;
-  if (!url) return { ...staticLiveStream, isLive: false, videoUrl: '' };
+  if (!url) {
+    return { ...staticLiveStream, isLive: false, videoUrl: '', nextServiceDate: '' };
+  }
   return {
     ...staticLiveStream,
     isLive: true,
