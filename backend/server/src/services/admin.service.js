@@ -6,6 +6,7 @@ import { sendEmail } from '../utils/email.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS, ROLES } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
+import bcrypt from 'bcrypt';
 
 class AdminService {
   async list(queryString) {
@@ -80,6 +81,11 @@ class AdminService {
     if (data.role) update.role = data.role;
     if (typeof data.isActive === 'boolean') update.isActive = data.isActive;
     if (typeof data.isVerified === 'boolean') update.isVerified = data.isVerified;
+    if (data.password) {
+      if (data.password.length < 8) throw new AppError('Password must be at least 8 characters', 400);
+      const salt = await bcrypt.genSalt(10);
+      update.password = await bcrypt.hash(data.password, salt);
+    }
 
     const updated = await adminRepository.findByIdAndUpdate(id, update);
 
