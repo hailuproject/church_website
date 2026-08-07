@@ -145,8 +145,8 @@ export const AuditLogsPage = () => {
       {summary && (
         <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard title="Total entries" value={summary.total ?? 0} icon={ScrollText} />
-          <StatCard title="Top module" value={summary.byModule?.[0]?._id || '—'} icon={Activity} />
-          <StatCard title="Top action" value={summary.byAction?.[0]?._id || '—'} icon={Activity} />
+          <StatCard title="Top module" value={summary.byModule?.[0]?.module || '—'} icon={Activity} />
+          <StatCard title="Top action" value={summary.byAction?.[0]?.action || '—'} icon={Activity} />
           <StatCard title="Unique modules" value={summary.byModule?.length ?? 0} icon={Activity} />
         </div>
       )}

@@ -88,12 +88,12 @@ export const MembersPage = () => {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const { items } = await refetchAll();
-      const rows = items || [];
+      const { data } = await refetchAll();
+      const items = data?.items || [];
       const header = ['fullName', 'amharicName', 'baptismName', 'email', 'phone', 'city', 'status', 'createdAt'];
       const lines = [
         header.join(','),
-        ...rows.map((m) =>
+        ...items.map((m) =>
           [
             escapeCsv(m.fullName),
             escapeCsv(m.amharicName),
@@ -107,7 +107,7 @@ export const MembersPage = () => {
         ),
       ];
       downloadTextFile(lines.join('\n'), `members-${new Date().toISOString().slice(0, 10)}.csv`);
-      toast.success(`Exported ${rows.length} members`);
+      toast.success(`Exported ${items.length} members`);
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {

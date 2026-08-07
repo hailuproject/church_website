@@ -160,8 +160,8 @@ export const auditService = {
     return unwrapData(response);
   },
 
-  clearOld: async () => {
-    const response = await client.delete('/audit-logs/clear');
+  clearOld: async (days = 90) => {
+    const response = await client.delete('/audit-logs/clear', { params: { days } });
     return unwrapData(response);
   },
 };
