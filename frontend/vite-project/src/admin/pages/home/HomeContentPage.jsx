@@ -81,9 +81,12 @@ export const HomeContentPage = () => {
   });
 
   const quickLinkMutation = useMutation({
-    mutationFn: (payload) => homeService.addQuickLink(payload),
-    onSuccess: () => {
-      toast.success('Quick link added');
+    mutationFn: ({ index, payload }) =>
+      index !== undefined && index !== null
+        ? homeService.updateQuickLink(index, payload)
+        : homeService.addQuickLink(payload),
+    onSuccess: (_data, vars) => {
+      toast.success(vars.index !== undefined && vars.index !== null ? 'Quick link updated' : 'Quick link added');
       invalidate();
       setQuickLinkModal(false);
     },
@@ -297,7 +300,7 @@ export const HomeContentPage = () => {
         onClose={() => setQuickLinkModal(false)}
         link={editingLink}
         index={editingLinkIndex}
-        onSubmit={quickLinkMutation.mutate}
+        onSubmit={(payload) => quickLinkMutation.mutate({ index: editingLinkIndex, payload })}
         submitting={quickLinkMutation.isPending}
       />
 

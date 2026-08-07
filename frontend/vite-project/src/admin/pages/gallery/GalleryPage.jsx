@@ -13,6 +13,7 @@ import { AlbumFormModal } from './AlbumFormModal';
 import { AlbumDetailModal } from './AlbumDetailModal';
 import { galleryService } from '../../services/gallery.service';
 import { useListQuery } from '../../hooks/useListQuery';
+import { Pagination } from '../../components/ui/Pagination';
 import { getErrorMessage } from '../../utils/api';
 import { FilterSelect, FilterBar } from '../../components/ui/FilterSelect';
 import { GALLERY_CATEGORIES } from '../../constants/options';
@@ -32,7 +33,11 @@ export const GalleryPage = () => {
     initialLimit: 12,
   });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['gallery'] });
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ['gallery'] });
+    queryClient.invalidateQueries({ queryKey: ['gallery-album'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard', 'full'] });
+  };
 
   const createMutation = useMutation({
     mutationFn: (payload) => galleryService.create(payload),
@@ -215,6 +220,16 @@ export const GalleryPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {list.pagination && list.pagination.totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            pagination={list.pagination}
+            onPageChange={list.setPage}
+            onLimitChange={list.setLimit}
+          />
         </div>
       )}
 

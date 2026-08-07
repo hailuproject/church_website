@@ -32,7 +32,10 @@ export const ResourcesPage = () => {
     initialLimit: 10,
   });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['resources'] });
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ['resources'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard', 'full'] });
+  };
 
   const createMutation = useMutation({
     mutationFn: (payload) => resourceService.create(payload),
