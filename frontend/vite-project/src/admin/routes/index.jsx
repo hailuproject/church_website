@@ -4,6 +4,8 @@ import { AdminLayout } from '../components/layout/AdminLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { GuestRoute } from './GuestRoute';
 import { FullPageLoader } from '../components/ui/Loader';
+import { useAuth } from '../context/AuthContext';
+import { getHomePath } from '../utils/permissions';
 
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
@@ -29,6 +31,11 @@ const ErrorPages = lazy(() => import('../pages/errors/ErrorPages'));
 
 const withSuspense = (element) => <Suspense fallback={<FullPageLoader />}>{element}</Suspense>;
 
+const DefaultRoute = () => {
+  const { user } = useAuth();
+  return <Navigate to={getHomePath(user?.role)} replace />;
+};
+
 export const AppRoutes = () => (
   <Routes>
     <Route element={<GuestRoute />}>
@@ -39,7 +46,7 @@ export const AppRoutes = () => (
 
     <Route path="" element={<ProtectedRoute />}>
       <Route element={<AdminLayout />}>
-        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route index element={<DefaultRoute />} />
         <Route path="dashboard" element={withSuspense(<DashboardPage />)} />
         <Route path="announcements" element={withSuspense(<AnnouncementsPage />)} />
         <Route path="home-content" element={withSuspense(<HomeContentPage />)} />

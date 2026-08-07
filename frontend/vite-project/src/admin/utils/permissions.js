@@ -56,3 +56,21 @@ export const hasPermission = (role, permission) => {
   const allowed = ROLE_PERMISSIONS[role] || [];
   return allowed.includes('*') || allowed.includes(permission);
 };
+
+const HOME_ROUTES = [
+  '/dashboard',
+  '/events',
+  '/announcements',
+  '/sermons',
+  '/gallery',
+  '/resources',
+  '/membership',
+  '/donations',
+  '/contact-inbox',
+  '/sacraments',
+];
+
+export const getHomePath = (role) => {
+  const accessible = HOME_ROUTES.find((route) => canAccessRoute(role, route));
+  return accessible ? `/admin${accessible}` : '/admin/profile';
+};

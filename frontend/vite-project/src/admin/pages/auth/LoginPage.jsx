@@ -9,6 +9,7 @@ import { AuthLayout } from './AuthLayout';
 import { Input } from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
+import { getHomePath } from '../../utils/permissions';
 import { usePageMeta } from '../../hooks/usePageMeta';
 
 const schema = z.object({
@@ -33,9 +34,9 @@ export const LoginPage = () => {
   const onSubmit = async (values) => {
     setSubmitting(true);
     try {
-      await login(values);
+      const { user } = await login(values);
       toast.success('Welcome back!');
-      const from = location.state?.from || '/admin/dashboard';
+      const from = location.state?.from || getHomePath(user?.role);
       navigate(from, { replace: true });
     } catch (error) {
       toast.error(error.message);

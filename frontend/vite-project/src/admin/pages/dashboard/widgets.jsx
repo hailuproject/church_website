@@ -115,7 +115,7 @@ export const RecentSermonsWidget = ({ sermons, linkTo = '/admin/sermons' }) => {
   );
 };
 
-export const RecentEventsWidget = ({ events, linkTo = '/events' }) => {
+export const RecentEventsWidget = ({ events, linkTo = '/admin/events' }) => {
   if (!events?.length) return null;
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -143,7 +143,7 @@ export const RecentEventsWidget = ({ events, linkTo = '/events' }) => {
   );
 };
 
-export const RecentMessagesWidget = ({ messages, linkTo = '/contact-inbox' }) => {
+export const RecentMessagesWidget = ({ messages, linkTo = '/admin/contact-inbox' }) => {
   if (!messages?.length) return null;
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -168,7 +168,7 @@ export const RecentMessagesWidget = ({ messages, linkTo = '/contact-inbox' }) =>
   );
 };
 
-export const RecentDonationsWidget = ({ donations, linkTo = '/donations' }) => {
+export const RecentDonationsWidget = ({ donations, linkTo = '/admin/donations' }) => {
   if (!donations?.length) return null;
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -195,7 +195,7 @@ export const RecentDonationsWidget = ({ donations, linkTo = '/donations' }) => {
   );
 };
 
-export const RecentAnnouncementsWidget = ({ announcements, linkTo = '/announcements' }) => {
+export const RecentAnnouncementsWidget = ({ announcements, linkTo = '/admin/announcements' }) => {
   if (!announcements?.length) return null;
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
