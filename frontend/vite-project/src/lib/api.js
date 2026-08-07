@@ -48,7 +48,7 @@ export const setUnauthorizedHandler = (handler) => {
 const refreshAccessToken = async () => {
   if (!refreshPromise) {
     refreshPromise = axios
-      .post(`${API_URL}/auth/refresh`, null, { withCredentials: true })
+      .post(`${API_URL}/auth/refresh`, null, { withCredentials: true, timeout: 10000 })
       .then(() => true)
       .catch(() => false)
       .finally(() => {
@@ -82,8 +82,8 @@ client.interceptors.response.use(
       if (axios.isCancel(error) || error.code === 'ERR_CANCELED') {
         return Promise.reject(new Error('Request cancelled'));
       }
-      if (config && !config._retry && (config.method === 'get' || config.method === 'GET')) {
-        config._retry = true;
+      if (config && !config._networkRetried && (config.method === 'get' || config.method === 'GET')) {
+        config._networkRetried = true;
         await new Promise((resolve) => setTimeout(resolve, 800));
         return client(config);
       }
@@ -98,12 +98,12 @@ client.interceptors.response.use(
 
     if (
       response.status === 401 &&
-      !originalRequest._retry &&
+      !originalRequest._refreshed &&
       !isRefreshEndpoint &&
       !isLoginEndpoint &&
       !window.location.pathname.startsWith('/admin/login')
     ) {
-      originalRequest._retry = true;
+      originalRequest._refreshed = true;
       const refreshed = await refreshAccessToken();
       if (refreshed) {
         return client(originalRequest);

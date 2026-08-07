@@ -46,7 +46,7 @@ export function useFeaturedAlbum() {
 }
 
 export function useMasonryImages() {
-  const { data } = useGalleryAlbums({ limit: 8 });
+  const { data, isError } = useGalleryAlbums({ limit: 8 });
   const albums = data?.items || [];
   const images = albums.flatMap((album) =>
     (album.images || []).map((image, i) => ({

@@ -9,7 +9,9 @@ export const toFormData = (payload) => {
       formData.append(key, value);
     } else if (Array.isArray(value)) {
       value.forEach((item, index) => {
-        if (typeof item === 'object' && item !== null) {
+        if (item instanceof File || item instanceof Blob) {
+          formData.append(key, item);
+        } else if (typeof item === 'object' && item !== null) {
           Object.entries(item).forEach(([subKey, subValue]) => {
             if (subValue !== undefined && subValue !== null) {
               formData.append(`${key}[${index}][${subKey}]`, subValue);

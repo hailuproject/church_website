@@ -9,6 +9,7 @@ const socketUrl = (() => {
 })();
 
 let socket;
+let socketUsers = 0;
 
 export const getAnnouncementsSocket = () => {
   if (socket?.connected) return socket;
@@ -19,11 +20,20 @@ export const getAnnouncementsSocket = () => {
   return socket;
 };
 
+const releaseAnnouncementsSocket = () => {
+  socketUsers = Math.max(0, socketUsers - 1);
+  if (socketUsers === 0 && socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};
+
 export function useAnnouncementsRealtime(enabled = true) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!enabled) return undefined;
+    socketUsers += 1;
     const client = getAnnouncementsSocket();
     const invalidate = () => {
       queryClient.invalidateQueries({ queryKey: publicKeys.announcements() });
@@ -31,6 +41,7 @@ export function useAnnouncementsRealtime(enabled = true) {
     client.on('announcement:changed', invalidate);
     return () => {
       client.off('announcement:changed', invalidate);
+      releaseAnnouncementsSocket();
     };
   }, [enabled, queryClient]);
 }

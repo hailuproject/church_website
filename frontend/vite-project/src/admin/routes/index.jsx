@@ -69,6 +69,7 @@ export const AppRoutes = () => (
 
     <Route path="forbidden" element={withSuspense(<ErrorPages mode="forbidden" />)} />
     <Route path="404" element={withSuspense(<ErrorPages mode="404" />)} />
+    <Route path="*" element={<Navigate to="404" replace />} />
   </Routes>
 );
 

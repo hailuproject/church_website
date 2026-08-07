@@ -7,10 +7,11 @@ import { contactService } from '../../services/donation.service';
 import { sacramentService } from '../../services/membership.service';
 import { Badge } from '../ui/Badge';
 import { cn } from '../../utils/helpers';
+import { getHomePath } from '../../utils/permissions';
 
 export const NotificationDropdown = () => {
   const navigate = useNavigate();
-  const { hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
 
   const canContact = hasPermission('manage:contact');
   const canSacrament = hasPermission('manage:sacraments');
@@ -70,7 +71,7 @@ export const NotificationDropdown = () => {
           </DropdownItem>
         )}
         {canSacrament && (
-          <DropdownItem icon={Church} onClick={() => navigate('/sacraments?status=pending')}>
+          <DropdownItem icon={Church} onClick={() => navigate('/admin/sacraments?status=pending')}>
             <div className="flex flex-1 items-center justify-between gap-2">
               <span>Pending sacrament requests</span>
               <Badge tone={pendingSacraments > 0 ? 'warning' : 'success'}>{pendingSacraments || 0}</Badge>
@@ -78,13 +79,13 @@ export const NotificationDropdown = () => {
           </DropdownItem>
         )}
         {canContact && (
-          <DropdownItem icon={Activity} onClick={() => navigate('/admin/dashboard')}>
+          <DropdownItem icon={Activity} onClick={() => navigate(getHomePath(user?.role))}>
             Dashboard analytics
           </DropdownItem>
         )}
       </div>
       <DropdownDivider />
-      <DropdownItem onClick={() => navigate('/admin/dashboard')} className="justify-center text-center font-medium text-primary-600 dark:text-primary-400">
+      <DropdownItem onClick={() => navigate(getHomePath(user?.role))} className="justify-center text-center font-medium text-primary-600 dark:text-primary-400">
         View dashboard
       </DropdownItem>
     </Dropdown>

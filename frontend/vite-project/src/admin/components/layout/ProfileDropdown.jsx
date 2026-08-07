@@ -5,7 +5,7 @@ import { Avatar } from '../ui/Avatar';
 import { useAuth } from '../../context/AuthContext';
 
 export const ProfileDropdown = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, hasPermission } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -28,9 +28,11 @@ export const ProfileDropdown = () => {
       <DropdownItem icon={User} onClick={() => navigate('/admin/profile')}>
         My Profile
       </DropdownItem>
-      <DropdownItem icon={Settings} onClick={() => navigate('/admin/settings')}>
-        Settings
-      </DropdownItem>
+      {hasPermission('manage:settings') && (
+        <DropdownItem icon={Settings} onClick={() => navigate('/admin/settings')}>
+          Settings
+        </DropdownItem>
+      )}
       <DropdownItem icon={ExternalLink} onClick={() => navigate('/')}>
         View Website
       </DropdownItem>
