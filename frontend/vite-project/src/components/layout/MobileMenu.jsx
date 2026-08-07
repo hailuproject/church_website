@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiLock } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
+import Button from '../Button';
 import { socialLinks } from '../../data/navigation';
 
 const overlay = {
@@ -64,6 +65,13 @@ export default function MobileMenu({ isOpen, onClose }) {
             <div className="px-6 py-4 border-t border-border">
               <div className="flex items-center justify-between mb-4">
                 <LanguageSwitcher />
+              </div>
+
+              <div className="mb-4">
+                <Button href="/admin/login" variant="outline-dark" size="sm" className="w-full" ariaLabel="Admin Login">
+                  <FiLock className="text-sm" />
+                  Admin Login
+                </Button>
               </div>
 
               {/* Social */}

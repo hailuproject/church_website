@@ -1,19 +1,40 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMapPin, FiPhone, FiMail, FiClock, FiArrowRight } from 'react-icons/fi';
-import { footerQuickLinks, footerServices, socialLinks } from '../../data/navigation';
+import { FiFacebook, FiYoutube, FiSend, FiInstagram, FiTwitter } from 'react-icons/fi';
+import { footerQuickLinks, footerServices } from '../../data/navigation';
+import { useChurch } from '../../hooks/useHomeSections';
 
-const contactItems = [
-  { icon: FiMapPin, label: 'Address', value: '123 Orthodox Way, Faith City, ST 12345' },
-  { icon: FiPhone, label: 'Phone', value: '(555) 123-4567' },
-  { icon: FiMail, label: 'Email', value: 'info@ethiopianorthodox.org' },
-  { icon: FiClock, label: 'Office Hours', value: 'Mon–Fri: 9:00 AM – 5:00 PM' },
-];
+const socialIcons = {
+  facebook: FiFacebook,
+  twitter: FiTwitter,
+  youtube: FiYoutube,
+  telegram: FiSend,
+  instagram: FiInstagram,
+  tiktok: null,
+};
 
 export default function Footer() {
+  const church = useChurch();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState('');
+
+  const contactItems = [
+    { icon: FiMapPin, label: 'Address', value: church.address || 'Address coming soon' },
+    { icon: FiPhone, label: 'Phone', value: church.phone || 'Phone coming soon' },
+    { icon: FiMail, label: 'Email', value: church.email || 'Email coming soon' },
+    { icon: FiClock, label: 'Office Hours', value: 'Mon–Fri: 9:00 AM – 5:00 PM' },
+  ];
+
+  const socialLinks = Object.entries(church.socialLinks || {})
+    .filter(([, href]) => href)
+    .map(([key, href]) => ({ key, icon: socialIcons[key], href }))
+    .filter((link) => link.icon);
+
+  const mapsUrl = church.address
+    ? `https://maps.google.com/?q=${encodeURIComponent(church.address)}`
+    : 'https://maps.google.com';
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -39,22 +60,30 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <div className="mb-5">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xs bg-primary flex items-center justify-center shadow-md">
-                  <span className="text-2xl leading-none font-bold">☦</span>
-                </div>
+                {church.logo ? (
+                  <img
+                    src={church.logo}
+                    alt={`${church.name} logo`}
+                    className="w-9 h-9 object-contain"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-xs bg-primary flex items-center justify-center shadow-md">
+                    <span className="text-2xl leading-none font-bold">☦</span>
+                  </div>
+                )}
                 <div className="flex flex-col leading-none">
                   <span className="text-sm font-bold text-white tracking-tight">
-                    Ethiopian Orthodox
+                    {church.name}
                   </span>
                   <span className="text-[11px] font-medium text-secondary tracking-wide">
-                    Tewahedo Church
+                    {church.tagline}
                   </span>
                 </div>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
-              Serving God and His people through faith, tradition, and love. Join our community
-              and experience the beauty of the Ethiopian Orthodox heritage.
+              {church.footerText ||
+                'Serving God and His people through faith, tradition, and love. Join our community and experience the beauty of the Ethiopian Orthodox heritage.'}
             </p>
 
             {/* Social */}
@@ -63,12 +92,12 @@ export default function Footer() {
                 const Icon = link.icon;
                 return (
                   <motion.a
-                    key={link.label}
+                    key={link.key}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 flex items-center justify-center rounded-xs bg-white/5 hover:bg-primary/20 text-gray-400 hover:text-primary transition-all duration-300"
-                    aria-label={link.label}
+                    aria-label={link.key}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -143,7 +172,7 @@ export default function Footer() {
               })}
             </div>
             <a
-              href="https://maps.google.com"
+              href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-secondary hover:text-secondary-light transition-colors duration-200"
@@ -208,7 +237,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Ethiopian Orthodox Tewahedo Church. All rights reserved.
+            &copy; {new Date().getFullYear()} {church.name} {church.tagline ? `(${church.tagline})` : 'Church'}. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-sm text-gray-500">
             Built with <span className="text-primary mx-1">&hearts;</span> for the Church
@@ -222,6 +251,10 @@ export default function Footer() {
             </a>
             <a href="/accessibility" className="text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200">
               Accessibility
+            </a>
+            <span className="text-gray-600" aria-hidden="true">|</span>
+            <a href="/admin/login" className="text-sm text-gray-500 hover:text-secondary transition-colors duration-200">
+              Admin Login
             </a>
           </div>
         </div>

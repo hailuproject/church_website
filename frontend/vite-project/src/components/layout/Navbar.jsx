@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiMenu } from 'react-icons/fi';
+import { FiMenu, FiLock } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
 import MobileMenu from './MobileMenu';
+import Button from '../Button';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,6 +51,10 @@ export default function Navbar() {
             {/* Right - Desktop actions */}
             <div className="hidden lg:flex items-center gap-2">
               <LanguageSwitcher />
+              <Button href="/admin/login" variant="outline-dark" size="sm">
+                <FiLock className="text-sm" />
+                Admin Login
+              </Button>
             </div>
 
             {/* Mobile - Hamburger */}
