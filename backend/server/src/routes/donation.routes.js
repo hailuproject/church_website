@@ -22,6 +22,7 @@ import {
   paymentHistoryValidation,
   changeStatusValidation,
   listDonationsValidation,
+  exportDonationsValidation,
 } from '../validators/donation.validators.js';
 import { objectIdValidator } from '../validators/common.validators.js';
 
@@ -52,7 +53,7 @@ router.get(
   '/export',
   authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY),
   hasPermission(PERMISSIONS.MANAGE_DONATIONS),
-  validate(listDonationsValidation),
+  validate(exportDonationsValidation),
   exportDonationsCSV
 );
 

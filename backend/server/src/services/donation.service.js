@@ -136,8 +136,8 @@ class DonationService {
     return updated;
   }
 
-  async sendReceipt(donation) {
-    if (!donation.email || donation.receiptSent) return null;
+  async sendReceipt(donation, { force = false } = {}) {
+    if (!donation.email || (!force && donation.receiptSent)) return null;
     const sent = await sendEmail({
       to: donation.email,
       subject: `Donation receipt ${donation.receiptNumber}`,

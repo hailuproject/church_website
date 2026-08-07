@@ -47,7 +47,13 @@ export const getDonationReceipt = asyncHandler(async (req, res) => {
 
 export const resendDonationReceipt = asyncHandler(async (req, res) => {
   const donation = await donationService.getById(req.params.id);
-  await donationService.sendReceipt(donation);
+  const sent = await donationService.sendReceipt(donation, { force: true });
+  if (!sent) {
+    throw new AppError(
+      donation.email ? 'Receipt email could not be sent' : 'Donation has no donor email',
+      400
+    );
+  }
   sendSuccess(res, { message: 'Receipt sent to donor email' });
 });
 
