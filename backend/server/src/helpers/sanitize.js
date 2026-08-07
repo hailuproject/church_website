@@ -16,11 +16,22 @@ export const sanitizeInput = (value) => {
 };
 
 export const sanitizeBody = (body) => {
+  if (typeof body === 'string') return sanitizeInput(body);
+  if (Buffer.isBuffer(body)) return body;
+  if (!body || typeof body !== 'object') return body;
+  if (Array.isArray(body)) return body.map((item) => sanitizeBody(item));
   const sanitized = {};
-  for (const [key, value] of Object.entries(body || {})) {
-    sanitized[key] = sanitizeInput(value);
+  for (const [key, value] of Object.entries(body)) {
+    sanitized[key] = sanitizeBody(value);
   }
   return sanitized;
 };
 
-export default { stripPrivateFields, sanitizeInput, sanitizeBody };
+export const sanitizeMutationBody = (req, res, next) => {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    req.body = sanitizeBody(req.body);
+  }
+  next();
+};
+
+export default { stripPrivateFields, sanitizeInput, sanitizeBody, sanitizeMutationBody };

@@ -12,6 +12,14 @@ const numberOr = (value, fallback) => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
 
+const durationToMs = (value, fallback) => {
+  if (typeof value !== 'string') return fallback;
+  const match = value.trim().match(/^(\d+)(ms|s|m|h|d)$/i);
+  if (!match) return fallback;
+  const multipliers = { ms: 1, s: 1000, m: 60 * 1000, h: 60 * 60 * 1000, d: 24 * 60 * 60 * 1000 };
+  return Number(match[1]) * multipliers[match[2].toLowerCase()];
+};
+
 const config = {
   env: process.env.NODE_ENV || 'development',
   port: numberOr(process.env.PORT, 5000),
@@ -29,7 +37,8 @@ const config = {
     refreshExpire: process.env.REFRESH_TOKEN_EXPIRE || '7d',
     accessCookieName: process.env.ACCESS_TOKEN_COOKIE_NAME || 'church_access_token',
     refreshCookieName: process.env.REFRESH_TOKEN_COOKIE_NAME || 'church_refresh_token',
-    refreshCookieMaxAgeMs: 7 * 24 * 60 * 60 * 1000,
+    accessCookieMaxAgeMs: durationToMs(process.env.ACCESS_TOKEN_EXPIRE || '15m', 15 * 60 * 1000),
+    refreshCookieMaxAgeMs: durationToMs(process.env.REFRESH_TOKEN_EXPIRE || '7d', 7 * 24 * 60 * 60 * 1000),
   },
 
   cloudinary: {
@@ -60,7 +69,7 @@ const config = {
   },
 
   isProd: process.env.NODE_ENV === 'production',
-  isDev: process.env.NODE_ENV !== 'production',
+  isDev: process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
 };
 
 export default config;

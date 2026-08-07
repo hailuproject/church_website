@@ -47,6 +47,8 @@ process.on('unhandledRejection', (reason) => {
 });
 process.on('uncaughtException', (error) => {
   logger.error(`Uncaught exception: ${error.message}`);
+  logger.error(error.stack);
+  process.exit(1);
 });
 
 startServer();

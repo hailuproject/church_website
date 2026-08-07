@@ -5,7 +5,7 @@ export const setAuthCookies = (res, { accessToken, refreshToken }) => {
     httpOnly: true,
     secure: config.isProd,
     sameSite: 'lax',
-    maxAge: 15 * 60 * 1000,
+    maxAge: config.jwt.accessCookieMaxAgeMs,
   });
   res.cookie(config.jwt.refreshCookieName, refreshToken, {
     httpOnly: true,

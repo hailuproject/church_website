@@ -43,7 +43,11 @@ class AuthRepository extends BaseRepository {
   }
 
   async findRefreshToken(tokenHash) {
-    return RefreshToken.findOne({ tokenHash, revokedAt: null }).populate('admin');
+    return RefreshToken.findOne({
+      tokenHash,
+      revokedAt: null,
+      expiresAt: { $gt: new Date() },
+    }).populate('admin');
   }
 
   async revokeRefreshToken(tokenHash, replacedBy = null) {

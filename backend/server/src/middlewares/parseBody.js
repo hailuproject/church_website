@@ -1,5 +1,10 @@
 const BRACKET_KEY_RE = /^([^\[]+)((\[\d+\]|\[[^\]]*\])+)$/;
 
+const DANGEROUS_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
+
+const isSafeSegment = (segment) =>
+  typeof segment !== 'string' || !DANGEROUS_SEGMENTS.has(segment.toLowerCase());
+
 const parseKey = (key) => {
   const match = BRACKET_KEY_RE.exec(key);
   if (!match) return [key];
@@ -17,6 +22,7 @@ const setAtPath = (target, segments, value) => {
   for (let i = 0; i < segments.length - 1; i += 1) {
     const segment = segments[i];
     const nextSegment = segments[i + 1];
+    if (!isSafeSegment(segment)) continue;
     if (typeof segment === 'number' || /^\d+$/.test(String(segment))) {
       if (!Array.isArray(cursor)) cursor = [];
     } else if (cursor === null || typeof cursor !== 'object' || Array.isArray(cursor)) {
@@ -28,6 +34,7 @@ const setAtPath = (target, segments, value) => {
     cursor = cursor[segment];
   }
   const lastSegment = segments[segments.length - 1];
+  if (!isSafeSegment(lastSegment)) return;
   if (typeof lastSegment === 'number' || /^\d+$/.test(String(lastSegment))) {
     if (!Array.isArray(cursor)) cursor = [];
   } else if (cursor === null || typeof cursor !== 'object' || Array.isArray(cursor)) {

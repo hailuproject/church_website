@@ -25,7 +25,9 @@ export const initSockets = (server) => {
 
   io = new Server(server, {
     cors: {
-      origin: config.clientUrl,
+      origin: config.clientUrl
+        ? config.clientUrl.split(',').map((url) => url.trim())
+        : '*',
       credentials: true,
     },
   });

@@ -15,6 +15,7 @@ import { notFound, globalErrorHandler } from './src/middlewares/errorHandler.js'
 import { apiLimiter } from './src/middlewares/rateLimiter.js';
 import { requestLogger } from './src/utils/logger.js';
 import { normalizeBody } from './src/middlewares/parseBody.js';
+import { sanitizeMutationBody } from './src/helpers/sanitize.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,10 +39,15 @@ app.use(
   })
 );
 app.use(compression());
+app.post(
+  `${config.apiPrefix}/donations/webhook/stripe`,
+  express.raw({ type: 'application/json' })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 app.use(normalizeBody);
+app.use(sanitizeMutationBody);
 
 if (config.isDev) {
   app.use(morgan('dev'));
@@ -56,7 +62,7 @@ try {
   swaggerDocument = null;
 }
 
-if (swaggerDocument) {
+if (config.isDev && swaggerDocument) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
