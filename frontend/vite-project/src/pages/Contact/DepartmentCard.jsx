@@ -51,20 +51,30 @@ export default function DepartmentCard({ department, index }) {
       <p className="text-sm text-muted leading-relaxed mb-4">{department.description}</p>
 
       <div className="flex flex-col gap-2 pt-3 border-t border-border">
-        <a
-          href={`tel:${department.phone.replace(/\D/g, '')}`}
-          className="flex items-center gap-2 text-xs text-muted hover:text-primary transition-colors duration-300"
-        >
-          <FiPhone className="w-3.5 h-3.5 flex-shrink-0" />
-          {department.phone}
-        </a>
-        <a
-          href={`mailto:${department.email}`}
-          className="flex items-center gap-2 text-xs text-muted hover:text-primary transition-colors duration-300"
-        >
-          <FiMail className="w-3.5 h-3.5 flex-shrink-0" />
-          <span className="truncate">{department.email}</span>
-        </a>
+        {department.phone && (
+          <a
+            href={`tel:${department.phone.replace(/\D/g, '')}`}
+            className="flex items-center gap-2 text-xs text-muted hover:text-primary transition-colors duration-300"
+          >
+            <FiPhone className="w-3.5 h-3.5 flex-shrink-0" />
+            {department.phone}
+          </a>
+        )}
+        {department.email && (
+          <a
+            href={`mailto:${department.email}`}
+            className="flex items-center gap-2 text-xs text-muted hover:text-primary transition-colors duration-300"
+          >
+            <FiMail className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">{department.email}</span>
+          </a>
+        )}
+        {!department.phone && !department.email && (
+          <p className="flex items-center gap-2 text-xs text-muted">
+            <FiMail className="w-3.5 h-3.5 flex-shrink-0" />
+            Contact the church office
+          </p>
+        )}
       </div>
     </motion.div>
   );

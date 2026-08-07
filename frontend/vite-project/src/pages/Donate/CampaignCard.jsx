@@ -88,9 +88,6 @@ export default function CampaignCard() {
                 Donate to Campaign
                 <FiArrowRight className="text-lg" />
               </Button>
-              <Button href="#" variant="outline-dark" size="md">
-                Learn More
-              </Button>
             </div>
           </motion.div>
         </div>

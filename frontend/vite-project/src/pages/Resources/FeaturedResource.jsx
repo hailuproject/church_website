@@ -93,14 +93,12 @@ export default function FeaturedResource() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
-              <Button href="#" variant="primary" size="md">
-                <FiBookOpen className="text-lg" />
-                Read Online
-              </Button>
-              <Button href="#" variant="outline-dark" size="md">
-                <FiDownload className="text-lg" />
-                Download PDF
-              </Button>
+              {featuredResource.fileUrl && (
+                <Button href={featuredResource.fileUrl} target="_blank" rel="noopener noreferrer" variant="primary" size="md">
+                  <FiDownload className="text-lg" />
+                  Download PDF
+                </Button>
+              )}
             </div>
           </motion.div>
         </div>

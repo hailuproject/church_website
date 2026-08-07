@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { FiArrowRight } from 'react-icons/fi';
 
 export default function SaintCard({ saint, index }) {
   return (
@@ -35,13 +34,6 @@ export default function SaintCard({ saint, index }) {
         <p className="text-sm text-muted leading-relaxed line-clamp-3 mb-4">
           {saint.description}
         </p>
-        <a
-          href="#"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
-        >
-          Learn More
-          <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </a>
       </div>
     </motion.div>
   );

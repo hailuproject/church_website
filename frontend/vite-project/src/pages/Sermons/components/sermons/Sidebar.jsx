@@ -47,7 +47,7 @@ function UpcomingServices() {
         ))}
       </div>
       <a
-        href="/schedule"
+        href="/contact#schedule"
         className="flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:text-primary-dark mt-4 pt-3 border-t border-border transition-colors"
       >
         Full Schedule
@@ -89,7 +89,7 @@ function PopularSermons() {
 function PrayerRequestButton() {
   return (
     <motion.a
-      href="/prayer-request"
+      href="/contact#form"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className="flex items-center justify-center gap-2.5 bg-primary/5 border border-primary/20 text-primary font-semibold text-sm px-6 py-4 rounded-xs hover:bg-primary hover:text-white transition-all duration-300"

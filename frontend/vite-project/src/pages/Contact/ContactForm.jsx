@@ -167,7 +167,7 @@ export default function ContactForm() {
                   type="tel"
                   {...register('phone')}
                   className="rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
-                  placeholder="(555) 000-0000"
+                  placeholder="Your phone number"
                 />
               </div>
 
@@ -241,11 +241,8 @@ export default function ContactForm() {
                 className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 cursor-pointer accent-primary"
               />
               <label htmlFor="privacy" className="text-xs text-muted cursor-pointer">
-                I agree to the{' '}
-                <a href="#" className="text-primary hover:text-primary-dark underline">
-                  privacy policy
-                </a>{' '}
-                and consent to being contacted regarding my inquiry.
+                I agree to the church&apos;s privacy practices and consent to being contacted
+                regarding my inquiry.
               </label>
             </div>
             {errors.privacy && (

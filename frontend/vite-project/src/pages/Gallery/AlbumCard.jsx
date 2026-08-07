@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FiCalendar, FiImage, FiArrowRight } from 'react-icons/fi';
+import { FiCalendar, FiImage } from 'react-icons/fi';
 
 export default function AlbumCard({ album, index }) {
   return (
@@ -45,14 +45,6 @@ export default function AlbumCard({ album, index }) {
         <p className="text-sm text-muted leading-relaxed line-clamp-2">
           {album.description}
         </p>
-
-        <a
-          href="#"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300 pt-2"
-        >
-          View Album
-          <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </a>
       </div>
     </motion.div>
   );

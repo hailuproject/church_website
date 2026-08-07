@@ -1,6 +1,4 @@
 import { motion } from 'framer-motion';
-import { FiArrowRight } from 'react-icons/fi';
-import Button from '../../components/Button';
 
 export default function CommunityCard({ item, index }) {
   return (
@@ -31,10 +29,6 @@ export default function CommunityCard({ item, index }) {
           {item.title}
         </h3>
         <p className="text-sm text-muted leading-relaxed">{item.description}</p>
-        <Button href="#" variant="outline-dark" size="sm" className="self-start">
-          Learn More
-          <FiArrowRight className="text-sm" />
-        </Button>
       </div>
     </motion.div>
   );

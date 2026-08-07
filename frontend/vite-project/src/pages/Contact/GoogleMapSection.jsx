@@ -1,33 +1,49 @@
 import { motion } from 'framer-motion';
-import { FiMapPin, FiPhone, FiGlobe, FiExternalLink } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiExternalLink } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
-import { mapData } from '../../data/contactData';
+import { useChurch } from '../../hooks/useHomeSections';
+
+const encodeQuery = (value) => encodeURIComponent(value).replace(/%20/g, '+');
 
 export default function GoogleMapSection() {
+  const church = useChurch();
+  const address = church.address || '';
+  const phone = church.phone || '';
+  const email = church.email || '';
+  const mapsUrl = address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeQuery(address)}`
+    : 'https://www.google.com/maps';
+
   return (
     <Section id="location" className="bg-surface">
       <Container>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           <motion.div
-            className="relative overflow-hidden rounded-xs shadow-lg"
+            className="relative overflow-hidden rounded-xs shadow-lg bg-white border border-border flex flex-col"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <iframe
-              src={mapData.embedUrl}
-              width="100%"
-              height="450"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Church location on Google Maps"
-              className="w-full rounded-xs"
-            />
+            <div className="flex flex-col items-center justify-center gap-4 min-h-[320px] p-8 text-center bg-surface/50">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <FiMapPin className="w-7 h-7 text-primary" />
+              </div>
+              <div className="max-w-md">
+                <h3 className="text-lg font-bold text-text mb-1">{church.name || 'Our Church'}</h3>
+                <p className="text-sm text-muted leading-relaxed">
+                  {address || 'Visit us at our church location. Contact the office for directions.'}
+                </p>
+              </div>
+            </div>
+            <div className="p-5 border-t border-border flex justify-center">
+              <Button href={mapsUrl} target="_blank" rel="noopener noreferrer" variant="outline-dark" size="md">
+                <FiExternalLink className="text-lg" />
+                Open in Google Maps
+              </Button>
+            </div>
           </motion.div>
 
           <motion.div
@@ -47,64 +63,64 @@ export default function GoogleMapSection() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
-                <FiMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <h4 className="text-sm font-bold text-text">Full Address</h4>
-                  <p className="text-sm text-muted mt-1">{mapData.address}</p>
+              {address && (
+                <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
+                  <FiMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-text">Full Address</h4>
+                    <p className="text-sm text-muted mt-1">{address}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
-                <FiPhone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <h4 className="text-sm font-bold text-text">Phone</h4>
-                  <p className="text-sm text-muted mt-1">{mapData.phone}</p>
+              {phone && (
+                <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
+                  <FiPhone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-text">Phone</h4>
+                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-sm text-muted mt-1 block hover:text-primary">
+                      {phone}
+                    </a>
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
-                <FiGlobe className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <h4 className="text-sm font-bold text-text">Website</h4>
-                  <p className="text-sm text-muted mt-1">{mapData.website}</p>
+              {email && (
+                <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
+                  <FiMail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-text">Email</h4>
+                    <a href={`mailto:${email}`} className="text-sm text-muted mt-1 block hover:text-primary">
+                      {email}
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )}
 
-            <div className="bg-white rounded-xs p-5 border border-border">
-              <h4 className="text-sm font-bold text-text uppercase tracking-wider mb-3">
-                Directions
-              </h4>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <span className="text-xs font-semibold text-secondary">Parking</span>
-                  <p className="text-sm text-muted mt-0.5">{mapData.parking}</p>
+              {!address && !phone && !email && (
+                <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
+                  <FiMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-text">Location</h4>
+                    <p className="text-sm text-muted mt-1">
+                      Contact the church office for our address and contact details.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-xs font-semibold text-secondary">Public Transit</span>
-                  <p className="text-sm text-muted mt-0.5">{mapData.transit}</p>
-                </div>
-                <div>
-                  <span className="text-xs font-semibold text-secondary">Landmark</span>
-                  <p className="text-sm text-muted mt-0.5">{mapData.landmark}</p>
-                </div>
-              </div>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
-              <Button
-                href="https://maps.google.com"
-                variant="primary"
-                size="md"
-              >
+              <Button href={mapsUrl} target="_blank" rel="noopener noreferrer" variant="primary" size="md">
                 <FiExternalLink className="text-lg" />
                 Open in Google Maps
               </Button>
-              <Button href="tel:+15551234567" variant="outline-dark" size="md">
-                <FiPhone className="text-lg" />
-                Call Church
-              </Button>
+              {phone && (
+                <Button href={`tel:${phone.replace(/\s/g, '')}`} variant="outline-dark" size="md">
+                  <FiPhone className="text-lg" />
+                  Call Church
+                </Button>
+              )}
             </div>
           </motion.div>
         </div>

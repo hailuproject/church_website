@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { FiClock, FiMapPin, FiArrowRight } from 'react-icons/fi';
+import { FiClock, FiMapPin } from 'react-icons/fi';
 
 const EventCard = memo(function EventCard({ event, delay = 0 }) {
   const dateObj = new Date(event.date + 'T00:00:00');
@@ -57,16 +57,6 @@ const EventCard = memo(function EventCard({ event, delay = 0 }) {
             <span>{event.location}</span>
           </div>
         </div>
-
-        <motion.a
-          href="#"
-          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors duration-300"
-          whileHover={{ x: 4 }}
-          transition={{ duration: 0.2 }}
-        >
-          View Details
-          <FiArrowRight className="text-sm" />
-        </motion.a>
       </div>
     </motion.article>
   );

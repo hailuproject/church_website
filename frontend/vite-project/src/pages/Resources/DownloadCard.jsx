@@ -41,15 +41,23 @@ export default function DownloadCard({ item, index }) {
         </div>
       </div>
 
-      <motion.a
-        href="#"
-        className="flex items-center justify-center w-10 h-10 rounded-xs bg-surface text-primary hover:bg-primary hover:text-white transition-all duration-500 flex-shrink-0"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label={`Download ${item.title}`}
-      >
-        <FiDownload className="w-4 h-4" />
-      </motion.a>
+      {item.url ? (
+        <motion.a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-10 h-10 rounded-xs bg-surface text-primary hover:bg-primary hover:text-white transition-all duration-500 flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={`Download ${item.title}`}
+        >
+          <FiDownload className="w-4 h-4" />
+        </motion.a>
+      ) : (
+        <span className="flex items-center justify-center w-10 h-10 rounded-xs bg-surface text-muted flex-shrink-0">
+          <FiDownload className="w-4 h-4" />
+        </span>
+      )}
     </motion.div>
   );
 }

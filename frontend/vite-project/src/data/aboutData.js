@@ -288,14 +288,14 @@ export const visitUsData = {
       {
         icon: "location",
         label: "Address",
-        value: "123 Orthodox Way, Faith City, ST 12345",
+        value: "Contact the church office for our address and directions.",
       },
-      { icon: "phone", label: "Phone", value: "(555) 123-4567" },
-      { icon: "email", label: "Email", value: "info@ethiopianorthodox.org" },
+      { icon: "phone", label: "Phone", value: "Contact the church office during office hours." },
+      { icon: "email", label: "Email", value: "Contact the church office for the correct email address." },
       {
         icon: "clock",
         label: "Office Hours",
-        value: "Mon\u2013Fri: 9:00 AM \u2013 5:00 PM",
+        value: "Sunday: 6:00 AM \u2013 1:00 PM",
       },
     ],
     image:

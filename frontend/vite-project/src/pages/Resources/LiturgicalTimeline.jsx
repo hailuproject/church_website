@@ -82,10 +82,12 @@ export default function LiturgicalTimeline() {
                       <p className="text-sm text-muted leading-relaxed mb-4">
                         {resource.description}
                       </p>
-                      <Button href="#" variant="outline-dark" size="sm">
-                        <FiDownload className="text-sm" />
-                        Download
-                      </Button>
+                      {resource.fileUrl && (
+                        <Button href={resource.fileUrl} target="_blank" rel="noopener noreferrer" variant="outline-dark" size="sm">
+                          <FiDownload className="text-sm" />
+                          Download
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </motion.div>

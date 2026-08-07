@@ -44,7 +44,7 @@ export default function LeaderCard({ name, role, bio, image, delay = 0 }) {
         <h3 className="text-xl font-bold text-text mt-1 mb-3">{name}</h3>
         <p className="text-sm text-muted leading-relaxed mb-4">{bio}</p>
         <a
-          href={`mailto:info@ethiopianorthodox.org`}
+          href="/contact#form"
           className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors duration-300"
           aria-label={`Contact ${name}`}
         >

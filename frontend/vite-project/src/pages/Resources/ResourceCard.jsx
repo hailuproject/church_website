@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FiDownload, FiBookOpen } from 'react-icons/fi';
+import { FiDownload } from 'react-icons/fi';
 
 export default function ResourceCard({ resource, index }) {
   return (
@@ -48,20 +48,17 @@ export default function ResourceCard({ resource, index }) {
         </div>
 
         <div className="flex items-center gap-3 pt-2 border-t border-border mt-1">
-          <a
-            href="#"
-            className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
-          >
-            <FiBookOpen className="w-3.5 h-3.5" />
-            Read
-          </a>
-          <a
-            href="#"
-            className="flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-primary transition-colors duration-300"
-          >
-            <FiDownload className="w-3.5 h-3.5" />
-            Download
-          </a>
+          {resource.fileUrl && (
+            <a
+              href={resource.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
+            >
+              <FiDownload className="w-3.5 h-3.5" />
+              Download
+            </a>
+          )}
         </div>
       </div>
     </motion.div>

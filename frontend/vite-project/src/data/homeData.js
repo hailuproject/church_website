@@ -379,7 +379,7 @@ export const faqs = [
   {
     question: 'Where is the church located?',
     answer:
-      'We are located at 123 Orthodox Way, Faith City, ST 12345. There is ample parking available, and the church is wheelchair accessible.',
+      'We are located at the address shared on our Contact page. Ample parking is available, and the church is wheelchair accessible.',
   },
   {
     question: 'Is parking available?',
