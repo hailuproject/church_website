@@ -7,6 +7,7 @@ import {
   deleteHeroSlide,
   addQuickLink,
   removeQuickLink,
+  updateQuickLink,
 } from '../controllers/home.controller.js';
 import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
@@ -47,5 +48,12 @@ router.post(
 );
 
 router.delete('/quick-links/:index', hasPermission(PERMISSIONS.MANAGE_HOME), removeQuickLink);
+
+router.patch(
+  '/quick-links/:index',
+  hasPermission(PERMISSIONS.MANAGE_HOME),
+  validate(addQuickLinkValidation),
+  updateQuickLink
+);
 
 export default router;

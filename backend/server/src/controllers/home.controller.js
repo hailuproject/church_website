@@ -47,6 +47,13 @@ export const removeQuickLink = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Quick link removed', data });
 });
 
+export const updateQuickLink = asyncHandler(async (req, res) => {
+  const index = parseInt(req.params.index, 10);
+  if (Number.isNaN(index)) throw new AppError('Invalid quick link index', 400);
+  const data = await homeService.updateQuickLink(index, req.body, req.admin, getRequestMeta(req));
+  sendSuccess(res, { message: 'Quick link updated', data });
+});
+
 export default {
   getPublicHome,
   getAdminHome,
@@ -55,4 +62,5 @@ export default {
   deleteHeroSlide,
   addQuickLink,
   removeQuickLink,
+  updateQuickLink,
 };
