@@ -1,13 +1,5 @@
 import { Router } from 'express';
-import {
-  getOverview,
-  getRecentActivities,
-  getRecentSermons,
-  getRecentEvents,
-  getRecentDonations,
-  getRecentMessages,
-  getFullDashboard,
-} from '../controllers/dashboard.controller.js';
+import { getOverview, getRecentActivities } from '../controllers/dashboard.controller.js';
 import { authenticate, authorize } from '../middlewares/auth.js';
 import { ROLES } from '../constants/index.js';
 
@@ -17,10 +9,6 @@ router.use(authenticate, authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PRIEST,
 
 router.get('/overview', getOverview);
 router.get('/recent-activities', getRecentActivities);
-router.get('/recent-sermons', getRecentSermons);
-router.get('/recent-events', getRecentEvents);
-router.get('/recent-donations', getRecentDonations);
-router.get('/recent-messages', getRecentMessages);
-router.get('/', getFullDashboard);
+router.get('/', getOverview);
 
 export default router;
