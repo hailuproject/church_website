@@ -11,7 +11,6 @@ import {
   getPaymentHistory,
   getMonthlyDonations,
   exportDonationsCSV,
-  stripeWebhook,
 } from '../controllers/donation.controller.js';
 import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
@@ -27,8 +26,6 @@ import {
 import { objectIdValidator } from '../validators/common.validators.js';
 
 const router = Router();
-
-router.post('/webhook/stripe', stripeWebhook);
 
 router.post('/', validate(createDonationValidation), createDonation);
 router.get('/history', validate(paymentHistoryValidation), getPaymentHistory);

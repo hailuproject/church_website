@@ -9,25 +9,15 @@ export const ROLES = {
 export const ROLE_VALUES = Object.values(ROLES);
 
 export const PERMISSIONS = {
-  // Content
-  MANAGE_ANNOUNCEMENTS: 'manage:announcements',
+  MANAGE_CONTENT: 'manage:content',
   MANAGE_SERMONS: 'manage:sermons',
   MANAGE_EVENTS: 'manage:events',
-  MANAGE_SACRAMENTS: 'manage:sacraments',
   MANAGE_GALLERY: 'manage:gallery',
   MANAGE_RESOURCES: 'manage:resources',
-  MANAGE_MEMBERSHIP: 'manage:membership',
   MANAGE_DONATIONS: 'manage:donations',
   MANAGE_CONTACT: 'manage:contact',
-  MANAGE_HOME: 'manage:home',
-  MANAGE_ABOUT: 'manage:about',
-  MANAGE_LEADERSHIP: 'manage:leadership',
   MANAGE_SETTINGS: 'manage:settings',
-  MANAGE_LANGUAGES: 'manage:languages',
-  // System
   MANAGE_USERS: 'manage:users',
-  MANAGE_MEDIA: 'manage:media',
-  VIEW_ANALYTICS: 'view:analytics',
   VIEW_AUDIT_LOGS: 'view:audit-logs',
   MANAGE_ROLES: 'manage:roles',
 };
@@ -36,19 +26,17 @@ export const ROLE_PERMISSIONS = {
   [ROLES.SUPER_ADMIN]: Object.values(PERMISSIONS),
   [ROLES.ADMIN]: Object.values(PERMISSIONS),
   [ROLES.PRIEST]: [
+    PERMISSIONS.MANAGE_CONTENT,
     PERMISSIONS.MANAGE_SERMONS,
-    PERMISSIONS.MANAGE_SACRAMENTS,
     PERMISSIONS.MANAGE_EVENTS,
-    PERMISSIONS.MANAGE_ANNOUNCEMENTS,
-    PERMISSIONS.VIEW_ANALYTICS,
   ],
   [ROLES.SECRETARY]: [
-    PERMISSIONS.MANAGE_MEMBERSHIP,
+    PERMISSIONS.MANAGE_CONTENT,
     PERMISSIONS.MANAGE_DONATIONS,
     PERMISSIONS.MANAGE_CONTACT,
-    PERMISSIONS.VIEW_ANALYTICS,
   ],
   [ROLES.DEACON]: [
+    PERMISSIONS.MANAGE_CONTENT,
     PERMISSIONS.MANAGE_GALLERY,
     PERMISSIONS.MANAGE_RESOURCES,
     PERMISSIONS.MANAGE_EVENTS,
@@ -82,14 +70,13 @@ export const CLOUDINARY_FOLDERS = {
   GALLERY_VIDEOS: 'church/gallery/videos',
   RESOURCE_THUMBNAILS: 'church/resources/thumbnails',
   RESOURCE_FILES: 'church/resources/files',
-  MEMBERSHIP_DOCUMENTS: 'church/membership/documents',
   DONATION_RECEIPTS: 'church/donations/receipts',
-  HOME: 'church/home',
-  ABOUT: 'church/about',
+  CONTENT: 'church/content',
   MISC: 'church/misc',
 };
 
-export const ANNOUNCEMENT_PRIORITIES = ['Low', 'Normal', 'High', 'Critical'];
+export const CONTENT_KEYS = ['home', 'about', 'contact', 'donate', 'footer'];
+
 export const EVENT_CATEGORIES = ['Liturgy', 'Fasting', 'Feast', 'Wedding', 'Baptism', 'Seminar', 'Conference', 'Youth', 'Charity', 'Other'];
 export const EVENT_STATUSES = ['upcoming', 'ongoing', 'completed', 'cancelled'];
 export const SERMON_CATEGORIES = ['Sunday Sermon', 'Bible Study', 'Homily', 'Lent', 'Feast', 'Teaching', 'Other'];
@@ -97,11 +84,8 @@ export const SERMON_LANGUAGES = ['English', 'Amharic', 'Both', 'Other'];
 export const RESOURCE_CATEGORIES = ['Books', 'Prayers', 'Hymns', 'Scriptures', 'Liturgy', 'Music', 'Other'];
 export const RESOURCE_LANGUAGES = SERMON_LANGUAGES;
 export const GALLERY_CATEGORIES = ['Liturgy', 'Festival', 'Ordination', 'Baptism', 'Community', 'Conference', 'Other'];
-export const MEMBERSHIP_STATUSES = ['pending', 'approved', 'rejected', 'inactive'];
-export const SACRAMENT_TYPES = ['Baptism', 'Holy Communion', 'Confession', 'Matrimony', 'Anointing of the Sick', 'Ordination', 'House Blessing', 'Other'];
-export const SACRAMENT_STATUSES = ['pending', 'scheduled', 'confirmed', 'completed', 'cancelled', 'rejected'];
 export const DONATION_STATUSES = ['pending', 'completed', 'failed', 'refunded'];
-export const DONATION_PAYMENT_METHODS = ['stripe', 'telebirr', 'cbe-birr', 'cash', 'bank-transfer', 'other'];
+export const DONATION_PAYMENT_METHODS = ['cash', 'bank-transfer', 'telebirr', 'cbe-birr', 'other'];
 export const CONTACT_CATEGORIES = ['General', 'Prayer Request', 'Membership', 'Donation', 'Event', 'Bible Question', 'Support', 'Other'];
 export const CONTACT_STATUSES = ['new', 'read', 'replied', 'archived'];
 export const AUDIT_ACTIONS = ['create', 'update', 'delete', 'login', 'logout', 'register', 'approve', 'reject', 'status-change', 'upload', 'download', 'send', 'reset-password', 'verify-email'];
@@ -136,7 +120,7 @@ export const CONSTANTS = {
   MEDIA_TYPES,
   FILE_MIME_TYPES,
   CLOUDINARY_FOLDERS,
-  ANNOUNCEMENT_PRIORITIES,
+  CONTENT_KEYS,
   EVENT_CATEGORIES,
   EVENT_STATUSES,
   SERMON_CATEGORIES,
@@ -144,9 +128,6 @@ export const CONSTANTS = {
   RESOURCE_CATEGORIES,
   RESOURCE_LANGUAGES,
   GALLERY_CATEGORIES,
-  MEMBERSHIP_STATUSES,
-  SACRAMENT_TYPES,
-  SACRAMENT_STATUSES,
   DONATION_STATUSES,
   DONATION_PAYMENT_METHODS,
   CONTACT_CATEGORIES,

@@ -1,7 +1,7 @@
-import adminRepository from '../repositories/admin.repository.js';
-import authRepository from '../repositories/auth.repository.js';
+import Admin from '../models/Admin.js';
+import RefreshToken from '../models/RefreshToken.js';
 import AppError from '../utils/AppError.js';
-import { generateRandomToken, hashToken } from '../utils/tokens.js';
+import { paginateModel } from '../utils/paginateModel.js';
 import { sendEmail } from '../utils/email.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS, ROLES } from '../constants/index.js';
@@ -10,7 +10,11 @@ import bcrypt from 'bcrypt';
 
 class AdminService {
   async list(queryString) {
-    const result = await adminRepository.paginate(queryString);
+    const result = await paginateModel(Admin, queryString, {
+      searchableFields: ['name', 'email'],
+      filterWhitelist: ['role', 'isActive', 'isVerified'],
+      defaultSort: { createdAt: -1 },
+    });
     return {
       data: result.data.map((admin) => admin.toSafeObject()),
       pagination: result.pagination,
@@ -18,7 +22,7 @@ class AdminService {
   }
 
   async getById(id) {
-    const admin = await adminRepository.getSafeById(id);
+    const admin = await Admin.findById(id).select('-password -refreshToken -verificationToken -verificationTokenExpires -resetPasswordToken -resetPasswordExpires');
     if (!admin) throw new AppError('User not found', 404);
     return admin.toSafeObject();
   }
@@ -28,10 +32,10 @@ class AdminService {
       throw new AppError('Only a Super Admin can create another Super Admin', 403);
     }
 
-    const existing = await adminRepository.findByEmail(data.email);
+    const existing = await Admin.findOne({ email: data.email.toLowerCase() });
     if (existing) throw new AppError('An account with this email already exists', 409);
 
-    const admin = await adminRepository.create({
+    const admin = await Admin.create({
       name: data.name,
       email: data.email,
       phone: data.phone || '',
@@ -61,7 +65,7 @@ class AdminService {
   }
 
   async update(id, data, actor, reqMeta) {
-    const target = await adminRepository.getSafeById(id);
+    const target = await Admin.findById(id).select('-password -refreshToken -verificationToken -verificationTokenExpires -resetPasswordToken -resetPasswordExpires');
     if (!target) throw new AppError('User not found', 404);
 
     if (target.role === ROLES.SUPER_ADMIN && actor._id.toString() !== target._id.toString() && actor.role !== ROLES.SUPER_ADMIN) {
@@ -71,7 +75,7 @@ class AdminService {
       throw new AppError('Only a Super Admin can assign the Super Admin role', 403);
     }
     if (target.role === ROLES.SUPER_ADMIN && data.isActive === false && actor._id.toString() !== target._id.toString()) {
-      const superAdmins = await adminRepository.count({ role: ROLES.SUPER_ADMIN, isActive: true });
+      const superAdmins = await Admin.countDocuments({ role: ROLES.SUPER_ADMIN, isActive: true });
       if (superAdmins <= 1) throw new AppError('Cannot deactivate the last active Super Admin', 400);
     }
 
@@ -87,7 +91,11 @@ class AdminService {
       update.password = await bcrypt.hash(data.password, salt);
     }
 
-    const updated = await adminRepository.findByIdAndUpdate(id, update);
+    const updated = await Admin.findByIdAndUpdate(id, update, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
+    if (!updated) throw new AppError('User not found', 404);
 
     await createAuditLog({
       admin: actor,
@@ -100,20 +108,23 @@ class AdminService {
     });
 
     if (typeof data.isActive === 'boolean' && data.isActive === false) {
-      await authRepository.revokeAllForAdmin(id);
+      await RefreshToken.updateMany(
+        { admin: id, revokedAt: null },
+        { revokedAt: new Date() }
+      );
     }
 
     return updated.toSafeObject();
   }
 
   async remove(id, actor, reqMeta) {
-    const target = await adminRepository.getSafeById(id);
+    const target = await Admin.findById(id).select('-password -refreshToken -verificationToken -verificationTokenExpires -resetPasswordToken -resetPasswordExpires');
     if (!target) throw new AppError('User not found', 404);
     if (actor._id.toString() === id) throw new AppError('You cannot delete your own account', 400);
     if (target.role === ROLES.SUPER_ADMIN) throw new AppError('Cannot delete a Super Admin account', 403);
 
-    await authRepository.revokeAllForAdmin(id);
-    const deleted = await adminRepository.deleteById(id);
+    await RefreshToken.updateMany({ admin: id, revokedAt: null }, { revokedAt: new Date() });
+    const deleted = await Admin.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -136,7 +147,7 @@ class AdminService {
   }
 
   async uploadAvatar(id, file, actor, reqMeta) {
-    const target = await adminRepository.getSafeById(id);
+    const target = await Admin.findById(id).select('-password -refreshToken -verificationToken -verificationTokenExpires -resetPasswordToken -resetPasswordExpires');
     if (!target) throw new AppError('User not found', 404);
 
     const uploaded = await uploadMedia(file, { folder: CLOUDINARY_FOLDERS.AVATARS });

@@ -1,5 +1,6 @@
 import config from '../config/index.js';
-import authRepository from '../repositories/auth.repository.js';
+import Admin from '../models/Admin.js';
+import RefreshToken from '../models/RefreshToken.js';
 import AppError from '../utils/AppError.js';
 import { generateTokenPair, verifyRefreshToken } from '../utils/jwt.js';
 import { generateRandomToken, hashToken } from '../utils/tokens.js';
@@ -10,6 +11,8 @@ import { createAuditLog } from '../helpers/auditLogger.js';
 
 const ACCESS_TOKEN_LIFETIME = config.jwt.accessExpire;
 const REFRESH_TOKEN_LIFETIME = config.jwt.refreshExpire;
+
+const findByEmail = (email) => Admin.findOne({ email: email.toLowerCase() });
 
 const buildSession = (admin, { userAgent, ipAddress }) => {
   const tokens = generateTokenPair(admin);
@@ -27,7 +30,7 @@ const buildSession = (admin, { userAgent, ipAddress }) => {
 const persistRefreshToken = async (admin, token, { userAgent, ipAddress }) => {
   const expiresAt = new Date();
   expiresAt.setTime(expiresAt.getTime() + config.jwt.refreshCookieMaxAgeMs);
-  await authRepository.createRefreshToken({
+  await RefreshToken.create({
     tokenHash: hashToken(token),
     admin: admin._id,
     userAgent,
@@ -36,12 +39,25 @@ const persistRefreshToken = async (admin, token, { userAgent, ipAddress }) => {
   });
 };
 
+const findValidRefreshToken = (tokenHash) =>
+  RefreshToken.findOne({
+    tokenHash,
+    revokedAt: null,
+    expiresAt: { $gt: new Date() },
+  }).populate('admin');
+
+const revokeAllForAdmin = (adminId) =>
+  RefreshToken.updateMany(
+    { admin: adminId, revokedAt: null },
+    { revokedAt: new Date() }
+  );
+
 class AuthService {
   async register({ name, email, phone, password, role }, creator, reqMeta) {
-    const existing = await authRepository.findByEmail(email);
+    const existing = await findByEmail(email);
     if (existing) throw new AppError('An account with this email already exists', 409);
 
-    const admin = await authRepository.create({
+    const admin = await Admin.create({
       name,
       email,
       phone,
@@ -71,7 +87,7 @@ class AuthService {
   }
 
   async login({ email, password }, reqMeta) {
-    const admin = await authRepository.findByEmailWithPassword(email);
+    const admin = await Admin.findOne({ email: email.toLowerCase() }).select('+password');
     if (!admin) throw new AppError('Invalid email or password', 401);
     if (!admin.isActive) throw new AppError('Your account has been deactivated', 403);
     if (!admin.isVerified) throw new AppError('Please verify your email address before logging in', 403);
@@ -81,7 +97,7 @@ class AuthService {
 
     const session = buildSession(admin, reqMeta);
     await persistRefreshToken(admin, session.tokens.refreshToken, reqMeta);
-    await authRepository.updateLastLogin(admin._id);
+    await Admin.findByIdAndUpdate(admin._id, { lastLogin: new Date() });
 
     await createAuditLog({
       admin,
@@ -106,17 +122,21 @@ class AuthService {
     }
 
     const tokenHash = hashToken(refreshToken);
-    const stored = await authRepository.findRefreshToken(tokenHash);
+    const stored = await findValidRefreshToken(tokenHash);
     if (!stored) throw new AppError('Refresh token has been revoked or is invalid', 401);
 
     const admin = stored.admin;
     if (!admin || !admin.isActive) throw new AppError('Account is no longer active', 401);
 
-    await authRepository.revokeRefreshToken(tokenHash);
+    await RefreshToken.findOneAndUpdate(
+      { tokenHash },
+      { revokedAt: new Date() },
+      { returnDocument: 'after' }
+    );
 
     const tokens = generateTokenPair(admin);
     await persistRefreshToken(admin, tokens.refreshToken, reqMeta);
-    await authRepository.updateLastLogin(admin._id);
+    await Admin.findByIdAndUpdate(admin._id, { lastLogin: new Date() });
 
     await createAuditLog({
       admin,
@@ -140,8 +160,8 @@ class AuthService {
   async logout(refreshToken, reqMeta) {
     if (refreshToken) {
       const tokenHash = hashToken(refreshToken);
-      const stored = await authRepository.findRefreshToken(tokenHash);
-      await authRepository.revokeRefreshToken(tokenHash);
+      const stored = await findValidRefreshToken(tokenHash);
+      await RefreshToken.findOneAndUpdate({ tokenHash }, { revokedAt: new Date() });
       if (stored?.admin) {
         await createAuditLog({
           admin: stored.admin._id,
@@ -156,7 +176,7 @@ class AuthService {
   }
 
   async forgotPassword({ email }, reqMeta) {
-    const admin = await authRepository.findByEmail(email);
+    const admin = await findByEmail(email);
     if (!admin) return true;
 
     const resetToken = generateRandomToken();
@@ -184,14 +204,17 @@ class AuthService {
   }
 
   async resetPassword(token, newPassword, reqMeta) {
-    const admin = await authRepository.findByResetToken(hashToken(token));
+    const admin = await Admin.findOne({
+      resetPasswordToken: hashToken(token),
+      resetPasswordExpires: { $gt: new Date() },
+    });
     if (!admin) throw new AppError('Invalid or expired reset token', 400);
 
     admin.password = newPassword;
     admin.resetPasswordToken = undefined;
     admin.resetPasswordExpires = undefined;
     await admin.save();
-    await authRepository.revokeAllForAdmin(admin._id);
+    await revokeAllForAdmin(admin._id);
 
     await createAuditLog({
       admin,
@@ -205,13 +228,13 @@ class AuthService {
   }
 
   async changePassword(admin, { currentPassword, newPassword }, reqMeta) {
-    const fullAdmin = await authRepository.findByIdWithPrivateFields(admin._id);
+    const fullAdmin = await Admin.findById(admin._id).select('+password');
     const isMatch = await fullAdmin.comparePassword(currentPassword);
     if (!isMatch) throw new AppError('Current password is incorrect', 400);
 
     fullAdmin.password = newPassword;
     await fullAdmin.save();
-    await authRepository.revokeAllForAdmin(admin._id);
+    await revokeAllForAdmin(admin._id);
 
     await createAuditLog({
       admin,
@@ -226,7 +249,10 @@ class AuthService {
   }
 
   async verifyEmail(token, reqMeta) {
-    const admin = await authRepository.findByVerificationToken(hashToken(token));
+    const admin = await Admin.findOne({
+      verificationToken: hashToken(token),
+      verificationTokenExpires: { $gt: new Date() },
+    });
     if (!admin) throw new AppError('Invalid or expired verification token', 400);
 
     admin.isVerified = true;
@@ -246,7 +272,7 @@ class AuthService {
   }
 
   async resendVerification({ email }) {
-    const admin = await authRepository.findByEmail(email);
+    const admin = await findByEmail(email);
     if (!admin) throw new AppError('No account found with this email', 404);
     if (admin.isVerified) throw new AppError('Email is already verified', 400);
 
@@ -273,11 +299,17 @@ class AuthService {
         update[field] = data[field];
       }
     }
-    return authRepository.findByIdAndUpdate(adminId, update);
+    const admin = await Admin.findByIdAndUpdate(adminId, update, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
+    if (!admin) throw new AppError('User not found', 404);
+    return admin;
   }
 
   async uploadAvatar(adminId, file) {
-    const admin = await authRepository.getByIdOrThrow(adminId);
+    const admin = await Admin.findById(adminId);
+    if (!admin) throw new AppError('User not found', 404);
     const uploaded = await uploadMedia(file, { folder: CLOUDINARY_FOLDERS.AVATARS });
 
     if (admin.avatar?.publicId) {

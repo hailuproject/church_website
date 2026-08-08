@@ -1,19 +1,26 @@
-import contactRepository, { prayerRequestRepository } from '../repositories/contact.repository.js';
+import ContactMessage from '../models/ContactMessage.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
 import { sendEmail } from '../utils/email.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
 class ContactService {
   async listMessages(queryString) {
-    return contactRepository.paginate(queryString);
+    return paginateModel(ContactMessage, queryString, {
+      searchableFields: ['name', 'email', 'subject', 'message'],
+      filterWhitelist: ['category', 'status', 'isRead'],
+      defaultSort: { createdAt: -1 },
+    });
   }
 
   async getMessage(id) {
-    return contactRepository.findById(id);
+    const message = await ContactMessage.findById(id);
+    if (!message) throw new AppError('Message not found', 404);
+    return message;
   }
 
   async submitContact(data, reqMeta) {
-    const message = await contactRepository.create(data);
+    const message = await ContactMessage.create(data);
 
     await sendEmail({
       to: data.email,
@@ -36,7 +43,7 @@ class ContactService {
   }
 
   async markRead(id, actor, reqMeta) {
-    const message = await contactRepository.markRead(id);
+    const message = await ContactMessage.findByIdAndUpdate(id, { isRead: true }, { returnDocument: 'after' });
     if (!message) throw new AppError('Message not found', 404);
 
     await createAuditLog({
@@ -52,7 +59,7 @@ class ContactService {
   }
 
   async markAllRead(actor, reqMeta) {
-    const result = await contactRepository.markAllRead();
+    const result = await ContactMessage.updateMany({ isRead: false }, { isRead: true });
     await createAuditLog({
       admin: actor,
       action: 'update',
@@ -64,7 +71,7 @@ class ContactService {
   }
 
   async reply(id, data, actor, reqMeta) {
-    const message = await contactRepository.findByIdOrNull(id);
+    const message = await ContactMessage.findById(id);
     if (!message) throw new AppError('Message not found', 404);
     if (!message.email) throw new AppError('This message has no reply email', 400);
 
@@ -80,7 +87,11 @@ class ContactService {
       </div>`,
     });
 
-    const updated = await contactRepository.reply(id, data.reply, message.email);
+    const updated = await ContactMessage.findByIdAndUpdate(
+      id,
+      { reply: data.reply, replied: true, repliedAt: new Date(), status: 'replied', isRead: true, email: message.email },
+      { returnDocument: 'after' }
+    );
 
     await createAuditLog({
       admin: actor,
@@ -95,10 +106,10 @@ class ContactService {
   }
 
   async remove(id, actor, reqMeta) {
-    const message = await contactRepository.findByIdOrNull(id);
+    const message = await ContactMessage.findById(id);
     if (!message) throw new AppError('Message not found', 404);
 
-    await contactRepository.deleteById(id);
+    await ContactMessage.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -106,64 +117,6 @@ class ContactService {
       module: 'contact',
       documentId: id,
       oldData: { subject: message.subject },
-      ...reqMeta,
-    });
-
-    return true;
-  }
-
-  async createPrayerRequest(data, reqMeta) {
-    const prayer = await contactRepository.createPrayerRequest(data);
-    await createAuditLog({
-      admin: null,
-      action: 'create',
-      module: 'prayers',
-      documentId: prayer._id,
-      newData: { prayerType: prayer.prayerType },
-      ipAddress: reqMeta?.ipAddress,
-      userAgent: reqMeta?.userAgent,
-    });
-    return prayer;
-  }
-
-  async listPrayerRequests(queryString) {
-    return prayerRequestRepository.paginate(queryString);
-  }
-
-  async getPrayerRequest(id) {
-    return prayerRequestRepository.findById(id);
-  }
-
-  async updatePrayerRequest(id, data, actor, reqMeta) {
-    const existing = await prayerRequestRepository.findByIdOrNull(id);
-    if (!existing) throw new AppError('Prayer request not found', 404);
-
-    const updated = await prayerRequestRepository.findByIdAndUpdate(id, data);
-
-    await createAuditLog({
-      admin: actor,
-      action: 'update',
-      module: 'prayers',
-      documentId: id,
-      oldData: { status: existing.status },
-      newData: { status: updated.status },
-      ...reqMeta,
-    });
-
-    return updated;
-  }
-
-  async removePrayerRequest(id, actor, reqMeta) {
-    const existing = await prayerRequestRepository.findByIdOrNull(id);
-    if (!existing) throw new AppError('Prayer request not found', 404);
-
-    await prayerRequestRepository.deleteById(id);
-
-    await createAuditLog({
-      admin: actor,
-      action: 'delete',
-      module: 'prayers',
-      documentId: id,
       ...reqMeta,
     });
 

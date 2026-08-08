@@ -5,8 +5,6 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
-  rsvpEvent,
-  getEventRsvps,
   getUpcomingEvents,
   getPastEvents,
   getFeaturedEvents,
@@ -22,7 +20,6 @@ import { MEDIA_TYPES, ROLES, PERMISSIONS } from '../constants/index.js';
 import {
   createEventValidation,
   updateEventValidation,
-  rsvpValidation,
   listEventsValidation,
   changeStatusValidation,
 } from '../validators/event.validators.js';
@@ -37,8 +34,6 @@ router.get('/featured', getFeaturedEvents);
 router.get('/calendar', getEventCalendar);
 router.get('/liturgical-calendar', getLiturgicalCalendar);
 router.get('/:id', validate([objectIdValidator('id')]), getEvent);
-router.post('/:id/rsvp', validate([objectIdValidator('id'), ...rsvpValidation]), rsvpEvent);
-router.get('/:id/rsvps', authenticate, authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PRIEST, ROLES.DEACON, ROLES.SECRETARY), validate([objectIdValidator('id')]), getEventRsvps);
 
 router.use(authenticate);
 

@@ -1,12 +1,14 @@
-import authRepository from '../repositories/auth.repository.js';
+import RefreshToken from '../models/RefreshToken.js';
 import { logger } from '../utils/logger.js';
 
 const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 const cleanupExpiredRefreshTokens = async () => {
   try {
-    const removed = await authRepository.cleanupExpiredTokens();
-    if (removed > 0) logger.info(`Cleaned up ${removed} expired/revoked refresh tokens`);
+    const result = await RefreshToken.deleteMany({
+      $or: [{ expiresAt: { $lt: new Date() } }, { revokedAt: { $ne: null } }],
+    });
+    if (result.deletedCount > 0) logger.info(`Cleaned up ${result.deletedCount} expired/revoked refresh tokens`);
   } catch (error) {
     logger.error(`Refresh token cleanup failed: ${error.message}`);
   }

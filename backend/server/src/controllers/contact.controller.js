@@ -44,31 +44,6 @@ export const deleteMessage = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Message deleted' });
 });
 
-export const createPrayerRequest = asyncHandler(async (req, res) => {
-  const prayer = await contactService.createPrayerRequest(req.body, getRequestMeta(req));
-  sendSuccess(res, { statusCode: 201, message: 'Prayer request submitted', data: prayer });
-});
-
-export const listPrayerRequests = asyncHandler(async (req, res) => {
-  const { data, pagination } = await contactService.listPrayerRequests(req.query);
-  sendPagination(res, { message: 'Prayer requests retrieved', data, pagination });
-});
-
-export const getPrayerRequest = asyncHandler(async (req, res) => {
-  const prayer = await contactService.getPrayerRequest(req.params.id);
-  sendSuccess(res, { message: 'Prayer request retrieved', data: prayer });
-});
-
-export const updatePrayerRequest = asyncHandler(async (req, res) => {
-  const prayer = await contactService.updatePrayerRequest(req.params.id, req.body, req.admin, getRequestMeta(req));
-  sendSuccess(res, { message: 'Prayer request updated', data: prayer });
-});
-
-export const deletePrayerRequest = asyncHandler(async (req, res) => {
-  await contactService.removePrayerRequest(req.params.id, req.admin, getRequestMeta(req));
-  sendSuccess(res, { message: 'Prayer request deleted' });
-});
-
 export default {
   listMessages,
   getMessage,
@@ -77,9 +52,4 @@ export default {
   markAllMessagesRead,
   replyMessage,
   deleteMessage,
-  createPrayerRequest,
-  listPrayerRequests,
-  getPrayerRequest,
-  updatePrayerRequest,
-  deletePrayerRequest,
 };

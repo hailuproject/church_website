@@ -5,9 +5,8 @@ export const listAuditValidation = [
   ...paginationValidators,
   enumValidator('action', AUDIT_ACTIONS),
   enumValidator('module', [
-    'auth', 'users', 'media', 'announcements', 'sermons', 'events', 'gallery', 'resources',
-    'membership', 'donations', 'contact', 'prayers', 'home', 'about', 'leadership',
-    'settings', 'languages', 'sacraments', 'audit-logs',
+    'auth', 'users', 'content', 'sermons', 'events', 'gallery', 'resources',
+    'donations', 'contact', 'settings', 'media', 'audit-logs',
   ]),
 ];
 

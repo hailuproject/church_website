@@ -1,16 +1,22 @@
-import galleryRepository from '../repositories/gallery.repository.js';
+import GalleryAlbum from '../models/GalleryAlbum.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
 class GalleryService {
   async list(queryString) {
-    return galleryRepository.paginate(queryString);
+    return paginateModel(GalleryAlbum, queryString, {
+      searchableFields: ['albumName', 'albumNameAm', 'description', 'descriptionAm'],
+      filterWhitelist: ['category', 'createdBy'],
+      defaultSort: { createdAt: -1 },
+    });
   }
 
   async getById(id) {
-    const album = await galleryRepository.findById(id);
+    const album = await GalleryAlbum.findById(id);
+    if (!album) throw new AppError('Album not found', 404);
     return {
       ...album.toObject(),
       imageCount: album.images.length,
@@ -24,7 +30,7 @@ class GalleryService {
       payload.coverImage = await uploadMedia(files.coverImage, { folder: CLOUDINARY_FOLDERS.GALLERY_IMAGES });
     }
 
-    const album = await galleryRepository.create(payload);
+    const album = await GalleryAlbum.create(payload);
 
     await createAuditLog({
       admin: actor,
@@ -39,7 +45,7 @@ class GalleryService {
   }
 
   async update(id, data, files = {}, actor, reqMeta) {
-    const existing = await galleryRepository.findByIdOrNull(id);
+    const existing = await GalleryAlbum.findById(id);
     if (!existing) throw new AppError('Album not found', 404);
 
     const payload = { ...data };
@@ -49,7 +55,10 @@ class GalleryService {
       payload.coverImage = uploaded;
     }
 
-    const updated = await galleryRepository.findByIdAndUpdate(id, payload);
+    const updated = await GalleryAlbum.findByIdAndUpdate(id, payload, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
 
     await createAuditLog({
       admin: actor,
@@ -65,7 +74,7 @@ class GalleryService {
   }
 
   async remove(id, actor, reqMeta) {
-    const existing = await galleryRepository.findByIdOrNull(id);
+    const existing = await GalleryAlbum.findById(id);
     if (!existing) throw new AppError('Album not found', 404);
 
     const deletions = [];
@@ -74,7 +83,7 @@ class GalleryService {
     existing.videos.forEach((video) => video.publicId && deletions.push(deleteMedia(video.publicId, 'video')));
     await Promise.all(deletions);
 
-    await galleryRepository.deleteById(id);
+    await GalleryAlbum.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -89,11 +98,15 @@ class GalleryService {
   }
 
   async addImage(albumId, file, actor, reqMeta) {
-    const album = await galleryRepository.findByIdOrNull(albumId);
+    const album = await GalleryAlbum.findById(albumId);
     if (!album) throw new AppError('Album not found', 404);
 
     const uploaded = await uploadMedia(file, { folder: CLOUDINARY_FOLDERS.GALLERY_IMAGES });
-    await galleryRepository.addImage(albumId, uploaded);
+    await GalleryAlbum.findByIdAndUpdate(
+      albumId,
+      { $push: { images: uploaded } },
+      { returnDocument: 'after', runValidators: true }
+    );
 
     await createAuditLog({
       admin: actor,
@@ -104,15 +117,19 @@ class GalleryService {
       ...reqMeta,
     });
 
-    return galleryRepository.findById(albumId);
+    return GalleryAlbum.findById(albumId);
   }
 
   async addVideo(albumId, file, actor, reqMeta) {
-    const album = await galleryRepository.findByIdOrNull(albumId);
+    const album = await GalleryAlbum.findById(albumId);
     if (!album) throw new AppError('Album not found', 404);
 
     const uploaded = await uploadMedia(file, { folder: CLOUDINARY_FOLDERS.GALLERY_VIDEOS });
-    await galleryRepository.addVideo(albumId, uploaded);
+    await GalleryAlbum.findByIdAndUpdate(
+      albumId,
+      { $push: { videos: uploaded } },
+      { returnDocument: 'after', runValidators: true }
+    );
 
     await createAuditLog({
       admin: actor,
@@ -123,17 +140,21 @@ class GalleryService {
       ...reqMeta,
     });
 
-    return galleryRepository.findById(albumId);
+    return GalleryAlbum.findById(albumId);
   }
 
   async addImages(albumId, files, actor, reqMeta) {
     if (!files || !files.length) throw new AppError('No images uploaded', 400);
-    const album = await galleryRepository.findByIdOrNull(albumId);
+    const album = await GalleryAlbum.findById(albumId);
     if (!album) throw new AppError('Album not found', 404);
 
     for (const file of files) {
       const uploaded = await uploadMedia(file, { folder: CLOUDINARY_FOLDERS.GALLERY_IMAGES });
-      await galleryRepository.addImage(albumId, uploaded);
+      await GalleryAlbum.findByIdAndUpdate(
+        albumId,
+        { $push: { images: uploaded } },
+        { runValidators: true }
+      );
     }
 
     await createAuditLog({
@@ -145,16 +166,20 @@ class GalleryService {
       ...reqMeta,
     });
 
-    return galleryRepository.findById(albumId);
+    return GalleryAlbum.findById(albumId);
   }
 
   async removeImage(albumId, mediaId, actor, reqMeta) {
-    const album = await galleryRepository.findByIdOrNull(albumId);
+    const album = await GalleryAlbum.findById(albumId);
     if (!album) throw new AppError('Album not found', 404);
 
     const target = album.images.find((img) => img._id.toString() === mediaId);
     if (target?.publicId) await deleteMedia(target.publicId);
-    await galleryRepository.removeImage(albumId, mediaId);
+    await GalleryAlbum.findByIdAndUpdate(
+      albumId,
+      { $pull: { images: { _id: mediaId } } },
+      { returnDocument: 'after' }
+    );
 
     await createAuditLog({
       admin: actor,
@@ -165,16 +190,20 @@ class GalleryService {
       ...reqMeta,
     });
 
-    return galleryRepository.findById(albumId);
+    return GalleryAlbum.findById(albumId);
   }
 
   async removeVideo(albumId, mediaId, actor, reqMeta) {
-    const album = await galleryRepository.findByIdOrNull(albumId);
+    const album = await GalleryAlbum.findById(albumId);
     if (!album) throw new AppError('Album not found', 404);
 
     const target = album.videos.find((video) => video._id.toString() === mediaId);
     if (target?.publicId) await deleteMedia(target.publicId, 'video');
-    await galleryRepository.removeVideo(albumId, mediaId);
+    await GalleryAlbum.findByIdAndUpdate(
+      albumId,
+      { $pull: { videos: { _id: mediaId } } },
+      { returnDocument: 'after' }
+    );
 
     await createAuditLog({
       admin: actor,
@@ -185,7 +214,7 @@ class GalleryService {
       ...reqMeta,
     });
 
-    return galleryRepository.findById(albumId);
+    return GalleryAlbum.findById(albumId);
   }
 }
 

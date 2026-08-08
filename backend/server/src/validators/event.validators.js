@@ -9,7 +9,6 @@ import {
   optionalDateValidator,
   requiredDateValidator,
   paginationValidators,
-  optionalEmailValidator,
 } from './common.validators.js';
 
 export const createEventValidation = [
@@ -42,14 +41,6 @@ export const updateEventValidation = [
   enumValidator('status', EVENT_STATUSES),
 ];
 
-export const rsvpValidation = [
-  requiredString('name', 'Name', { max: 150 }),
-  optionalEmailValidator('email'),
-  optionalString('phone', { max: 20 }),
-  numberValidator('guests', { min: 0, max: 10 }),
-  enumValidator('status', ['confirmed', 'pending', 'cancelled']),
-];
-
 export const listEventsValidation = [
   ...paginationValidators,
   enumValidator('category', EVENT_CATEGORIES),
@@ -63,7 +54,6 @@ export const changeStatusValidation = [
 export default {
   createEventValidation,
   updateEventValidation,
-  rsvpValidation,
   listEventsValidation,
   changeStatusValidation,
 };

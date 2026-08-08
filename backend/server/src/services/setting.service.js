@@ -1,19 +1,43 @@
-import settingRepository from '../repositories/setting.repository.js';
+import Setting from '../models/Setting.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
+const getSingleton = async () => {
+  let setting = await Setting.findOne().sort({ createdAt: -1 });
+  if (!setting) {
+    setting = await Setting.create({});
+  }
+  return setting;
+};
+
+const updateSingleton = async (data) => {
+  let setting = await Setting.findOne().sort({ createdAt: -1 });
+  if (!setting) {
+    setting = await Setting.create(data);
+  } else {
+    setting.set(data);
+    await setting.save();
+  }
+  return setting;
+};
+
 class SettingService {
   async getPublic() {
-    return settingRepository.getPublic();
+    const setting = await getSingleton();
+    const obj = setting.toObject();
+    delete obj.createdBy;
+    delete obj.updatedBy;
+    delete obj.__v;
+    return obj;
   }
 
   async getAdmin() {
-    return settingRepository.getSingleton();
+    return getSingleton();
   }
 
   async update(data, files = {}, actor, reqMeta) {
-    const current = await settingRepository.getSingleton();
+    const current = await getSingleton();
     const payload = { ...data };
 
     if (files.logo) {
@@ -34,7 +58,7 @@ class SettingService {
 
     payload.updatedBy = actor._id;
 
-    const updated = await settingRepository.updateSingleton(payload);
+    const updated = await updateSingleton(payload);
 
     await createAuditLog({
       admin: actor,
@@ -49,9 +73,9 @@ class SettingService {
   }
 
   async updateSocialLinks(data, actor, reqMeta) {
-    const current = await settingRepository.getSingleton();
+    const current = await getSingleton();
     const socialLinks = { ...current.socialLinks?.toObject?.(), ...data };
-    const updated = await settingRepository.updateSingleton({ socialLinks, updatedBy: actor._id });
+    const updated = await updateSingleton({ socialLinks, updatedBy: actor._id });
 
     await createAuditLog({
       admin: actor,
@@ -66,8 +90,8 @@ class SettingService {
   }
 
   async updateHomepageSettings(data, actor, reqMeta) {
-    const current = await settingRepository.getSingleton();
-    const updated = await settingRepository.updateSingleton({
+    const current = await getSingleton();
+    const updated = await updateSingleton({
       heroImage: data.heroImage !== undefined ? data.heroImage : current.heroImage,
       liveStreamURL: data.liveStreamURL !== undefined ? data.liveStreamURL : current.liveStreamURL,
       languageSettings: data.languageSettings !== undefined ? data.languageSettings : current.languageSettings,
@@ -87,7 +111,7 @@ class SettingService {
   }
 
   async updateFooter(data, actor, reqMeta) {
-    const updated = await settingRepository.updateSingleton({
+    const updated = await updateSingleton({
       footerText: data.footerText,
       footerTextAm: data.footerTextAm,
       updatedBy: actor._id,
@@ -106,9 +130,9 @@ class SettingService {
   }
 
   async updateLanguageSettings(data, actor, reqMeta) {
-    const current = await settingRepository.getSingleton();
+    const current = await getSingleton();
     const languageSettings = { ...current.languageSettings?.toObject?.(), ...data };
-    const updated = await settingRepository.updateSingleton({ languageSettings, updatedBy: actor._id });
+    const updated = await updateSingleton({ languageSettings, updatedBy: actor._id });
 
     await createAuditLog({
       admin: actor,
@@ -123,7 +147,7 @@ class SettingService {
   }
 
   async updateLiveStream(data, actor, reqMeta) {
-    const updated = await settingRepository.updateSingleton({
+    const updated = await updateSingleton({
       liveStreamURL: data.liveStreamURL,
       updatedBy: actor._id,
     });
@@ -141,9 +165,9 @@ class SettingService {
   }
 
   async updateTheme(data, actor, reqMeta) {
-    const current = await settingRepository.getSingleton();
+    const current = await getSingleton();
     const theme = { ...current.theme?.toObject?.(), ...data };
-    const updated = await settingRepository.updateSingleton({ theme, updatedBy: actor._id });
+    const updated = await updateSingleton({ theme, updatedBy: actor._id });
 
     await createAuditLog({
       admin: actor,

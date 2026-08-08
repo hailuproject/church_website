@@ -77,13 +77,6 @@ export const exportDonationsCSV = asyncHandler(async (req, res) => {
   res.send(csv);
 });
 
-export const stripeWebhook = asyncHandler(async (req, res) => {
-  const signature = req.headers['stripe-signature'];
-  if (!signature) throw new AppError('Missing Stripe signature', 400);
-  const eventType = await donationService.handleStripeWebhook(req.body, signature);
-  sendSuccess(res, { message: `Webhook received: ${eventType}` });
-});
-
 export default {
   listDonations,
   getDonation,
@@ -96,5 +89,4 @@ export default {
   getPaymentHistory,
   getMonthlyDonations,
   exportDonationsCSV,
-  stripeWebhook,
 };

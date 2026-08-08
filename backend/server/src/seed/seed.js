@@ -2,44 +2,46 @@ import mongoose from 'mongoose';
 import config from '../config/index.js';
 import Admin from '../models/Admin.js';
 import Setting from '../models/Setting.js';
-import HomeContent from '../models/HomeContent.js';
-import AboutContent from '../models/AboutContent.js';
+import ChurchContent from '../models/ChurchContent.js';
 import { ROLES } from '../constants/index.js';
+
+const ADDRESS = '4808 W 99th St, Inglewood, CA 90301, United States';
+const MAP_QUERY = '4808 W 99th St, Inglewood, CA 90301';
 
 const seedAdmins = async () => {
   const admins = [
     {
       name: 'Super Admin',
       email: 'superadmin@church.org',
-      phone: '+251900000001',
+      phone: '',
       password: 'SuperAdmin123!',
       role: ROLES.SUPER_ADMIN,
     },
     {
       name: 'Church Admin',
       email: 'admin@church.org',
-      phone: '+251900000002',
+      phone: '',
       password: 'Admin123!',
       role: ROLES.ADMIN,
     },
     {
-      name: 'Priest Gebre',
+      name: 'Priest Admin',
       email: 'priest@church.org',
-      phone: '+251900000003',
+      phone: '',
       password: 'Priest123!',
       role: ROLES.PRIEST,
     },
     {
-      name: 'Deacon Dawit',
+      name: 'Deacon Admin',
       email: 'deacon@church.org',
-      phone: '+251900000004',
+      phone: '',
       password: 'Deacon123!',
       role: ROLES.DEACON,
     },
     {
-      name: 'Secretary Sara',
+      name: 'Secretary Admin',
       email: 'secretary@church.org',
-      phone: '+251900000005',
+      phone: '',
       password: 'Secretary123!',
       role: ROLES.SECRETARY,
     },
@@ -69,17 +71,26 @@ const seedSettings = async () => {
     return;
   }
   await Setting.create({
-    churchName: 'St. Mary Ethiopian Orthodox Tewahedo Church',
-    churchNameAm: 'የቅድስት ማርያም የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን',
+    churchName: 'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church',
+    churchNameAm: 'የቅድስት ሥላሴ ገብረ ክርስቶስ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን',
     tagline: 'Worship, Fellowship, Service',
     taglineAm: 'አምልኮ ፣ ሕብረት ፣ አገልግሎት',
-    phone: '+251900000000',
-    email: 'info@church.org',
-    address: { street: 'Church Street', city: 'Addis Ababa', country: 'Ethiopia' },
+    phone: '',
+    email: '',
+    address: {
+      street: '4808 W 99th St',
+      city: 'Inglewood',
+      region: 'CA',
+      country: 'United States',
+      postalCode: '90301',
+    },
     socialLinks: {
-      facebook: 'https://facebook.com/church',
-      youtube: 'https://youtube.com/church',
-      telegram: 'https://t.me/church',
+      facebook: '',
+      youtube: '',
+      telegram: '',
+      instagram: '',
+      twitter: '',
+      tiktok: '',
     },
     languageSettings: {
       defaultLanguage: 'english',
@@ -96,89 +107,97 @@ const seedSettings = async () => {
   console.log('  + Created default church settings');
 };
 
-const seedHomeContent = async () => {
-  const existing = await HomeContent.findOne();
-  if (existing) {
-    console.log('  = Home content already exists, skipping');
-    return;
-  }
-  await HomeContent.create({
+const CONTENT_DEFAULTS = {
+  home: {
     hero: {
-      heading: 'Welcome to St. Mary Church',
-      headingAm: 'እንኳን ወደ ቅድስት ማርያም ቤተ ክርስቲያን መጡ',
-      slides: [],
+      heading: 'Welcome to Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church',
+      tagline: 'A community of faith in Los Angeles, California',
+      primaryCta: { label: 'Plan Your Visit', href: '/contact' },
+      secondaryCta: { label: 'Donate', href: '/donate' },
+      image: null,
     },
-    welcome: {
-      title: 'A community of faith',
-      titleAm: 'የእምነት ማህበረሰብ',
-      content: 'Welcome to our church. We are glad you are here.',
-      contentAm: 'ወደ ቤተ ክርስቲያናችን እንኳን ደህና መጡ።',
-      scripture: 'Matthew 18:20',
+    intro: {
+      title: 'Welcome to our church',
+      content:
+        'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church is a community of faith serving the faithful in Los Angeles, California, in the spirit of the Ethiopian Orthodox Tewahedo tradition.',
     },
-    priestWelcome: {
-      title: 'A word from our priest',
-      titleAm: 'ከካህናችን ቃል',
-      content: 'May the peace of our Lord Jesus Christ be with you.',
-      contentAm: 'የጌታችን የኢየሱስ ክርስቶስ ሰላም ከእናንተ ጋር ይሁን።',
-      priestName: 'Priest Gebre',
-      priestTitle: 'Head Priest',
-    },
-    quickLinks: [],
-    announcementSectionTitle: 'Announcements',
-    announcementSectionTitleAm: 'ማስታወቂያዎች',
-    showLiveStream: true,
-    showAnnouncements: true,
     showUpcomingEvents: true,
-    showRecentSermons: true,
-  });
-  console.log('  + Created default home content');
-};
-
-const seedAboutContent = async () => {
-  const existing = await AboutContent.findOne();
-  if (existing) {
-    console.log('  = About content already exists, skipping');
-    return;
-  }
-  await AboutContent.create({
+    showLatestSermons: true,
+    showGalleryPreview: true,
+    cta: {
+      title: 'Come Worship With Us',
+      content: 'We would love to welcome you to our church community.',
+      buttonLabel: 'Contact Us',
+      buttonHref: '/contact',
+    },
+  },
+  about: {
+    intro: {
+      title: 'About Our Church',
+      content:
+        'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church is a congregation of the Ethiopian Orthodox Tewahedo Church in Los Angeles, California.',
+    },
     history: {
       title: 'Our History',
-      titleAm: 'ታሪካችን',
-      content: 'Our church was established to serve the faithful in the spirit of the Ethiopian Orthodox Tewahedo tradition.',
-      contentAm: 'ቤተ ክርስቲያናችን የተመሰረተችው በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ትውፊት መንፈስ ምእመናንን ለማገልገል ነው።',
-      images: [],
+      content: '',
     },
-    faith: {
-      title: 'Our Faith',
-      titleAm: 'እምነታችን',
-      content: 'We hold to the Nicene faith, the Seven Sacraments, and the teachings of the Church Fathers.',
-      contentAm: 'በኒቅኔዎስ እምነት ፣ በሰባቱ ቅዱሳት ምሥጢራት እና በቤተ ክርስቲያን አበው ትምህርት እንቆያለን።',
-      beliefs: ['The Holy Trinity', 'The Incarnation', 'The Seven Sacraments', 'The Theotokos'],
-      beliefsAm: ['ቅድስት ሥላሴ', 'ትስብእት', 'ሰባቱ ቅዱሳት ምሥጢራት', 'እመቤታችን'],
-    },
-    timeline: [],
-    serviceHours: [
-      { weekday: 'Sunday', name: 'Holy Liturgy', nameAm: 'ቅዳሴ', hours: '6:00 AM - 11:00 AM' },
-      { weekday: 'Wednesday', name: 'Prayer & Bible Study', nameAm: 'ጸሎት እና የመጽሐፍ ቅዱስ ጥናት', hours: '6:00 PM - 8:00 PM' },
-      { weekday: 'Friday', name: 'Vespers', nameAm: 'የምሽት ጸሎት', hours: '5:00 PM - 6:00 PM' },
-    ],
     location: {
-      title: 'Find us',
-      address: 'Church Street, Addis Ababa, Ethiopia',
-      addressAm: 'ቤተ ክርስቲያን መንገድ ፣ አዲስ አበባ ፣ ኢትዮጵያ',
+      title: 'Our Location',
+      address: ADDRESS,
+      mapQuery: MAP_QUERY,
     },
-  });
-  console.log('  + Created default about content');
+  },
+  contact: {
+    intro: {
+      title: 'Get In Touch',
+      content: 'Send us a message using the form below and we will get back to you.',
+    },
+    address: ADDRESS,
+    phone: '',
+    email: '',
+    hours: [],
+    mapQuery: MAP_QUERY,
+    showForm: true,
+  },
+  donate: {
+    intro: {
+      title: 'Support Our Church',
+      content: 'Your generosity helps our church continue its mission of worship, fellowship, and service.',
+    },
+    methods: [],
+    contactNote: '',
+  },
+  footer: {
+    aboutText:
+      'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church, a community of faith in Los Angeles, California.',
+  },
+};
+
+const seedContent = async () => {
+  let created = 0;
+  let skipped = 0;
+  for (const [key, data] of Object.entries(CONTENT_DEFAULTS)) {
+    const existing = await ChurchContent.findOne({ key });
+    if (existing) {
+      skipped += 1;
+      continue;
+    }
+    await ChurchContent.create({ key, data, version: 1 });
+    created += 1;
+    console.log(`  + Created content: ${key}`);
+  }
+  return { created, skipped };
 };
 
 const destroy = async () => {
   const results = await Promise.all([
     Admin.deleteMany({}),
     Setting.deleteMany({}),
-    HomeContent.deleteMany({}),
-    AboutContent.deleteMany({}),
+    ChurchContent.deleteMany({}),
   ]);
-  console.log(`Destroyed seed data: admins=${results[0].deletedCount}, settings=${results[1].deletedCount}, home=${results[2].deletedCount}, about=${results[3].deletedCount}`);
+  console.log(
+    `Destroyed seed data: admins=${results[0].deletedCount}, settings=${results[1].deletedCount}, content=${results[2].deletedCount}`
+  );
 };
 
 const seed = async () => {
@@ -195,8 +214,8 @@ const seed = async () => {
     console.log(`  Admins: ${adminResult.created} created, ${adminResult.skipped} already exist`);
 
     await seedSettings();
-    await seedHomeContent();
-    await seedAboutContent();
+    const contentResult = await seedContent();
+    console.log(`  Content: ${contentResult.created} created, ${contentResult.skipped} already exist`);
 
     console.log('\nSeed completed successfully.');
     console.log('\nDefault accounts (email / password):');

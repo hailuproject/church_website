@@ -1,30 +1,26 @@
-import donationRepository from '../repositories/donation.repository.js';
+import Donation from '../models/Donation.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
+import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import { generateReferenceNumber } from '../utils/tokens.js';
 import { sendEmail } from '../utils/email.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 import { toCSV } from '../utils/csv.js';
-import config from '../config/index.js';
 import { DONATION_STATUSES, DONATION_PAYMENT_METHODS } from '../constants/index.js';
-import Stripe from 'stripe';
-
-let stripe = null;
-const getStripe = () => {
-  if (!stripe && config.stripe.secretKey) {
-    stripe = new Stripe(config.stripe.secretKey);
-  }
-  return stripe;
-};
-
-const isStripeMethod = (method) => method === 'stripe';
 
 class DonationService {
   async list(queryString) {
-    return donationRepository.paginate(queryString);
+    return paginateModel(Donation, queryString, {
+      searchableFields: ['donorName', 'email', 'phone', 'campaign', 'transactionId', 'receiptNumber'],
+      filterWhitelist: ['status', 'paymentMethod', 'campaign'],
+      defaultSort: { createdAt: -1 },
+    });
   }
 
   async getById(id) {
-    return donationRepository.findById(id);
+    const donation = await Donation.findById(id);
+    if (!donation) throw new AppError('Donation not found', 404);
+    return donation;
   }
 
   async create(data, reqMeta) {
@@ -33,32 +29,13 @@ class DonationService {
     }
 
     const receiptNumber = generateReferenceNumber('RCPT');
-    let status = data.paymentMethod === 'cash' ? 'completed' : 'pending';
+    const status = data.paymentMethod === 'cash' ? 'completed' : 'pending';
 
-    let donation = await donationRepository.create({
+    const donation = await Donation.create({
       ...data,
       receiptNumber,
       status,
     });
-
-    let paymentIntent = null;
-    if (isStripeMethod(data.paymentMethod)) {
-      const stripeClient = getStripe();
-      if (!stripeClient) throw new AppError('Stripe is not configured', 503);
-      try {
-        paymentIntent = await stripeClient.paymentIntents.create({
-          amount: Math.round(data.amount * 100),
-          currency: data.currency?.toLowerCase() || 'etb',
-          metadata: { donationId: donation._id.toString(), receiptNumber },
-          automatic_payment_methods: { enabled: true },
-        });
-        donation = await donationRepository.findByIdAndUpdate(donation._id, {
-          transactionId: paymentIntent.id,
-        });
-      } catch (error) {
-        throw new AppError(`Stripe payment setup failed: ${error.message}`, 502);
-      }
-    }
 
     await createAuditLog({
       admin: reqMeta?.actorId || null,
@@ -70,17 +47,17 @@ class DonationService {
       userAgent: reqMeta?.userAgent,
     });
 
-    return {
-      donation,
-      paymentIntent: paymentIntent ? { clientSecret: paymentIntent.client_secret } : null,
-    };
+    return { donation, paymentIntent: null };
   }
 
   async update(id, data, actor, reqMeta) {
-    const existing = await donationRepository.findByIdOrNull(id);
+    const existing = await Donation.findById(id);
     if (!existing) throw new AppError('Donation not found', 404);
 
-    const updated = await donationRepository.findByIdAndUpdate(id, data);
+    const updated = await Donation.findByIdAndUpdate(id, data, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
 
     await createAuditLog({
       admin: actor,
@@ -96,10 +73,10 @@ class DonationService {
   }
 
   async confirmPayment(id, actor, reqMeta) {
-    const existing = await donationRepository.findByIdOrNull(id);
+    const existing = await Donation.findById(id);
     if (!existing) throw new AppError('Donation not found', 404);
 
-    const updated = await donationRepository.findByIdAndUpdate(id, { status: 'completed' });
+    const updated = await Donation.findByIdAndUpdate(id, { status: 'completed' }, { returnDocument: 'after' });
     await this.sendReceipt(updated);
 
     await createAuditLog({
@@ -117,10 +94,10 @@ class DonationService {
 
   async changeStatus(id, status, actor, reqMeta) {
     if (!DONATION_STATUSES.includes(status)) throw new AppError(`status must be one of: ${DONATION_STATUSES.join(', ')}`, 400);
-    const existing = await donationRepository.findByIdOrNull(id);
+    const existing = await Donation.findById(id);
     if (!existing) throw new AppError('Donation not found', 404);
 
-    const updated = await donationRepository.findByIdAndUpdate(id, { status });
+    const updated = await Donation.findByIdAndUpdate(id, { status }, { returnDocument: 'after' });
     if (status === 'completed') await this.sendReceipt(updated);
 
     await createAuditLog({
@@ -151,13 +128,13 @@ class DonationService {
       },
     });
     if (sent) {
-      await donationRepository.findByIdAndUpdate(donation._id, { receiptSent: true });
+      await Donation.findByIdAndUpdate(donation._id, { receiptSent: true });
     }
     return sent;
   }
 
   async getReceipt(id) {
-    const donation = await donationRepository.findById(id);
+    const donation = await this.getById(id);
     return {
       receiptNumber: donation.receiptNumber,
       donorName: donation.donorName,
@@ -172,11 +149,30 @@ class DonationService {
   }
 
   async paymentHistory(email, queryString) {
-    return donationRepository.paymentHistory(email, queryString);
+    const { page, limit, skip } = parsePagination(queryString);
+    const filter = { email: email.toLowerCase() };
+    const data = await Donation.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const total = await Donation.countDocuments(filter);
+    return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
 
   async monthlyDonations(year) {
-    return donationRepository.monthlySeries(year || new Date().getFullYear());
+    return Donation.aggregate([
+      {
+        $match: {
+          status: 'completed',
+          createdAt: { $gte: new Date(year, 0, 1), $lt: new Date(year + 1, 0, 1) },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: '$createdAt' },
+          total: { $sum: '$amount' },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
   }
 
   async exportCSV(queryString) {
@@ -194,28 +190,6 @@ class DonationService {
       createdAt: d.createdAt?.toISOString(),
     }));
     return toCSV(rows);
-  }
-
-  async handleStripeWebhook(payload, signature) {
-    const stripeClient = getStripe();
-    if (!stripeClient) throw new AppError('Stripe is not configured', 503);
-
-    let event;
-    try {
-      event = stripeClient.webhooks.constructEvent(payload, signature, config.stripe.webhookSecret);
-    } catch (error) {
-      throw new AppError(`Webhook signature verification failed: ${error.message}`, 400);
-    }
-
-    if (event.type === 'payment_intent.succeeded') {
-      const intent = event.data.object;
-      const donationId = intent.metadata?.donationId;
-      if (donationId) {
-        const updated = await donationRepository.findByIdAndUpdate(donationId, { status: 'completed' });
-        await this.sendReceipt(updated);
-      }
-    }
-    return event.type;
   }
 }
 

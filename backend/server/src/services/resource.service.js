@@ -1,16 +1,23 @@
-import resourceRepository from '../repositories/resource.repository.js';
+import Resource from '../models/Resource.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
 class ResourceService {
   async list(queryString) {
-    return resourceRepository.paginate(queryString);
+    return paginateModel(Resource, queryString, {
+      searchableFields: ['title', 'titleAm', 'description', 'descriptionAm'],
+      filterWhitelist: ['category', 'language', 'isPublished', 'createdBy'],
+      defaultSort: { createdAt: -1 },
+    });
   }
 
   async getById(id) {
-    return resourceRepository.findById(id);
+    const resource = await Resource.findById(id);
+    if (!resource) throw new AppError('Resource not found', 404);
+    return resource;
   }
 
   async create(data, files = {}, actor, reqMeta) {
@@ -22,7 +29,7 @@ class ResourceService {
       payload.file = await uploadMedia(files.file, { folder: CLOUDINARY_FOLDERS.RESOURCE_FILES });
     }
 
-    const resource = await resourceRepository.create(payload);
+    const resource = await Resource.create(payload);
 
     await createAuditLog({
       admin: actor,
@@ -37,7 +44,7 @@ class ResourceService {
   }
 
   async update(id, data, files = {}, actor, reqMeta) {
-    const existing = await resourceRepository.findByIdOrNull(id);
+    const existing = await Resource.findById(id);
     if (!existing) throw new AppError('Resource not found', 404);
 
     const payload = { ...data };
@@ -52,7 +59,10 @@ class ResourceService {
       payload.file = uploaded;
     }
 
-    const updated = await resourceRepository.findByIdAndUpdate(id, payload);
+    const updated = await Resource.findByIdAndUpdate(id, payload, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
 
     await createAuditLog({
       admin: actor,
@@ -68,7 +78,7 @@ class ResourceService {
   }
 
   async remove(id, actor, reqMeta) {
-    const existing = await resourceRepository.findByIdOrNull(id);
+    const existing = await Resource.findById(id);
     if (!existing) throw new AppError('Resource not found', 404);
 
     await Promise.all([
@@ -76,7 +86,7 @@ class ResourceService {
       existing.file?.publicId ? deleteMedia(existing.file.publicId, 'raw') : null,
     ]);
 
-    await resourceRepository.deleteById(id);
+    await Resource.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -91,13 +101,16 @@ class ResourceService {
   }
 
   async incrementDownload(id) {
-    const resource = await resourceRepository.incrementDownloads(id);
+    const resource = await Resource.findByIdAndUpdate(id, { $inc: { downloads: 1 } }, { returnDocument: 'after' });
     if (!resource) throw new AppError('Resource not found', 404);
     return resource;
   }
 
   async getCategories() {
-    return resourceRepository.categories();
+    return Resource.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+    ]);
   }
 
   async uploadPdf(id, file, actor, reqMeta) {

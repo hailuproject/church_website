@@ -1,28 +1,38 @@
-import auditRepository from '../repositories/audit.repository.js';
+import AuditLog from '../models/AuditLog.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
 
 class AuditService {
   async list(queryString) {
-    return auditRepository.paginate(queryString);
+    return paginateModel(AuditLog, queryString, {
+      searchableFields: ['adminName', 'module', 'action'],
+      filterWhitelist: ['action', 'module', 'admin', 'adminRole'],
+      defaultSort: { createdAt: -1 },
+    });
   }
 
   async getById(id) {
-    return auditRepository.findById(id);
+    const log = await AuditLog.findById(id);
+    if (!log) throw new AppError('Audit log not found', 404);
+    return log;
   }
 
   async recent(limit = 10) {
-    return auditRepository.recent(Math.min(limit, 100));
+    return AuditLog.find({})
+      .sort({ createdAt: -1 })
+      .limit(Math.min(limit, 100))
+      .populate('admin', 'name email role');
   }
 
   async summary() {
     const [total, byModule, byAction] = await Promise.all([
-      auditRepository.count({}),
-      auditRepository.aggregate([
+      AuditLog.countDocuments({}),
+      AuditLog.aggregate([
         { $group: { _id: '$module', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]),
-      auditRepository.aggregate([
+      AuditLog.aggregate([
         { $group: { _id: '$action', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
       ]),
@@ -38,8 +48,8 @@ class AuditService {
   async clearOlderThan(days, actor, reqMeta) {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
-    const result = await auditRepository.model.deleteMany({ createdAt: { $lt: cutoff } });
-    await auditRepository.create({
+    const result = await AuditLog.deleteMany({ createdAt: { $lt: cutoff } });
+    await AuditLog.create({
       admin: actor?._id || null,
       action: 'delete',
       module: 'audit-logs',

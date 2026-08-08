@@ -33,16 +33,6 @@ export const deleteEvent = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Event deleted' });
 });
 
-export const rsvpEvent = asyncHandler(async (req, res) => {
-  const rsvp = await eventService.rsvp(req.params.id, req.body);
-  sendSuccess(res, { statusCode: 201, message: 'RSVP recorded', data: rsvp });
-});
-
-export const getEventRsvps = asyncHandler(async (req, res) => {
-  const { data, pagination } = await eventService.getRsvps(req.params.id, req.query);
-  sendPagination(res, { message: 'RSVPs retrieved', data, pagination });
-});
-
 export const getUpcomingEvents = asyncHandler(async (req, res) => {
   const { data, pagination } = await eventService.upcoming(req.query);
   sendPagination(res, { message: 'Upcoming events retrieved', data, pagination });
@@ -89,8 +79,6 @@ export default {
   createEvent,
   updateEvent,
   deleteEvent,
-  rsvpEvent,
-  getEventRsvps,
   getUpcomingEvents,
   getPastEvents,
   getFeaturedEvents,

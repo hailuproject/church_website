@@ -1,5 +1,7 @@
-import sermonRepository from '../repositories/sermon.repository.js';
+import Sermon from '../models/Sermon.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
+import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
@@ -8,15 +10,28 @@ const isAudio = (file) => (file?.mimetype || '').startsWith('audio/');
 
 class SermonService {
   async list(queryString) {
-    return sermonRepository.paginate(queryString);
+    return paginateModel(Sermon, queryString, {
+      searchableFields: ['title', 'titleAm', 'description', 'descriptionAm', 'speaker'],
+      filterWhitelist: ['category', 'language', 'isPublished', 'isFeatured', 'speaker'],
+      defaultSort: { publishedAt: -1 },
+    });
   }
 
   async listPublished(queryString) {
-    return sermonRepository.listPublished(queryString);
+    const { page, limit, skip } = parsePagination(queryString);
+    const filter = { isPublished: true };
+    const data = await Sermon.find(filter)
+      .sort({ publishedAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    const total = await Sermon.countDocuments(filter);
+    return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
 
   async getById(id) {
-    return sermonRepository.findById(id);
+    const sermon = await Sermon.findById(id);
+    if (!sermon) throw new AppError('Sermon not found', 404);
+    return sermon;
   }
 
   async create(data, files = {}, actor, reqMeta) {
@@ -42,7 +57,7 @@ class SermonService {
       payload.duration = Number(payload.duration) || 0;
     }
 
-    const sermon = await sermonRepository.create(payload);
+    const sermon = await Sermon.create(payload);
 
     await createAuditLog({
       admin: actor,
@@ -57,7 +72,7 @@ class SermonService {
   }
 
   async update(id, data, files = {}, actor, reqMeta) {
-    const existing = await sermonRepository.findByIdOrNull(id);
+    const existing = await Sermon.findById(id);
     if (!existing) throw new AppError('Sermon not found', 404);
 
     const payload = { ...data };
@@ -78,7 +93,10 @@ class SermonService {
       payload.videoUrl = uploaded;
     }
 
-    const updated = await sermonRepository.findByIdAndUpdate(id, payload);
+    const updated = await Sermon.findByIdAndUpdate(id, payload, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
 
     await createAuditLog({
       admin: actor,
@@ -94,7 +112,7 @@ class SermonService {
   }
 
   async remove(id, actor, reqMeta) {
-    const existing = await sermonRepository.findByIdOrNull(id);
+    const existing = await Sermon.findById(id);
     if (!existing) throw new AppError('Sermon not found', 404);
 
     await Promise.all([
@@ -103,7 +121,7 @@ class SermonService {
       existing.videoUrl?.publicId ? deleteMedia(existing.videoUrl.publicId, 'video') : null,
     ]);
 
-    await sermonRepository.deleteById(id);
+    await Sermon.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -138,21 +156,28 @@ class SermonService {
   }
 
   async incrementDownload(id) {
-    const sermon = await sermonRepository.incrementDownloadCount(id);
+    const sermon = await Sermon.findByIdAndUpdate(id, { $inc: { downloadCount: 1 } }, { returnDocument: 'after' });
     if (!sermon) throw new AppError('Sermon not found', 404);
     return sermon;
   }
 
   async getFeatured() {
-    return sermonRepository.featured();
+    return Sermon.find({ isPublished: true, isFeatured: true })
+      .sort({ publishedAt: -1 })
+      .limit(4);
   }
 
   async getRecent() {
-    return sermonRepository.recent();
+    return Sermon.find({ isPublished: true })
+      .sort({ publishedAt: -1 })
+      .limit(4);
   }
 
   async getCategories() {
-    return sermonRepository.categories();
+    return Sermon.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+    ]);
   }
 }
 

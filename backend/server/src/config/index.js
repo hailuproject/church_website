@@ -56,11 +56,6 @@ const config = {
     from: process.env.EMAIL_FROM || `Church CMS <${process.env.EMAIL_USER || 'noreply@church.local'}>`,
   },
 
-  stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY,
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-  },
-
   uploads: {
     imageMb: numberOr(process.env.MAX_UPLOAD_IMAGE_MB, 5),
     audioMb: numberOr(process.env.MAX_UPLOAD_AUDIO_MB, 25),

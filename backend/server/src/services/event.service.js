@@ -1,27 +1,24 @@
-import eventRepository from '../repositories/event.repository.js';
+import Event from '../models/Event.js';
 import AppError from '../utils/AppError.js';
+import { paginateModel } from '../utils/paginateModel.js';
+import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
 class EventService {
   async list(queryString) {
-    const result = await eventRepository.paginate(queryString);
-    const ids = result.data.map((event) => event._id);
-    const counts = await eventRepository.countRsvpsForEvents(ids);
-    return {
-      ...result,
-      data: result.data.map((event) => ({
-        ...(event.toObject ? event.toObject() : event),
-        rsvpCount: counts.get(String(event._id)) || 0,
-      })),
-    };
+    return paginateModel(Event, queryString, {
+      searchableFields: ['title', 'titleAm', 'description', 'descriptionAm', 'location'],
+      filterWhitelist: ['category', 'status', 'isFeatured', 'createdBy'],
+      defaultSort: { date: 1 },
+    });
   }
 
   async getById(id) {
-    const event = await eventRepository.findById(id);
-    const rsvpCount = await eventRepository.countRsvps(id);
-    return { ...event.toObject(), registeredCount: rsvpCount };
+    const event = await Event.findById(id);
+    if (!event) throw new AppError('Event not found', 404);
+    return event;
   }
 
   async create(data, files = {}, actor, reqMeta) {
@@ -32,7 +29,7 @@ class EventService {
       });
     }
 
-    const event = await eventRepository.create(payload);
+    const event = await Event.create(payload);
 
     await createAuditLog({
       admin: actor,
@@ -47,7 +44,7 @@ class EventService {
   }
 
   async update(id, data, files = {}, actor, reqMeta) {
-    const existing = await eventRepository.findByIdOrNull(id);
+    const existing = await Event.findById(id);
     if (!existing) throw new AppError('Event not found', 404);
 
     const payload = { ...data };
@@ -57,7 +54,10 @@ class EventService {
       payload.coverImage = uploaded;
     }
 
-    const updated = await eventRepository.findByIdAndUpdate(id, payload);
+    const updated = await Event.findByIdAndUpdate(id, payload, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
 
     await createAuditLog({
       admin: actor,
@@ -73,11 +73,11 @@ class EventService {
   }
 
   async remove(id, actor, reqMeta) {
-    const existing = await eventRepository.findByIdOrNull(id);
+    const existing = await Event.findById(id);
     if (!existing) throw new AppError('Event not found', 404);
 
     if (existing.coverImage?.publicId) await deleteMedia(existing.coverImage.publicId);
-    await eventRepository.deleteById(id);
+    await Event.findByIdAndDelete(id);
 
     await createAuditLog({
       admin: actor,
@@ -91,62 +91,40 @@ class EventService {
     return true;
   }
 
-  async rsvp(eventId, data) {
-    const event = await eventRepository.findByIdOrNull(eventId);
-    if (!event) throw new AppError('Event not found', 404);
-
-    if (event.capacity > 0) {
-      const current = await eventRepository.countRsvps(eventId);
-      if (current + 1 > event.capacity) throw new AppError('Event is fully booked', 400);
-    }
-
-    let rsvp = await eventRepository.findRsvp({ event: eventId, email: (data.email || '').toLowerCase() });
-    if (rsvp) {
-      rsvp.status = data.status || 'confirmed';
-      rsvp.guests = data.guests || 0;
-      await rsvp.save();
-    } else {
-      rsvp = await eventRepository.createRsvp({ event: eventId, ...data, email: (data.email || '').toLowerCase() });
-    }
-
-    return rsvp;
-  }
-
-  async getRsvps(eventId, queryString) {
-    const page = Math.max(parseInt(queryString.page, 10) || 1, 1);
-    const limit = Math.min(parseInt(queryString.limit, 10) || 50, 100);
-    const skip = (page - 1) * limit;
-    const filter = { event: eventId };
-    if (queryString.status) filter.status = queryString.status;
-    const [data, total] = await Promise.all([
-      eventRepository.findRsvps(filter, skip, limit),
-      eventRepository.countRsvps(eventId),
-    ]);
-    const totalPages = Math.ceil(total / limit) || 1;
-    return {
-      data,
-      pagination: { page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 },
-    };
-  }
-
   async upcoming(queryString) {
-    return eventRepository.upcoming(queryString);
+    const { page, limit, skip } = parsePagination(queryString);
+    const filter = { date: { $gte: new Date() }, status: { $in: ['upcoming', 'ongoing'] } };
+    const data = await Event.find(filter).sort({ date: 1 }).skip(skip).limit(limit);
+    const total = await Event.countDocuments(filter);
+    return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
 
   async past(queryString) {
-    return eventRepository.past(queryString);
+    const { page, limit, skip } = parsePagination(queryString);
+    const filter = { $or: [{ date: { $lt: new Date() } }, { status: 'completed' }] };
+    const data = await Event.find(filter).sort({ date: -1 }).skip(skip).limit(limit);
+    const total = await Event.countDocuments(filter);
+    return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
 
-  async featured() {
-    return eventRepository.featured();
+  async featured(limit = 4) {
+    return Event.find({ isFeatured: true, date: { $gte: new Date() } })
+      .sort({ date: 1 })
+      .limit(limit);
   }
 
   async calendar(year, month) {
-    return eventRepository.calendar(year, month);
+    const start = new Date(Date.UTC(year, month - 1, 1));
+    const end = new Date(Date.UTC(year, month, 1));
+    return Event.find({ date: { $gte: start, $lt: end } }).sort({ date: 1 });
   }
 
   async liturgicalCalendar(year) {
-    return eventRepository.liturgicalCalendar(year);
+    const start = new Date(Date.UTC(year, 0, 1));
+    const end = new Date(Date.UTC(year, 11, 31, 23, 59, 59));
+    return Event.find({ date: { $gte: start, $lte: end } })
+      .sort({ date: 1 })
+      .select('title titleAm date category status startTime endTime location isFeatured');
   }
 
   async toggleFeatured(id, isFeatured, actor, reqMeta) {

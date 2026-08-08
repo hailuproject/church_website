@@ -4,7 +4,6 @@ import config from './src/config/index.js';
 import { connectDB } from './src/config/db.js';
 import { logger } from './src/utils/logger.js';
 import { startScheduledJobs } from './src/jobs/index.js';
-import { initSockets } from './src/sockets/index.js';
 
 let server;
 
@@ -19,7 +18,6 @@ const startServer = async () => {
     });
 
     startScheduledJobs();
-    initSockets(server);
   } catch (error) {
     logger.error(`Failed to start server: ${error.message}`);
     process.exit(1);

@@ -13,12 +13,6 @@ export const getRecentActivities = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Recent activities retrieved', data });
 });
 
-export const getRecentMembers = asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 5;
-  const data = await dashboardService.recentMembers(Math.min(limit, 50));
-  sendSuccess(res, { message: 'Recent members retrieved', data });
-});
-
 export const getRecentSermons = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 5;
   const data = await dashboardService.recentSermons(Math.min(limit, 50));
@@ -31,24 +25,29 @@ export const getRecentEvents = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Recent events retrieved', data });
 });
 
-export const getCharts = asyncHandler(async (req, res) => {
-  const months = Math.min(parseInt(req.query.months, 10) || 6, 24);
-  const data = await dashboardService.charts(months);
-  sendSuccess(res, { message: 'Chart data retrieved', data });
+export const getRecentDonations = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const data = await dashboardService.recentDonations(Math.min(limit, 50));
+  sendSuccess(res, { message: 'Recent donations retrieved', data });
+});
+
+export const getRecentMessages = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const data = await dashboardService.recentMessages(Math.min(limit, 50));
+  sendSuccess(res, { message: 'Recent messages retrieved', data });
 });
 
 export const getFullDashboard = asyncHandler(async (req, res) => {
-  const months = Math.min(parseInt(req.query.months, 10) || 6, 24);
-  const data = await dashboardService.full(months);
+  const data = await dashboardService.full();
   sendSuccess(res, { message: 'Dashboard data retrieved', data });
 });
 
 export default {
   getOverview,
   getRecentActivities,
-  getRecentMembers,
   getRecentSermons,
   getRecentEvents,
-  getCharts,
+  getRecentDonations,
+  getRecentMessages,
   getFullDashboard,
 };
