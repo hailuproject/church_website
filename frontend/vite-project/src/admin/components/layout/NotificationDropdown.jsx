@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Bell, Inbox, Church, Activity } from 'lucide-react';
+import { Bell, Inbox, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown, DropdownItem, DropdownHeader, DropdownDivider } from '../ui/Dropdown';
 import { useAuth } from '../../context/AuthContext';
-import { contactService } from '../../services/donation.service';
-import { sacramentService } from '../../services/membership.service';
+import { contactService } from '../../services/contact.service';
 import { Badge } from '../ui/Badge';
-import { cn } from '../../utils/helpers';
 import { getHomePath } from '../../utils/permissions';
 
 export const NotificationDropdown = () => {
@@ -14,7 +12,6 @@ export const NotificationDropdown = () => {
   const { hasPermission, user } = useAuth();
 
   const canContact = hasPermission('manage:contact');
-  const canSacrament = hasPermission('manage:sacraments');
 
   const { data: messages } = useQuery({
     queryKey: ['inbox', 'unread', 'count'],
@@ -26,18 +23,6 @@ export const NotificationDropdown = () => {
     refetchInterval: 60 * 1000,
   });
 
-  const { data: pendingSacraments } = useQuery({
-    queryKey: ['sacraments', 'pending', 'count'],
-    queryFn: async () => {
-      const result = await sacramentService.list({ limit: 1, status: 'pending', page: 1 });
-      return result.pagination?.total || 0;
-    },
-    enabled: canSacrament,
-    refetchInterval: 60 * 1000,
-  });
-
-  const total = (messages || 0) + (pendingSacraments || 0);
-
   return (
     <Dropdown
       width="w-80"
@@ -48,9 +33,9 @@ export const NotificationDropdown = () => {
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
-          {total > 0 && (
+          {messages > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-              {total > 99 ? '99+' : total}
+              {messages > 99 ? '99+' : messages}
             </span>
           )}
         </button>
@@ -61,7 +46,7 @@ export const NotificationDropdown = () => {
       </DropdownHeader>
       <div className="max-h-80 overflow-y-auto">
         {canContact && (
-          <DropdownItem icon={Inbox} onClick={() => navigate('/admin/contact-inbox')}>
+          <DropdownItem icon={Inbox} onClick={() => navigate('/admin/messages')}>
             <div className="flex flex-1 items-center justify-between gap-2">
               <span className="flex items-center gap-1">
                 Inbox
@@ -70,17 +55,9 @@ export const NotificationDropdown = () => {
             </div>
           </DropdownItem>
         )}
-        {canSacrament && (
-          <DropdownItem icon={Church} onClick={() => navigate('/admin/sacraments?status=pending')}>
-            <div className="flex flex-1 items-center justify-between gap-2">
-              <span>Pending sacrament requests</span>
-              <Badge tone={pendingSacraments > 0 ? 'warning' : 'success'}>{pendingSacraments || 0}</Badge>
-            </div>
-          </DropdownItem>
-        )}
         {canContact && (
           <DropdownItem icon={Activity} onClick={() => navigate(getHomePath(user?.role))}>
-            Dashboard analytics
+            Dashboard
           </DropdownItem>
         )}
       </div>

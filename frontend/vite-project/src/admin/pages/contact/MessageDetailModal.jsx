@@ -5,7 +5,7 @@ import { Mail, Send, X } from 'lucide-react';
 import Modal from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import { StatusBadge } from '../../components/ui/Badge';
-import { contactService } from '../../services/donation.service';
+import { contactService } from '../../services/contact.service';
 import { getErrorMessage } from '../../utils/api';
 import { formatDateTime } from '../../utils/format';
 
