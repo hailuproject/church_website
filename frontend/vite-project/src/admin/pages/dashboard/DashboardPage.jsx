@@ -1,20 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import {
-  Users,
-  Mic,
-  CalendarDays,
-  BookOpen,
-  Images,
-  HeartHandshake,
-  Inbox,
-  Church,
-  Download,
-  Megaphone,
-  TrendingUp,
-  Wallet,
-  RefreshCw,
-} from 'lucide-react';
+import { Mic, CalendarDays, BookOpen, Inbox, HeartHandshake, Activity, RefreshCw } from 'lucide-react';
 import { dashboardService } from '../../services/system.service';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { StatCard } from '../../components/ui/StatCard';
@@ -24,54 +9,75 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { usePageMeta } from '../../hooks/usePageMeta';
-import { formatCurrency, formatNumber } from '../../utils/format';
-import {
-  DonationAreaChart,
-  GrowthAreaChart,
-  CategoryPieChart,
-  CategoryBarChart,
-} from './charts';
-import {
-  RecentActivitiesWidget,
-  RecentMembersWidget,
-  RecentSermonsWidget,
-  RecentEventsWidget,
-  RecentMessagesWidget,
-  RecentDonationsWidget,
-  RecentAnnouncementsWidget,
-} from './widgets';
-import { cn } from '../../utils/helpers';
+import { formatNumber, timeAgo } from '../../utils/format';
 
-const OVERVIEW_CARDS = [
-  { key: 'totalMembers', label: 'Total Members', icon: Users, tone: 'primary', hint: 'total registered' },
-  { key: 'totalSermons', label: 'Total Sermons', icon: Mic, tone: 'violet', hint: 'published & drafts' },
+const STAT_CARDS = [
+  { key: 'totalSermons', label: 'Total Sermons', icon: Mic, tone: 'primary', hint: 'published & drafts' },
   { key: 'upcomingEvents', label: 'Upcoming Events', icon: CalendarDays, tone: 'info', hint: 'scheduled events' },
   { key: 'totalResources', label: 'Resources', icon: BookOpen, tone: 'success', hint: 'total documents' },
-  { key: 'galleryImages', label: 'Gallery Images', icon: Images, tone: 'warning', hint: 'across all albums' },
-  { key: 'donationCount', label: 'Completed Donations', icon: HeartHandshake, tone: 'danger', hint: 'all-time' },
-  { key: 'unreadMessages', label: 'Unread Messages', icon: Inbox, tone: 'info', hint: 'in contact inbox' },
-  { key: 'pendingRequests', label: 'Pending Sacrament Requests', icon: Church, tone: 'warning', hint: 'needs attention' },
+  { key: 'unreadMessages', label: 'Unread Messages', icon: Inbox, tone: 'warning', hint: 'in contact inbox' },
+  { key: 'donationCount', label: 'Donations', icon: HeartHandshake, tone: 'danger', hint: 'all-time' },
 ];
+
+const RecentActivity = ({ activities, loading }) => {
+  if (loading) {
+    return (
+      <div className="space-y-3 px-5 pb-5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-12 w-full" />
+        ))}
+      </div>
+    );
+  }
+
+  if (!activities?.length) {
+    return (
+      <div className="px-5 pb-5">
+        <EmptyState title="No recent activity" description="Administrative actions will appear here." icon={Activity} />
+      </div>
+    );
+  }
+
+  return (
+    <ol className="px-5 pb-5">
+      {activities.map((activity, index) => (
+        <li key={activity._id || index} className="flex gap-3 py-2.5">
+          <div className="flex flex-col items-center">
+            <div className="h-2.5 w-2.5 rounded-full bg-primary-500 ring-4 ring-primary-100 dark:ring-primary-500/20" />
+            {index < activities.length - 1 && <div className="h-full w-px bg-gray-200 dark:bg-gray-700" />}
+          </div>
+          <div className="min-w-0 flex-1 pb-1">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-medium capitalize">{activity.action}</span>{' '}
+              <span className="text-gray-500 dark:text-gray-400">on {activity.module}</span>
+            </p>
+            <p className="mt-0.5 truncate text-xs text-gray-400">
+              {activity.adminName || activity.admin?.name || 'System'} · {timeAgo(activity.createdAt)}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+};
 
 export const DashboardPage = () => {
   usePageMeta('Dashboard');
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const { data, isLoading, isFetching, refetch } = useQuery({
-    queryKey: ['dashboard', 'full'],
-    queryFn: () => dashboardService.getFull(6),
+    queryKey: ['dashboard', 'overview'],
+    queryFn: () => dashboardService.getOverview(),
     refetchInterval: 60 * 1000,
   });
 
-  const overview = data?.overview || {};
-  const charts = data?.charts || {};
+  const overview = data?.overview || data || {};
 
   return (
     <div>
       <PageHeader
         title={`Welcome back, ${user?.name?.split(' ')[0] || 'Admin'}`}
-        subtitle="Here's what's happening across your church today."
+        subtitle="A quick look at your church's content and communication."
         breadcrumbs={[{ label: 'Dashboard' }]}
         actions={
           <Button variant="secondary" size="sm" onClick={() => refetch()} loading={isFetching}>
@@ -81,103 +87,34 @@ export const DashboardPage = () => {
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {isLoading ? (
-          <SkeletonCards count={8} />
+          <SkeletonCards count={5} />
         ) : (
-          <>
+          STAT_CARDS.map((card) => (
             <StatCard
-              title="Total Donations"
-              value={formatCurrency(overview.totalDonations)}
-              icon={Wallet}
-              tone="success"
-              hint="completed only"
+              key={card.key}
+              title={card.label}
+              value={formatNumber(overview[card.key])}
+              icon={card.icon}
+              tone={card.tone}
+              hint={card.hint}
             />
-            <StatCard
-              title="Monthly Donations"
-              value={formatCurrency(overview.monthlyDonations)}
-              icon={TrendingUp}
-              tone="primary"
-              hint="this month"
-            />
-            <StatCard
-              title="Annual Donations"
-              value={formatCurrency(overview.annualDonations)}
-              icon={HeartHandshake}
-              tone="danger"
-              hint="this year"
-            />
-            <StatCard
-              title="Total Downloads"
-              value={formatNumber(overview.totalDownloads)}
-              icon={Download}
-              tone="violet"
-              hint="sermons & resources"
-            />
-            {OVERVIEW_CARDS.map((card) => (
-              <StatCard
-                key={card.key}
-                title={card.label}
-                value={formatNumber(overview[card.key])}
-                icon={card.icon}
-                tone={card.tone}
-                hint={card.hint}
-              />
-            ))}
-          </>
+          ))
         )}
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Monthly Donations" subtitle="Completed donations over the current year" />
+          <CardHeader title="Recent Activity" subtitle="Latest administrative actions" />
           <CardContent>
-            {isLoading ? <Skeleton className="h-64 w-full" /> : <DonationAreaChart data={charts.donationSeries} />}
+            <RecentActivity activities={data?.recentActivities} loading={isLoading} />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader title="Member Growth" subtitle="New members per month" />
-          <CardContent>
-            {isLoading ? <Skeleton className="h-64 w-full" /> : <GrowthAreaChart data={charts.memberStats} label="New members" />}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader title="Events by Category" subtitle="Distribution of events" />
-          <CardContent>
-            {isLoading ? <Skeleton className="h-64 w-full" /> : <CategoryPieChart data={charts.eventsByCategory} name="Events" />}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader title="Sermons by Category" subtitle="Content distribution" />
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-64 w-full" />
-            ) : (
-              <CategoryBarChart data={charts.sermonsByCategory} name="Sermons" />
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <RecentActivitiesWidget activities={data?.recentActivities} />
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:col-span-2">
-          <RecentMembersWidget members={data?.recentMembers} />
-          <RecentSermonsWidget sermons={data?.recentSermons} />
-          <RecentEventsWidget events={data?.recentEvents} />
-          <RecentMessagesWidget messages={data?.recentMessages} />
-        </div>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <RecentDonationsWidget donations={data?.recentDonations} />
-        <RecentAnnouncementsWidget announcements={data?.recentAnnouncements} />
       </div>
 
       {!isLoading && !data && (
-        <Card className={cn('mt-6')}>
+        <Card className="mt-6">
           <EmptyState
             title="Could not load dashboard data"
             description="Check that the backend API is running and try again."
