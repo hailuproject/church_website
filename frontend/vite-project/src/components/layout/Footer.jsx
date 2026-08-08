@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiMapPin, FiPhone, FiMail, FiClock, FiArrowRight } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiArrowRight } from 'react-icons/fi';
 import { FiFacebook, FiYoutube, FiSend, FiInstagram, FiTwitter } from 'react-icons/fi';
 import { footerQuickLinks, footerServices } from '../../data/navigation';
 import { useChurch } from '../../hooks/useHomeSections';
@@ -23,20 +23,15 @@ export default function Footer() {
   const [error, setError] = useState('');
 
   const contactItems = [
-    { icon: FiMapPin, label: 'Address', value: church.address || 'Address coming soon' },
-    { icon: FiPhone, label: 'Phone', value: church.phone || 'Phone coming soon' },
-    { icon: FiMail, label: 'Email', value: church.email || 'Email coming soon' },
-    { icon: FiClock, label: 'Office Hours', value: 'Mon–Fri: 9:00 AM – 5:00 PM' },
-  ];
+    { icon: FiMapPin, label: 'Address', value: church.address },
+    { icon: FiPhone, label: 'Phone', value: church.phone },
+    { icon: FiMail, label: 'Email', value: church.email },
+  ].filter((item) => item.value);
 
   const socialLinks = Object.entries(church.socialLinks || {})
     .filter(([, href]) => href)
     .map(([key, href]) => ({ key, icon: socialIcons[key], href }))
     .filter((link) => link.icon);
-
-  const mapsUrl = church.address
-    ? `https://maps.google.com/?q=${encodeURIComponent(church.address)}`
-    : 'https://maps.google.com';
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -187,15 +182,17 @@ export default function Footer() {
                 );
               })}
             </div>
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-secondary hover:text-secondary-light transition-colors duration-200"
-            >
-              View on Google Maps
-              <FiArrowRight className="text-sm" />
-            </a>
+            {church.address && (
+              <a
+                href={`https://maps.google.com/?q=${encodeURIComponent(church.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-secondary hover:text-secondary-light transition-colors duration-200"
+              >
+                View on Google Maps
+                <FiArrowRight className="text-sm" />
+              </a>
+            )}
           </div>
         </div>
 

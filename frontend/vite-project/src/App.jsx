@@ -8,7 +8,6 @@ import AdminApp from './admin/AdminApp';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
 const SermonsPage = lazy(() => import('./pages/Sermons/SermonsPage'));
-const SacramentsPage = lazy(() => import('./pages/Sacraments/SacramentsPage'));
 const EventsPage = lazy(() => import('./pages/Events/EventsPage'));
 const ResourcesPage = lazy(() => import('./pages/Resources/ResourcesPage'));
 const GalleryPage = lazy(() => import('./pages/Gallery/GalleryPage'));
@@ -55,7 +54,6 @@ function PublicSite() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/sermons" element={<SermonsPage />} />
-          <Route path="/sacraments" element={<SacramentsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
