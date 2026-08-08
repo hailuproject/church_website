@@ -1,38 +1,26 @@
 import HeroSlider from '../../components/home/HeroSlider';
-import AnnouncementsBanner from '../../components/home/AnnouncementsBanner';
-import WelcomeSection from '../../components/home/WelcomeSection';
-import ChurchStats from '../../components/home/ChurchStats';
 import FeaturedEvents from '../../components/home/FeaturedEvents';
-import ScriptureSection from '../../components/home/ScriptureSection';
 import FeaturedSermons from '../../components/home/FeaturedSermons';
-import LiveStreamSection from '../../components/home/LiveStreamSection';
-import SacramentsOverview from '../../components/home/SacramentsOverview';
-import Ministries from '../../components/home/Ministries';
 import GalleryPreview from '../../components/home/GalleryPreview';
-import Testimonials from '../../components/home/Testimonials';
-import ServiceSchedule from '../../components/home/ServiceSchedule';
-import FAQSection from '../../components/home/FAQSection';
+import ChurchInformation from '../../components/home/ChurchInformation';
 import CTASection from '../../components/home/CTASection';
 import { useHomeFlags } from '../../hooks/useHomeSections';
+import { useSeo } from '../../hooks/useSeo';
 
 export default function HomePage() {
-  const { showAnnouncements, showUpcomingEvents, showRecentSermons } = useHomeFlags();
+  const { showUpcomingEvents, showLatestSermons, showGalleryPreview } = useHomeFlags();
+  useSeo({
+    title: 'Home',
+    description:
+      'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church in Inglewood, CA. Join us for worship and fellowship.',
+  });
   return (
     <main className="min-h-screen">
-      {showAnnouncements && <AnnouncementsBanner />}
       <HeroSlider />
-      <WelcomeSection />
-      <ChurchStats />
       {showUpcomingEvents && <FeaturedEvents />}
-      <ScriptureSection />
-      {showRecentSermons && <FeaturedSermons />}
-      <LiveStreamSection />
-      <SacramentsOverview />
-      <Ministries />
-      <GalleryPreview />
-      <Testimonials />
-      <ServiceSchedule />
-      <FAQSection />
+      {showLatestSermons && <FeaturedSermons />}
+      {showGalleryPreview && <GalleryPreview />}
+      <ChurchInformation />
       <CTASection />
     </main>
   );

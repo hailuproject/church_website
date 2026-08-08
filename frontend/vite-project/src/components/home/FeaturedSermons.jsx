@@ -62,6 +62,7 @@ const SermonCard = memo(function SermonCard({ sermon, index }) {
 
 export default function FeaturedSermons() {
   const featuredSermons = useFeaturedSermons();
+  if (!featuredSermons?.length) return null;
   return (
     <Section id="sermons" className="bg-surface">
       <Container>

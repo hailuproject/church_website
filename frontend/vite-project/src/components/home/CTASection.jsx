@@ -5,13 +5,7 @@ import Button from '../Button';
 export default function CTASection() {
   return (
     <section className="relative py-24 md:py-32 overflow-hidden" aria-label="Call to action">
-      <img
-        src="https://images.unsplash.com/photo-1597466599360-3b9775841aec?w=1920&h=800&fit=crop"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
 
       <Container className="relative z-10">
         <div className="max-w-3xl mx-auto text-center">

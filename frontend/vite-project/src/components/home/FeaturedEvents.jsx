@@ -63,6 +63,7 @@ const EventCard = memo(function EventCard({ event, index }) {
 
 export default function FeaturedEvents() {
   const featuredEvents = useFeaturedEvents();
+  if (!featuredEvents?.length) return null;
   return (
     <Section id="events" className="bg-white">
       <Container>

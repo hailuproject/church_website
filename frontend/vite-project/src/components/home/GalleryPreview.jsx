@@ -7,6 +7,7 @@ import { useGalleryPreview } from '../../hooks/useHomeSections';
 
 export default function GalleryPreview() {
   const galleryPreview = useGalleryPreview();
+  if (!galleryPreview?.length) return null;
   return (
     <Section id="gallery" className="bg-white">
       <Container>
