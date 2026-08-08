@@ -1,4 +1,3 @@
-import { Select } from './Input';
 import { cn } from '../../utils/helpers';
 
 const ALL_LABEL = 'All';

@@ -89,7 +89,6 @@ export const FileUpload = ({
         <ul className="mt-3 space-y-2">
           {items.map((file, index) => {
             const name = typeof file === 'string' ? file : file?.name || 'Selected file';
-            const url = typeof file === 'string' ? file : file?.url || (file instanceof Blob ? URL.createObjectURL(file) : '');
             const isRemote = typeof file === 'string' || file?.url;
             return (
               <li

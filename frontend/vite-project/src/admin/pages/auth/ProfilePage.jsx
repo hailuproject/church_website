@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { Camera, KeyRound } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { Avatar } from '../../components/ui/Avatar';

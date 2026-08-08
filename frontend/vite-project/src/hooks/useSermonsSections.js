@@ -1,6 +1,5 @@
 import { usePublishedSermons, useSermonCategories } from './usePublicData';
 import { formatDate, mediaUrl } from '../lib/publicMappers';
-import { useHomeFlags } from './useHomeSections';
 import { useChurch } from './useHomeSections';
 
 export function useLatestSermons() {

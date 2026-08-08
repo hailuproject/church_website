@@ -256,7 +256,7 @@ export const ActionMenu = ({ items = [], row }) => {
         </button>
       }
     >
-      {primary.map((item, index) => (
+      {primary.map((item) => (
         <div key={item.label}>
           <DropdownItem
             icon={item.icon}
