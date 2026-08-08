@@ -10,7 +10,6 @@ import resourceRoutes from './resource.routes.js';
 import donationRoutes from './donation.routes.js';
 import contactRoutes from './contact.routes.js';
 import settingRoutes from './setting.routes.js';
-import mediaRoutes from './media.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import auditRoutes from './audit.routes.js';
 import { sendSuccess } from '../utils/response.js';
@@ -39,7 +38,6 @@ router.use('/resources', resourceRoutes);
 router.use('/donations', donationRoutes);
 router.use('/contact', contactRoutes);
 router.use('/settings', settingRoutes);
-router.use('/media', mediaRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/audit-logs', auditRoutes);
 
