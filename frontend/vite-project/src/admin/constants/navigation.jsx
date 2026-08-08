@@ -1,19 +1,12 @@
 import {
   LayoutDashboard,
-  Megaphone,
-  Home,
-  Info,
-  Users,
   Mic,
   CalendarDays,
-  Church,
-  Images,
   BookOpen,
-  UserPlus,
-  HeartHandshake,
   Inbox,
-  ShieldCheck,
+  HeartHandshake,
   Settings,
+  ShieldCheck,
   ScrollText,
   LogOut,
 } from 'lucide-react';
@@ -21,37 +14,13 @@ import { ROLES } from './options';
 
 export const NAV_SECTIONS = [
   {
-    label: 'Main',
+    label: '',
     items: [
       {
         label: 'Dashboard',
         path: '/admin/dashboard',
         icon: LayoutDashboard,
         roles: Object.values(ROLES),
-      },
-      {
-        label: 'Announcements',
-        path: '/admin/announcements',
-        icon: Megaphone,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PRIEST],
-      },
-      {
-        label: 'Home Content',
-        path: '/admin/home-content',
-        icon: Home,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
-      },
-      {
-        label: 'About',
-        path: '/admin/about',
-        icon: Info,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
-      },
-      {
-        label: 'Leadership',
-        path: '/admin/leadership',
-        icon: Users,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
       },
     ],
   },
@@ -71,18 +40,6 @@ export const NAV_SECTIONS = [
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PRIEST, ROLES.DEACON],
       },
       {
-        label: 'Sacraments',
-        path: '/admin/sacraments',
-        icon: Church,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PRIEST, ROLES.SECRETARY],
-      },
-      {
-        label: 'Gallery',
-        path: '/admin/gallery',
-        icon: Images,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DEACON],
-      },
-      {
         label: 'Resources',
         path: '/admin/resources',
         icon: BookOpen,
@@ -91,12 +48,12 @@ export const NAV_SECTIONS = [
     ],
   },
   {
-    label: 'Community',
+    label: 'Communication',
     items: [
       {
-        label: 'Membership',
-        path: '/admin/membership',
-        icon: UserPlus,
+        label: 'Messages',
+        path: '/admin/messages',
+        icon: Inbox,
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY],
       },
       {
@@ -105,27 +62,21 @@ export const NAV_SECTIONS = [
         icon: HeartHandshake,
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY],
       },
-      {
-        label: 'Contact Inbox',
-        path: '/admin/contact-inbox',
-        icon: Inbox,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY],
-      },
     ],
   },
   {
     label: 'System',
     items: [
       {
-        label: 'Users',
-        path: '/admin/users',
-        icon: ShieldCheck,
-        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
-      },
-      {
         label: 'Settings',
         path: '/admin/settings',
         icon: Settings,
+        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+      },
+      {
+        label: 'Users',
+        path: '/admin/users',
+        icon: ShieldCheck,
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN],
       },
       {
@@ -153,20 +104,13 @@ export const getNavItemsForRole = (role) => {
 
 export const PAGE_TITLES = {
   '/admin/dashboard': 'Dashboard',
-  '/admin/announcements': 'Announcements',
-  '/admin/home-content': 'Home Content',
-  '/admin/about': 'About',
-  '/admin/leadership': 'Leadership',
   '/admin/sermons': 'Sermons',
   '/admin/events': 'Events',
-  '/admin/sacraments': 'Sacraments',
-  '/admin/gallery': 'Gallery',
   '/admin/resources': 'Resources',
-  '/admin/membership': 'Membership',
+  '/admin/messages': 'Messages',
   '/admin/donations': 'Donations',
-  '/admin/contact-inbox': 'Contact Inbox',
-  '/admin/users': 'Users',
   '/admin/settings': 'Settings',
+  '/admin/users': 'Users',
   '/admin/audit-logs': 'Audit Logs',
   '/admin/profile': 'Profile',
 };

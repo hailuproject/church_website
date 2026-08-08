@@ -11,7 +11,7 @@ export const AdminLayout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar collapsed={collapsed} onToggleCollapsed={() => setCollapsed((c) => !c)} />
+      <Sidebar collapsed={collapsed} />
       <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <Header

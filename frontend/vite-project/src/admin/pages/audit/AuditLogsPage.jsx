@@ -35,9 +35,8 @@ const ACTION_TONES = {
 };
 
 const MODULES = [
-  'auth', 'users', 'media', 'announcements', 'sermons', 'events', 'gallery', 'resources',
-  'membership', 'donations', 'contact', 'prayers', 'home', 'about', 'leadership',
-  'settings', 'languages', 'sacraments', 'audit-logs',
+  'auth', 'users', 'sermons', 'events', 'resources',
+  'donations', 'contact', 'settings', 'audit-logs',
 ];
 
 export const AuditLogsPage = () => {

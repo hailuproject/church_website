@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, X } from 'lucide-react';
-import { useState } from 'react';
+import { X } from 'lucide-react';
 import { getNavItemsForRole, LOGOUT_ITEM } from '../../constants/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../utils/helpers';
@@ -28,7 +27,7 @@ const SidebarLink = ({ item, collapsed }) => {
   );
 };
 
-export const SidebarContent = ({ collapsed, onNavigate }) => {
+export const SidebarContent = ({ collapsed }) => {
   const { user, logout } = useAuth();
   const sections = getNavItemsForRole(user?.role);
 
@@ -49,7 +48,7 @@ export const SidebarContent = ({ collapsed, onNavigate }) => {
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
         {sections.map((section) => (
           <div key={section.label}>
-            {!collapsed && (
+            {!collapsed && section.label && (
               <p className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 {section.label}
               </p>
@@ -81,7 +80,7 @@ export const SidebarContent = ({ collapsed, onNavigate }) => {
   );
 };
 
-export const Sidebar = ({ collapsed, onToggleCollapsed }) => (
+export const Sidebar = ({ collapsed }) => (
   <aside
     className={cn(
       'hidden h-screen shrink-0 flex-col border-r border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-gray-800 lg:flex',
@@ -118,7 +117,7 @@ export const MobileDrawer = ({ open, onClose }) => (
           >
             <X className="h-5 w-5" />
           </button>
-          <SidebarContent onNavigate={onClose} />
+          <SidebarContent collapsed={collapsed} />
         </motion.div>
       </div>
     )}

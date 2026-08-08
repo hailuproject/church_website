@@ -63,21 +63,6 @@ export const initials = (name = '') => {
   return (first + last).toUpperCase();
 };
 
-export const formatMonthKey = (key) => {
-  if (!key) return '—';
-  if (/^\d{4}-\d{2}$/.test(key)) {
-    const [year, month] = key.split('-');
-    const date = new Date(Number(year), Number(month) - 1, 1);
-    return format(date, 'MMM yy');
-  }
-  return String(key);
-};
-
-export const monthLabel = (monthIndex) => {
-  const date = new Date(new Date().getFullYear(), Number(monthIndex) - 1, 1);
-  return format(date, 'MMM');
-};
-
 export const formatDuration = (minutes) => {
   const value = Number(minutes) || 0;
   if (value <= 0) return '—';
