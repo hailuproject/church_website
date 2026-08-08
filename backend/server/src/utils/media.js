@@ -62,10 +62,4 @@ export const inferResourceType = (mimeType = '') => {
   return 'raw';
 };
 
-export const toCloudinaryResourceType = (resourceType) => {
-  if (resourceType === 'raw' || resourceType === 'pdf' || resourceType === 'document') return 'raw';
-  if (resourceType === 'video') return 'video';
-  return 'image';
-};
-
-export default { uploadMedia, deleteMedia, inferResourceType, toCloudinaryResourceType };
+export default { uploadMedia, deleteMedia, inferResourceType };

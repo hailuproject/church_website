@@ -1,16 +1,8 @@
 import { body, param, query } from 'express-validator';
 import mongoose from 'mongoose';
 
-export const isObjectId = (value) => mongoose.Types.ObjectId.isValid(value);
-
 export const objectIdValidator = (field = 'id') =>
-  param(field).custom((value) => isObjectId(value)).withMessage(`Invalid ${field} format`);
-
-export const bodyObjectIdValidator = (field) =>
-  body(field).optional().custom((value) => isObjectId(value)).withMessage(`Invalid ${field} format`);
-
-export const optionalObjectIdValidator = (field) =>
-  body(field).optional({ nullable: true, checkFalsy: true }).custom((value) => isObjectId(value)).withMessage(`Invalid ${field} format`);
+  param(field).custom((value) => mongoose.Types.ObjectId.isValid(value)).withMessage(`Invalid ${field} format`);
 
 export const emailValidator = (field = 'email') =>
   body(field)
@@ -102,10 +94,7 @@ export const paginationValidators = [
 ];
 
 export default {
-  isObjectId,
   objectIdValidator,
-  bodyObjectIdValidator,
-  optionalObjectIdValidator,
   emailValidator,
   optionalEmailValidator,
   passwordValidator,

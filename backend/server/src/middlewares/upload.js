@@ -60,15 +60,6 @@ export const upload = (allowedMediaTypes, { fieldName = 'file', maxCount = 10 } 
   return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
-export const uploadMultiple = (allowedMediaTypes, { fieldName = 'files', maxCount = 10 } = {}) => {
-  const middleware = multer({
-    storage: memoryStorage,
-    limits: { fileSize: getMaxSize(allowedMediaTypes), files: maxCount },
-    fileFilter: buildFileFilter(allowedMediaTypes),
-  }).array(fieldName, maxCount);
-  return (req, res, next) => runMulter(req, res, next, middleware);
-};
-
 export const uploadMixed = (fields, allowedMediaTypes) => {
   const allowedMimes = allowedMediaTypes.flatMap((type) => FILE_MIME_TYPES[type] || []);
   const middleware = multer({
@@ -82,4 +73,4 @@ export const uploadMixed = (fields, allowedMediaTypes) => {
   return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
-export default { upload, uploadMultiple, uploadMixed };
+export default { upload, uploadMixed };

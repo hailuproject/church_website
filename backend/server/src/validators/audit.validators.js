@@ -6,7 +6,7 @@ export const listAuditValidation = [
   enumValidator('action', AUDIT_ACTIONS),
   enumValidator('module', [
     'auth', 'users', 'content', 'sermons', 'events', 'gallery', 'resources',
-    'donations', 'contact', 'settings', 'media', 'audit-logs',
+    'donations', 'contact', 'settings', 'audit-logs',
   ]),
 ];
 

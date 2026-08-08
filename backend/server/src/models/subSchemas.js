@@ -43,9 +43,4 @@ export const addressSchema = new Schema(
   { _id: false }
 );
 
-export const localizedSchema = (englishOptions = {}, amharicOptions = {}) => ({
-  title: { type: String, required: true, trim: true, ...englishOptions },
-  titleAm: { type: String, trim: true, default: '', ...amharicOptions },
-});
-
-export default { mediaObjectSchema, mediaListSchema, socialLinksSchema, addressSchema, localizedSchema };
+export default { mediaObjectSchema, mediaListSchema, socialLinksSchema, addressSchema };

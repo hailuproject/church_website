@@ -68,26 +68,6 @@ export const templates = {
     );
   },
 
-  sacramentConfirmation: ({ name, type, date }) => {
-    return baseLayout(
-      'Sacrament request confirmation',
-      `<p>Dear <strong>${name}</strong>,</p>
-       <p>We have received your request for <strong>${type}</strong>${date ? ` scheduled for <strong>${date}</strong>` : ''}.</p>
-       <p>Our office will contact you shortly to confirm the details.</p>
-       <p>May God bless you. እግዚአብሔር ይባርክህ።</p>`
-    );
-  },
-
-  membershipConfirmation: ({ name }) => {
-    return baseLayout(
-      'Membership application received',
-      `<p>Dear <strong>${name}</strong>,</p>
-       <p>Thank you for applying for membership in the Ethiopian Orthodox Tewahedo Church.</p>
-       <p>Your application is being reviewed and we will contact you with the outcome.</p>
-       <p>Welcome to the family. እንኳን ደህና መጣህ።</p>`
-    );
-  },
-
   welcome: ({ name, email }) => {
     return baseLayout(
       'Account created',
