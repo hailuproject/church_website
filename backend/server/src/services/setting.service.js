@@ -89,27 +89,6 @@ class SettingService {
     return updated;
   }
 
-  async updateHomepageSettings(data, actor, reqMeta) {
-    const current = await getSingleton();
-    const updated = await updateSingleton({
-      heroImage: data.heroImage !== undefined ? data.heroImage : current.heroImage,
-      liveStreamURL: data.liveStreamURL !== undefined ? data.liveStreamURL : current.liveStreamURL,
-      languageSettings: data.languageSettings !== undefined ? data.languageSettings : current.languageSettings,
-      updatedBy: actor._id,
-    });
-
-    await createAuditLog({
-      admin: actor,
-      action: 'update',
-      module: 'settings',
-      documentId: updated._id,
-      newData: { event: 'homepage_settings_updated' },
-      ...reqMeta,
-    });
-
-    return updated;
-  }
-
   async updateFooter(data, actor, reqMeta) {
     const updated = await updateSingleton({
       footerText: data.footerText,
@@ -129,23 +108,6 @@ class SettingService {
     return updated;
   }
 
-  async updateLanguageSettings(data, actor, reqMeta) {
-    const current = await getSingleton();
-    const languageSettings = { ...current.languageSettings?.toObject?.(), ...data };
-    const updated = await updateSingleton({ languageSettings, updatedBy: actor._id });
-
-    await createAuditLog({
-      admin: actor,
-      action: 'update',
-      module: 'settings',
-      documentId: updated._id,
-      newData: { event: 'language_settings_updated' },
-      ...reqMeta,
-    });
-
-    return updated;
-  }
-
   async updateLiveStream(data, actor, reqMeta) {
     const updated = await updateSingleton({
       liveStreamURL: data.liveStreamURL,
@@ -158,23 +120,6 @@ class SettingService {
       module: 'settings',
       documentId: updated._id,
       newData: { event: 'live_stream_updated' },
-      ...reqMeta,
-    });
-
-    return updated;
-  }
-
-  async updateTheme(data, actor, reqMeta) {
-    const current = await getSingleton();
-    const theme = { ...current.theme?.toObject?.(), ...data };
-    const updated = await updateSingleton({ theme, updatedBy: actor._id });
-
-    await createAuditLog({
-      admin: actor,
-      action: 'update',
-      module: 'settings',
-      documentId: updated._id,
-      newData: { event: 'theme_updated' },
       ...reqMeta,
     });
 

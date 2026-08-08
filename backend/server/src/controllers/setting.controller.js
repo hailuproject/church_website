@@ -27,19 +27,9 @@ export const updateSocialLinks = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Social links updated', data });
 });
 
-export const updateHomepageSettings = asyncHandler(async (req, res) => {
-  const data = await settingService.updateHomepageSettings(req.body, req.admin, getRequestMeta(req));
-  sendSuccess(res, { message: 'Homepage settings updated', data });
-});
-
 export const updateFooterSettings = asyncHandler(async (req, res) => {
   const data = await settingService.updateFooter(req.body, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: 'Footer settings updated', data });
-});
-
-export const updateLanguageSettings = asyncHandler(async (req, res) => {
-  const data = await settingService.updateLanguageSettings(req.body, req.admin, getRequestMeta(req));
-  sendSuccess(res, { message: 'Language settings updated', data });
 });
 
 export const updateLiveStreamSettings = asyncHandler(async (req, res) => {
@@ -47,19 +37,11 @@ export const updateLiveStreamSettings = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: 'Live stream settings updated', data });
 });
 
-export const updateThemeSettings = asyncHandler(async (req, res) => {
-  const data = await settingService.updateTheme(req.body, req.admin, getRequestMeta(req));
-  sendSuccess(res, { message: 'Theme settings updated', data });
-});
-
 export default {
   getPublicSettings,
   getAdminSettings,
   updateSettings,
   updateSocialLinks,
-  updateHomepageSettings,
   updateFooterSettings,
-  updateLanguageSettings,
   updateLiveStreamSettings,
-  updateThemeSettings,
 };
