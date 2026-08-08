@@ -7,15 +7,7 @@ export default function CTASection() {
   return (
     <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Call to action">
       {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&h=800&fit=crop"
-          alt=""
-          className="w-full h-full object-cover opacity-20"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-black/80" />
-      </div>
+      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
 
       {/* Floating orb */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

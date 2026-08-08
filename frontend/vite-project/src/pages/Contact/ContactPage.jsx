@@ -1,72 +1,42 @@
-import { useState } from 'react';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
-import SectionHeader from '../../components/SectionHeader';
 import HeroBanner from './HeroBanner';
 import ContactCard from './ContactCard';
 import ContactForm from './ContactForm';
 import GoogleMapSection from './GoogleMapSection';
-import ServiceTimeline from './ServiceTimeline';
-import DepartmentCard from './DepartmentCard';
-import FAQAccordion from './FAQAccordion';
-import SocialCard from './SocialCard';
-import VisitSection from './VisitSection';
 import CTASection from './CTASection';
-import {
-  contactInfo,
-  departments,
-  socialLinks,
-  faqs,
-} from '../../data/contactData';
 import { useChurch } from '../../hooks/useHomeSections';
-
-const platformMeta = {
-  facebook: { platform: 'Facebook', description: 'Follow us for event updates, photos, and community news.', icon: 'facebook' },
-  twitter: { platform: 'Twitter', description: 'Follow us for updates and announcements.', icon: 'twitter' },
-  youtube: { platform: 'YouTube', description: 'Watch live services, sermons, and choir performances.', icon: 'youtube' },
-  telegram: { platform: 'Telegram', description: 'Join our channel for announcements and prayer requests.', icon: 'telegram' },
-  instagram: { platform: 'Instagram', description: 'Beautiful photos from worship, feasts, and community life.', icon: 'instagram' },
-  tiktok: { platform: 'TikTok', description: 'Short clips from our community and worship.', icon: 'tiktok' },
-};
-
-const socialIcons = Object.keys(platformMeta);
+import { useSeo } from '../../hooks/useSeo';
 
 function ContactInformation() {
   const church = useChurch();
-  const hasLiveContact = church.address || church.phone || church.email;
-  const cards = hasLiveContact
-    ? [
-        {
-          id: 'address',
-          title: 'Visit Us',
-          icon: 'location',
-          details: [{ label: 'Address', value: church.address }].filter((d) => d.value),
-        },
-        {
-          id: 'phone',
-          title: 'Call Us',
-          icon: 'phone',
-          details: [{ label: 'Church Office', value: church.phone }].filter((d) => d.value),
-        },
-        {
-          id: 'email',
-          title: 'Email Us',
-          icon: 'email',
-          details: [{ label: 'General', value: church.email }].filter((d) => d.value),
-        },
-        contactInfo[3],
-      ].filter((card) => card.details.length)
-    : contactInfo;
+  const cards = [
+    {
+      id: 'address',
+      title: 'Visit Us',
+      icon: 'location',
+      details: [{ label: 'Address', value: church.address }].filter((d) => d.value),
+    },
+    {
+      id: 'phone',
+      title: 'Call Us',
+      icon: 'phone',
+      details: [{ label: 'Church Office', value: church.phone }].filter((d) => d.value),
+    },
+    {
+      id: 'email',
+      title: 'Email Us',
+      icon: 'email',
+      details: [{ label: 'General', value: church.email }].filter((d) => d.value),
+    },
+  ].filter((card) => card.details.length);
+
+  if (!cards.length) return null;
 
   return (
     <Section id="info" className="bg-surface">
       <Container>
-        <SectionHeader
-          subtitle="Reach Out"
-          title="Contact Information"
-          description="Multiple ways to connect with our church community. We are here to serve you."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cards.map((info, i) => (
             <ContactCard key={info.id} info={info} index={i} />
           ))}
@@ -86,98 +56,14 @@ function ContactFormSection() {
   );
 }
 
-function ChurchDepartments() {
-  return (
-    <Section id="departments" className="bg-surface">
-      <Container>
-        <SectionHeader
-          subtitle="Our Teams"
-          title="Church Departments"
-          description="Connect with the right ministry team for your needs."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {departments.map((dept, i) => (
-            <DepartmentCard key={dept.id} department={dept} index={i} />
-          ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
-function FAQSection() {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  const handleToggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
-  return (
-    <Section id="faq" className="bg-white">
-      <Container>
-        <SectionHeader
-          subtitle="Common Questions"
-          title="Frequently Asked Questions"
-          description="Find quick answers to the most common questions about visiting and joining our church."
-        />
-        <div className="max-w-3xl mx-auto flex flex-col gap-4">
-          {faqs.map((item, i) => (
-            <FAQAccordion
-              key={i}
-              item={item}
-              index={i}
-              isOpen={openIndex === i}
-              onToggle={() => handleToggle(i)}
-            />
-          ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
-function ConnectWithUs() {
-  const church = useChurch();
-  const liveLinks = Object.entries(church.socialLinks || {})
-    .filter(([, url]) => url)
-    .map(([key, url]) => ({
-      id: key,
-      url,
-      ...(platformMeta[key] || { platform: key, description: `Follow us on ${key}.`, icon: key }),
-    }))
-    .filter((link) => socialIcons.includes(link.icon));
-  const links = liveLinks.length ? liveLinks : socialLinks;
-
-  return (
-    <Section id="social" className="bg-surface">
-      <Container>
-        <SectionHeader
-          subtitle="Stay Connected"
-          title="Connect With Us"
-          description="Follow us on social media for event updates, live services, and community news."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {links.map((link, i) => (
-            <SocialCard key={link.id} link={link} index={i} />
-          ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
 export default function ContactPage() {
+  useSeo({ title: 'Contact Us' });
   return (
     <main className="min-h-screen">
       <HeroBanner />
       <ContactInformation />
       <ContactFormSection />
       <GoogleMapSection />
-      <ServiceTimeline />
-      <ChurchDepartments />
-      <FAQSection />
-      <ConnectWithUs />
-      <VisitSection />
       <CTASection />
     </main>
   );
