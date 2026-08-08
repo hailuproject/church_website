@@ -72,11 +72,6 @@ export const eventService = {
     const response = await client.get('/events/calendar', { params: { year, month } });
     return unwrapData(response);
   },
-
-  getRsvps: async (id, params) => {
-    const response = await client.get(`/events/${id}/rsvps`, { params });
-    return unwrapList(response);
-  },
 };
 
 export default eventService;

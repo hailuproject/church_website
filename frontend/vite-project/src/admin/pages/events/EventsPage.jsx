@@ -1,15 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { Plus, Pencil, Trash2, Star, Users, CalendarDays } from 'lucide-react';
+import { Plus, Pencil, Trash2, Star, CalendarDays } from 'lucide-react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { DataTable, ActionMenu } from '../../components/ui/DataTable';
 import { SearchInput } from '../../components/ui/SearchInput';
 import Button from '../../components/ui/Button';
-import { Badge, StatusBadge } from '../../components/ui/Badge';
+import { StatusBadge } from '../../components/ui/Badge';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { EventFormModal } from './EventFormModal';
-import { EventRsvpsModal } from './EventRsvpsModal';
 import { eventService } from '../../services/event.service';
 import { useListQuery } from '../../hooks/useListQuery';
 import { getErrorMessage } from '../../utils/api';
@@ -24,7 +23,6 @@ export const EventsPage = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
-  const [rsvpsEvent, setRsvpsEvent] = useState(null);
 
   const list = useListQuery({
     key: 'events',
@@ -125,21 +123,6 @@ export const EventsPage = () => {
         render: (row) => <StatusBadge status={row.status} />,
       },
       {
-        key: 'rsvpCount',
-        header: 'RSVPs',
-        render: (row) => (
-          <button
-            type="button"
-            onClick={() => setRsvpsEvent(row)}
-            className="inline-flex items-center gap-1.5 text-sm text-primary-600 hover:underline dark:text-primary-400"
-          >
-            <Users className="h-3.5 w-3.5" />
-            {row.rsvpCount ?? 0}
-            {row.capacity ? `/${row.capacity}` : ''}
-          </button>
-        ),
-      },
-      {
         key: 'isFeatured',
         header: 'Featured',
         render: (row) =>
@@ -157,11 +140,6 @@ export const EventsPage = () => {
           <ActionMenu
             row={row}
             items={[
-              {
-                label: 'View RSVPs',
-                icon: Users,
-                onClick: (r) => setRsvpsEvent(r),
-              },
               ...EVENT_STATUSES.filter((s) => s !== row.status).map((s) => ({
                 label: `Mark ${s}`,
                 onClick: (r) => statusMutation.mutate({ id: r._id, status: s }),
@@ -268,8 +246,6 @@ export const EventsPage = () => {
         onSubmit={handleFormSubmit}
         submitting={createMutation.isPending || updateMutation.isPending}
       />
-
-      <EventRsvpsModal open={Boolean(rsvpsEvent)} onClose={() => setRsvpsEvent(null)} event={rsvpsEvent} />
 
       <ConfirmDialog
         open={Boolean(deleting)}
