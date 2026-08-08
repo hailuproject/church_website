@@ -14,7 +14,6 @@ import LiturgicalTimeline from './LiturgicalTimeline';
 import FastingCalendar from './FastingCalendar';
 import SaintCard from './SaintCard';
 import DownloadCard from './DownloadCard';
-import VisitSection from './VisitSection';
 import CTASection from './CTASection';
 import {
   resourceFilters,
@@ -27,6 +26,7 @@ import {
   useResourceCategoriesList,
   useResourcesList,
 } from '../../hooks/useResourcesSections';
+import { useSeo } from '../../hooks/useSeo';
 
 function ResourceCategories() {
   const resourceCategories = useResourceCategoriesList();
@@ -51,6 +51,7 @@ function ResourceCategories() {
 function DigitalLibrary() {
   const [activeFilter, setActiveFilter] = useState('All');
   const resources = useResourcesList();
+  if (!resources.length) return null;
 
   const filteredResources =
     activeFilter === 'All'
@@ -99,6 +100,7 @@ function DigitalLibrary() {
 }
 
 function PrayerLibrary() {
+  if (!prayerResources.length) return null;
   return (
     <Section id="prayers" className="bg-white">
       <Container>
@@ -137,6 +139,7 @@ function EthiopianSaints() {
 }
 
 function Downloads() {
+  if (!downloads.length) return null;
   return (
     <Section id="downloads" className="bg-white">
       <Container>
@@ -156,6 +159,7 @@ function Downloads() {
 }
 
 function FAQ() {
+  if (!faqs.length) return null;
   return (
     <Section id="faq" className="bg-surface">
       <Container>
@@ -173,6 +177,7 @@ function FAQ() {
 }
 
 export default function ResourcesPage() {
+  useSeo({ title: 'Resources' });
   return (
     <main className="min-h-screen">
       <HeroBanner />
@@ -186,7 +191,6 @@ export default function ResourcesPage() {
       <EthiopianSaints />
       <Downloads />
       <FAQ />
-      <VisitSection />
       <CTASection />
     </main>
   );

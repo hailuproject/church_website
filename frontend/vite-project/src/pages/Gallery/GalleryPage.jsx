@@ -22,11 +22,13 @@ import {
 } from '../../data/galleryData';
 import {
   useAlbums,
-  useMasonryImages,
   useVideoItems,
 } from '../../hooks/useGallerySections';
+import { useSeo } from '../../hooks/useSeo';
 
 function GalleryCategories() {
+  const albums = useAlbums();
+  if (!albums.length) return null;
   return (
     <Section id="categories" className="bg-white">
       <Container>
@@ -77,6 +79,8 @@ function VideoGallery() {
     setSelectedVideo(null);
   };
 
+  if (!videos.length) return null;
+
   return (
     <Section id="videos" className="bg-white">
       <Container>
@@ -121,9 +125,6 @@ function VideoGallery() {
                     </div>
                     <p className="text-lg font-medium">{selectedVideo.title}</p>
                     <p className="text-sm mt-1">{selectedVideo.event}</p>
-                    <p className="text-xs mt-2 text-white/40">
-                      Video player placeholder — embed your YouTube/Vimeo URL here
-                    </p>
                   </div>
                 </div>
                 <div className="p-4 flex items-center justify-between">
@@ -170,6 +171,7 @@ function SacredMoments() {
 }
 
 function CommunityHighlights() {
+  if (!communityHighlights.length) return null;
   return (
     <Section id="community" className="bg-white">
       <Container>
@@ -189,6 +191,7 @@ function CommunityHighlights() {
 }
 
 export default function GalleryPage() {
+  useSeo({ title: 'Gallery' });
   return (
     <main className="min-h-screen">
       <HeroBanner />

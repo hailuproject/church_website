@@ -15,12 +15,16 @@ export default function SacredMomentCard({ moment, index }) {
       whileHover={{ y: -4 }}
     >
       <div className="relative overflow-hidden">
-        <img
-          src={moment.image}
-          alt={moment.title}
-          className="w-full aspect-[3/4] object-cover group-hover:scale-110 transition-transform duration-700"
-          loading="lazy"
-        />
+        {moment.image ? (
+          <img
+            src={moment.image}
+            alt={moment.title}
+            className="w-full aspect-[3/4] object-cover group-hover:scale-110 transition-transform duration-700"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full aspect-[3/4] bg-linear-to-br from-primary to-primary-dark" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       </div>
 

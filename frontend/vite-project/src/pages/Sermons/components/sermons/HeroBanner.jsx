@@ -9,15 +9,7 @@ export default function HeroBanner() {
       className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden"
       aria-label="Sermons hero banner"
     >
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1548013146-72479768bada?w=1920&h=1080&fit=crop"
-          alt="Ethiopian Orthodox Church interior with beautiful murals"
-          className="w-full h-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
-      </div>
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
         <nav aria-label="Breadcrumb" className="mb-10">

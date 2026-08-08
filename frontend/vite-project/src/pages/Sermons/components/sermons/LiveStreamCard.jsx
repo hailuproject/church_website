@@ -5,9 +5,6 @@ import ReactPlayer from "react-player";
 import Button from "../../../../components/Button";
 import { useLiveStream } from "../../../../hooks/useSermonsSections";
 
-const LIVE_THUMB =
-  "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop";
-
 function CountdownTimer({ targetDate }) {
   const [timeLeft, setTimeLeft] = useState("");
   const [isClient, setIsClient] = useState(false);
@@ -62,6 +59,8 @@ const LiveStreamCard = memo(function LiveStreamCard() {
   const stream = useLiveStream();
   const [isPlaying, setIsPlaying] = useState(false);
 
+  if (!stream) return null;
+
   return (
     <section
       id="live"
@@ -76,7 +75,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="grid lg:grid-cols-2 gap-0 bg-white rounded-xs border border-border overflow-hidden shadow-lg"
         >
-          <div className="relative bg-black aspect-video lg:aspect-auto">
+          <div className="relative bg-stone-900 aspect-video lg:aspect-auto">
             {stream.isLive && isPlaying ? (
               <ReactPlayer
                 url={stream.videoUrl}
@@ -88,21 +87,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
               />
             ) : (
               <div className="w-full h-full min-h-[280px] flex items-center justify-center relative">
-                <img
-                  src={LIVE_THUMB}
-                  alt="Church interior"
-                  className="absolute inset-0 w-full h-full object-cover opacity-50"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/40" />
-                {!stream.isLive && (
-                  <div className="relative z-10 text-center">
-                    <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xs flex items-center justify-center mx-auto mb-3">
-                      <FiClock className="text-3xl text-white/70" />
-                    </div>
-                    <p className="text-white/60 text-sm font-medium">Offline</p>
-                  </div>
-                )}
+                <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-stone-900" />
                 {stream.isLive && !isPlaying && (
                   <motion.button
                     whileHover={{ scale: 1.05 }}

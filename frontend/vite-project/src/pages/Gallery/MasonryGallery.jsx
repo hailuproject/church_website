@@ -14,6 +14,8 @@ export default function MasonryGallery() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
+  if (!galleryImages.length) return null;
+
   const filteredImages =
     activeFilter === 'All'
       ? galleryImages

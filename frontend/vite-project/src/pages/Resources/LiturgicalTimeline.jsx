@@ -23,6 +23,7 @@ const liturgicalIcons = {
 };
 
 export default function LiturgicalTimeline() {
+  if (!liturgicalResources.length) return null;
   return (
     <Section id="liturgical" className="bg-surface">
       <Container>

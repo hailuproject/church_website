@@ -9,10 +9,10 @@ import FeastCard from './FeastCard';
 import ServiceTimeline from './ServiceTimeline';
 import MinistryCard from './MinistryCard';
 import CategoryCard from './CategoryCard';
-import VisitSection from './VisitSection';
 import CTASection from './CTASection';
 import { feastDays, ministries, categories } from '../../data/eventsData';
 import { useUpcomingEventsList } from '../../hooks/useEventsSections';
+import { useSeo } from '../../hooks/useSeo';
 
 function UpcomingEvents() {
   const events = useUpcomingEventsList();
@@ -54,6 +54,7 @@ function MajorFeastDays() {
 }
 
 function ChurchMinistries() {
+  if (!ministries.length) return null;
   return (
     <Section id="ministries" className="bg-surface">
       <Container>
@@ -73,6 +74,8 @@ function ChurchMinistries() {
 }
 
 function EventCategories() {
+  const events = useUpcomingEventsList();
+  if (!events.length) return null;
   return (
     <Section id="categories" className="bg-white">
       <Container>
@@ -92,6 +95,7 @@ function EventCategories() {
 }
 
 export default function EventsPage() {
+  useSeo({ title: 'Events & Liturgical Calendar' });
   return (
     <main className="min-h-screen">
       <HeroBanner />
@@ -102,7 +106,6 @@ export default function EventsPage() {
       <ServiceTimeline />
       <ChurchMinistries />
       <EventCategories />
-      <VisitSection />
       <CTASection />
     </main>
   );

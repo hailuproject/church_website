@@ -4,6 +4,7 @@ import Section from '../../components/Section';
 import { timeline } from '../../data/galleryData';
 
 export default function TimelineSection() {
+  if (!timeline.length) return null;
   return (
     <Section id="history" className="bg-surface">
       <Container>

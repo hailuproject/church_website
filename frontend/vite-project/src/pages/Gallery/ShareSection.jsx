@@ -16,13 +16,7 @@ export default function ShareSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img
-              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop"
-              alt="Community members sharing joyful moments at church"
-              className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            <div className="w-full aspect-[4/3] bg-linear-to-br from-primary to-primary-dark" />
           </motion.div>
 
           <motion.div

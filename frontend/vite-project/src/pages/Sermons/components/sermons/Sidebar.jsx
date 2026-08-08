@@ -22,6 +22,7 @@ function SectionHeading({ icon: Icon, title }) {
 
 function UpcomingServices() {
   const { upcomingServices } = sidebarContent;
+  if (!upcomingServices.length) return null;
   return (
     <div className="bg-white border border-border rounded-xs p-5">
       <SectionHeading icon={FiCalendar} title="Upcoming Services" />
@@ -59,6 +60,7 @@ function UpcomingServices() {
 
 function PopularSermons() {
   const { popularSermons } = sidebarContent;
+  if (!popularSermons.length) return null;
   return (
     <div className="bg-white border border-border rounded-xs p-5">
       <SectionHeading icon={FiTrendingUp} title="Popular Sermons" />

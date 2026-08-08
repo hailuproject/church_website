@@ -5,7 +5,7 @@ import Button from "../../../../components/Button";
 
 export default function FeaturedTeaching() {
   const sermon = featuredTeaching;
-
+  if (!sermon) return null;
   return (
     <section className="py-20 md:py-28 bg-white" aria-label="Featured teaching">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

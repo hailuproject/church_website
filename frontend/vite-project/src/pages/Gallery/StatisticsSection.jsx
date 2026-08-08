@@ -49,6 +49,7 @@ function CounterItem({ value, suffix, label, index }) {
 }
 
 export default function StatisticsSection() {
+  if (!statistics.length) return null;
   return (
     <section
       className="relative py-24 md:py-32 overflow-hidden"

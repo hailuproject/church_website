@@ -9,15 +9,7 @@ export default function HeroBanner() {
       className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
       aria-label="Gallery page hero"
     >
-      <div className="absolute inset-0">
-        <img
-          src={heroData.image}
-          alt={heroData.imageAlt}
-          className="w-full h-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
-      </div>
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
