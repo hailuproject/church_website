@@ -34,36 +34,20 @@ tags:
     description: Admin user management (RBAC)
   - name: Dashboard
     description: Analytics dashboard
-  - name: Announcements
-    description: Announcement management
-  - name: Home
-    description: Home page content
-  - name: About
-    description: About page content
-  - name: Leadership
-    description: Church leadership
   - name: Sermons
     description: Sermon management
   - name: Events
     description: Events & liturgical calendar
-  - name: Sacraments
-    description: Sacrament requests
   - name: Gallery
     description: Photo & video albums
   - name: Resources
     description: Downloads and resources
-  - name: Membership
-    description: Membership applications
   - name: Donations
     description: Donations and receipts
   - name: Contact
-    description: Contact inbox & prayer requests
+    description: Contact inbox
   - name: Settings
     description: Church settings
-  - name: Languages
-    description: Bilingual translations (English & Amharic)
-  - name: Media
-    description: File uploads
   - name: Audit Logs
     description: Audit trail
   - name: System
@@ -398,114 +382,36 @@ paths:
   /dashboard:
     get:
       tags: [Dashboard]
-      summary: Full dashboard data (overview + recent + charts)
+      summary: Dashboard overview counts (sermons, events, resources, unread messages, donations)
       security:
         - bearerAuth: []
-      parameters:
-        - in: query
-          name: months
-          schema:
-            type: integer
-            default: 6
       responses:
         '200':
-          description: Dashboard data
+          description: Dashboard overview
   /dashboard/overview:
     get:
       tags: [Dashboard]
-      summary: Analytics overview counts
+      summary: Dashboard overview counts
       security:
         - bearerAuth: []
       responses:
         '200':
           description: Overview counts
-  /announcements:
+  /dashboard/recent-activities:
     get:
-      tags: [Announcements]
-      summary: List announcements (public)
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Search'
-        - $ref: '#/components/parameters/SortBy'
-        - $ref: '#/components/parameters/Order'
-      responses:
-        '200':
-          description: Announcements retrieved
-    post:
-      tags: [Announcements]
-      summary: Create announcement (Admin/Priest)
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Announcement'
-      responses:
-        '201':
-          description: Announcement created
-  /announcements/active:
-    get:
-      tags: [Announcements]
-      summary: List currently active announcements
-      responses:
-        '200':
-          description: Active announcements
-  /announcements/{id}:
-    get:
-      tags: [Announcements]
-      summary: Get an announcement
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Announcement retrieved
-    patch:
-      tags: [Announcements]
-      summary: Update an announcement
+      tags: [Dashboard]
+      summary: Recent admin activities
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/Id'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
       responses:
         '200':
-          description: Announcement updated
-    delete:
-      tags: [Announcements]
-      summary: Delete an announcement
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Announcement deleted
-  /home:
-    get:
-      tags: [Home]
-      summary: Public home page content (hero, welcome, announcements, live stream, events, sermons, quick links)
-      responses:
-        '200':
-          description: Home content
-    patch:
-      tags: [Home]
-      summary: Update home content (Admin)
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Home content updated
-  /home/admin:
-    get:
-      tags: [Home]
-      summary: Get admin home settings
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Admin home content
+          description: Recent activities
   /sermons:
     get:
       tags: [Sermons]
@@ -747,69 +653,10 @@ paths:
       responses:
         '200':
           description: Event deleted
-  /events/{id}/rsvp:
-    post:
-      tags: [Events]
-      summary: RSVP to an event (public)
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RsvpRequest'
-      responses:
-        '201':
-          description: RSVP recorded
-  /events/{id}/rsvps:
-    get:
-      tags: [Events]
-      summary: List event RSVPs
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: RSVPs retrieved
-  /sacraments:
-    get:
-      tags: [Sacraments]
-      summary: List sacrament requests
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-      responses:
-        '200':
-          description: Requests retrieved
-    post:
-      tags: [Sacraments]
-      summary: Submit a sacrament request (public)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SacramentRequest'
-      responses:
-        '201':
-          description: Request submitted
-  /sacraments/{id}/status:
-    patch:
-      tags: [Sacraments]
-      summary: Update request status / assign priest
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Status updated
   /gallery:
     get:
       tags: [Gallery]
-      summary: List albums
+      summary: List albums (public)
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
@@ -817,20 +664,6 @@ paths:
       responses:
         '200':
           description: Albums retrieved
-    post:
-      tags: [Gallery]
-      summary: Create album (Admin/Deacon)
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/GalleryAlbum'
-      responses:
-        '201':
-          description: Album created
   /gallery/{id}:
     get:
       tags: [Gallery]
@@ -840,26 +673,6 @@ paths:
       responses:
         '200':
           description: Album retrieved
-    patch:
-      tags: [Gallery]
-      summary: Update album
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Album updated
-    delete:
-      tags: [Gallery]
-      summary: Delete album
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Album deleted
   /gallery/{id}/images:
     post:
       tags: [Gallery]
@@ -884,49 +697,6 @@ paths:
       responses:
         '201':
           description: Images uploaded
-  /gallery/{id}/videos:
-    post:
-      tags: [Gallery]
-      summary: Upload video to album
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '201':
-          description: Video uploaded
-  /gallery/{id}/images/{mediaId}:
-    delete:
-      tags: [Gallery]
-      summary: Remove an image from album
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-        - in: path
-          name: mediaId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Image removed
-  /gallery/{id}/videos/{mediaId}:
-    delete:
-      tags: [Gallery]
-      summary: Remove a video from album
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-        - in: path
-          name: mediaId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Video removed
   /resources:
     get:
       tags: [Resources]
@@ -979,80 +749,6 @@ paths:
       responses:
         '200':
           description: PDF uploaded
-  /membership:
-    get:
-      tags: [Membership]
-      summary: List membership applications
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Search'
-      responses:
-        '200':
-          description: Members retrieved
-    post:
-      tags: [Membership]
-      summary: Register a member (public, with optional documents)
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Membership'
-      responses:
-        '201':
-          description: Membership submitted
-  /membership/{id}:
-    get:
-      tags: [Membership]
-      summary: Get a member
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Member retrieved
-    patch:
-      tags: [Membership]
-      summary: Update a member
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Member updated
-    delete:
-      tags: [Membership]
-      summary: Delete a member
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Member deleted
-  /membership/{id}/approve:
-    patch:
-      tags: [Membership]
-      summary: Approve a member
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Member approved
-  /membership/{id}/reject:
-    patch:
-      tags: [Membership]
-      summary: Reject a member
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Member rejected
   /donations:
     get:
       tags: [Donations]
@@ -1187,19 +883,6 @@ paths:
       responses:
         '200':
           description: Reply sent
-  /contact/prayer-request:
-    post:
-      tags: [Contact]
-      summary: Submit a prayer request (public)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PrayerRequest'
-      responses:
-        '201':
-          description: Prayer request submitted
   /settings/public:
     get:
       tags: [Settings]
@@ -1253,15 +936,6 @@ paths:
       responses:
         '200':
           description: Social links updated
-  /settings/homepage:
-    patch:
-      tags: [Settings]
-      summary: Update homepage settings (hero, live stream, language)
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Homepage settings updated
   /settings/footer:
     patch:
       tags: [Settings]
@@ -1271,15 +945,6 @@ paths:
       responses:
         '200':
           description: Footer updated
-  /settings/language:
-    patch:
-      tags: [Settings]
-      summary: Update language settings
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Language settings updated
   /settings/live-stream:
     patch:
       tags: [Settings]
@@ -1289,152 +954,6 @@ paths:
       responses:
         '200':
           description: Live stream updated
-  /settings/theme:
-    patch:
-      tags: [Settings]
-      summary: Update theme settings
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Theme updated
-  /languages/public:
-    get:
-      tags: [Languages]
-      summary: Get translations for a language
-      parameters:
-        - in: query
-          name: language
-          schema:
-            type: string
-            enum: [english, amharic]
-            default: english
-      responses:
-        '200':
-          description: Translations retrieved
-  /languages:
-    get:
-      tags: [Languages]
-      summary: List translations (Admin)
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Search'
-      responses:
-        '200':
-          description: Translations retrieved
-    post:
-      tags: [Languages]
-      summary: Upsert a translation (Admin)
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [key]
-              properties:
-                key: { type: string }
-                english: { type: string }
-                amharic: { type: string }
-                section: { type: string }
-      responses:
-        '201':
-          description: Translation saved
-  /languages/bulk:
-    post:
-      tags: [Languages]
-      summary: Bulk upsert translations (Admin)
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [items]
-              properties:
-                items:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      key: { type: string }
-                      english: { type: string }
-                      amharic: { type: string }
-                      section: { type: string }
-      responses:
-        '201':
-          description: Translations saved
-  /media:
-    get:
-      tags: [Media]
-      summary: List media
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/Search'
-      responses:
-        '200':
-          description: Media retrieved
-  /media/upload:
-    post:
-      tags: [Media]
-      summary: Upload a file (image/video/audio/pdf)
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required: [file]
-              properties:
-                file:
-                  type: string
-                  format: binary
-                folder:
-                  type: string
-                usage:
-                  type: string
-      responses:
-        '201':
-          description: File uploaded
-  /media/{id}:
-    get:
-      tags: [Media]
-      summary: Get media details
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Media retrieved
-    patch:
-      tags: [Media]
-      summary: Update media metadata
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Media updated
-    delete:
-      tags: [Media]
-      summary: Delete media (and from Cloudinary)
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Media deleted
   /audit-logs:
     get:
       tags: [Audit Logs]
@@ -1653,25 +1172,6 @@ components:
           type: number
         height:
           type: number
-    Announcement:
-      type: object
-      required: [title, description]
-      properties:
-        title: { type: string }
-        titleAm: { type: string }
-        description: { type: string }
-        descriptionAm: { type: string }
-        priority:
-          type: string
-          enum: [Low, Normal, High, Critical]
-        startDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date
-        isPublished:
-          type: boolean
     Sermon:
       type: object
       required: [title]
@@ -1727,54 +1227,6 @@ components:
         status:
           type: string
           enum: [upcoming, ongoing, completed, cancelled]
-    RsvpRequest:
-      type: object
-      required: [name]
-      properties:
-        name: { type: string }
-        email: { type: string }
-        phone: { type: string }
-        guests:
-          type: number
-          maximum: 10
-        status:
-          type: string
-          enum: [confirmed, pending, cancelled]
-    SacramentRequest:
-      type: object
-      required: [type, memberName]
-      properties:
-        type:
-          type: string
-          enum: [Baptism, Holy Communion, Confession, Matrimony, Anointing of the Sick, Ordination, House Blessing, Other]
-        member:
-          type: string
-        memberName: { type: string }
-        phone: { type: string }
-        email: { type: string }
-        preferredDate:
-          type: string
-          format: date
-        assignedPriest:
-          type: string
-        status:
-          type: string
-          enum: [pending, scheduled, confirmed, completed, cancelled, rejected]
-        notes: { type: string }
-    GalleryAlbum:
-      type: object
-      required: [albumName]
-      properties:
-        albumName: { type: string }
-        albumNameAm: { type: string }
-        description: { type: string }
-        descriptionAm: { type: string }
-        coverImage:
-          type: string
-          format: binary
-        category:
-          type: string
-          enum: [Liturgy, Festival, Ordination, Baptism, Community, Conference, Other]
     Resource:
       type: object
       required: [title]
@@ -1797,40 +1249,6 @@ components:
           format: binary
         isPublished:
           type: boolean
-    Membership:
-      type: object
-      required: [fullName, phone]
-      properties:
-        fullName: { type: string }
-        amharicName: { type: string }
-        baptismName: { type: string }
-        email: { type: string }
-        phone: { type: string }
-        address:
-          type: object
-          properties:
-            street: { type: string }
-            city: { type: string }
-            subcity: { type: string }
-            woreda: { type: string }
-            country: { type: string }
-        family:
-          type: array
-          items:
-            type: object
-            properties:
-              fullName: { type: string }
-              relationship: { type: string }
-              age: { type: number }
-        documents:
-          type: array
-          items:
-            type: string
-            format: binary
-        status:
-          type: string
-          enum: [pending, approved, rejected, inactive]
-        notes: { type: string }
     Donation:
       type: object
       required: [amount]
@@ -1862,19 +1280,6 @@ components:
         category:
           type: string
           enum: [General, Prayer Request, Membership, Donation, Event, Bible Question, Support, Other]
-    PrayerRequest:
-      type: object
-      required: [request]
-      properties:
-        name: { type: string }
-        email: { type: string }
-        phone: { type: string }
-        prayerType: { type: string }
-        request: { type: string }
-        isConfidential:
-          type: boolean
-        isPublic:
-          type: boolean
     Setting:
       type: object
       properties:
