@@ -6,14 +6,11 @@ export const publicKeys = {
   all: ['public'],
 
   settings: () => [...publicKeys.all, 'settings'],
-  home: () => [...publicKeys.all, 'home'],
-  announcements: () => [...publicKeys.all, 'announcements'],
+  content: (key) => [...publicKeys.all, 'content', key],
   events: (params = {}) => [...publicKeys.all, 'events', params],
   featuredEvents: () => [...publicKeys.all, 'events', 'featured'],
   upcomingEvents: (params = {}) => [...publicKeys.all, 'events', 'upcoming', params],
   pastEvents: (params = {}) => [...publicKeys.all, 'events', 'past', params],
-  eventCalendar: (params = {}) => [...publicKeys.all, 'events', 'calendar', params],
-  liturgicalCalendar: (params = {}) => [...publicKeys.all, 'events', 'liturgical', params],
   event: (id) => [...publicKeys.all, 'events', 'detail', id],
   sermons: (params = {}) => [...publicKeys.all, 'sermons', params],
   featuredSermons: () => [...publicKeys.all, 'sermons', 'featured'],
@@ -25,10 +22,9 @@ export const publicKeys = {
   resources: (params = {}) => [...publicKeys.all, 'resources', params],
   resourceCategories: () => [...publicKeys.all, 'resources', 'categories'],
   resource: (id) => [...publicKeys.all, 'resources', 'detail', id],
-  sacraments: (params = {}) => [...publicKeys.all, 'sacraments', params],
-  sacrament: (id) => [...publicKeys.all, 'sacraments', 'detail', id],
-  about: () => [...publicKeys.all, 'about'],
-  leadership: (params = {}) => [...publicKeys.all, 'leadership', params],
+  submitContact: () => [...publicKeys.all, 'contact', 'submit'],
+  createDonation: () => [...publicKeys.all, 'donation', 'create'],
+  downloadResource: () => [...publicKeys.all, 'resources', 'download'],
 };
 
 export const useSettings = (options) =>
@@ -39,18 +35,10 @@ export const useSettings = (options) =>
     ...options,
   });
 
-export const useHomeData = (options) =>
+export const useContent = (key, options) =>
   useQuery({
-    queryKey: publicKeys.home(),
-    queryFn: publicService.getHome,
-    staleTime: 60 * 1000,
-    ...options,
-  });
-
-export const useActiveAnnouncements = (options) =>
-  useQuery({
-    queryKey: publicKeys.announcements(),
-    queryFn: publicService.getActiveAnnouncements,
+    queryKey: publicKeys.content(key),
+    queryFn: () => publicService.getContent(key),
     staleTime: 60 * 1000,
     ...options,
   });
@@ -80,20 +68,6 @@ export const usePastEvents = (params, options) =>
   useQuery({
     queryKey: publicKeys.pastEvents(params),
     queryFn: () => publicService.getPastEvents(params),
-    ...options,
-  });
-
-export const useEventCalendar = (params, options) =>
-  useQuery({
-    queryKey: publicKeys.eventCalendar(params),
-    queryFn: () => publicService.getEventCalendar(params),
-    ...options,
-  });
-
-export const useLiturgicalCalendar = (params, options) =>
-  useQuery({
-    queryKey: publicKeys.liturgicalCalendar(params),
-    queryFn: () => publicService.getLiturgicalCalendar(params),
     ...options,
   });
 
@@ -178,36 +152,6 @@ export const useResource = (id, options) =>
     ...options,
   });
 
-export const useSacraments = (params, options) =>
-  useQuery({
-    queryKey: publicKeys.sacraments(params),
-    queryFn: () => publicService.listSacraments(params),
-    ...options,
-  });
-
-export const useSacrament = (id, options) =>
-  useQuery({
-    queryKey: publicKeys.sacrament(id),
-    queryFn: () => publicService.getSacrament(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-
-export const useAbout = (options) =>
-  useQuery({
-    queryKey: publicKeys.about(),
-    queryFn: publicService.getAbout,
-    staleTime: 5 * 60 * 1000,
-    ...options,
-  });
-
-export const useActiveLeadership = (params, options) =>
-  useQuery({
-    queryKey: publicKeys.leadership(params),
-    queryFn: () => publicService.getActiveLeadership(params),
-    ...options,
-  });
-
 export const useSubmitContact = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -218,17 +162,12 @@ export const useSubmitContact = () => {
   });
 };
 
-export const useSubmitPrayerRequest = () =>
-  useMutation({
-    mutationFn: (payload) => publicService.submitPrayerRequest(payload),
-  });
-
-export const useRsvpEvent = () => {
+export const useCreateDonation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }) => publicService.rsvpEvent(id, payload),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: publicKeys.event(variables.id) });
+    mutationFn: (payload) => publicService.createDonation(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: publicKeys.all });
     },
   });
 };

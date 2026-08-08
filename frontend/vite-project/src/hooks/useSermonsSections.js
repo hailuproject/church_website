@@ -1,18 +1,11 @@
 import { usePublishedSermons, useSermonCategories } from './usePublicData';
-import {
-  sermons as staticSermons,
-  sermonCategories as staticCategories,
-  audioSermons as staticAudio,
-  liveStream as staticLiveStream,
-} from '../data/sermonsData';
 import { formatDate, mediaUrl } from '../lib/publicMappers';
 import { useHomeFlags } from './useHomeSections';
 import { useChurch } from './useHomeSections';
 
 export function useLatestSermons() {
-  const { data, isError } = usePublishedSermons({ limit: 4 });
+  const { data } = usePublishedSermons({ limit: 4 });
   const items = data?.items || [];
-  if (!items.length && isError) return staticSermons;
   return items.map((sermon) => ({
     id: sermon._id,
     thumbnail: mediaUrl(sermon.thumbnail),
@@ -25,9 +18,8 @@ export function useLatestSermons() {
 }
 
 export function useAudioSermons() {
-  const { data, isError } = usePublishedSermons({ limit: 4 });
+  const { data } = usePublishedSermons({ limit: 4 });
   const items = (data?.items || []).filter((sermon) => mediaUrl(sermon.audioUrl));
-  if (!items.length && isError) return staticAudio;
   return items.map((sermon) => ({
     id: sermon._id,
     title: sermon.title,
@@ -38,8 +30,8 @@ export function useAudioSermons() {
 }
 
 export function useSermonCategoriesList() {
-  const { data, isError } = useSermonCategories();
-  if (!Array.isArray(data) || !data.length) return isError ? staticCategories : [];
+  const { data } = useSermonCategories();
+  if (!Array.isArray(data) || !data.length) return [];
   return data.map((cat) => ({
     id: cat._id,
     icon: 'bible',
@@ -51,13 +43,9 @@ export function useSermonCategoriesList() {
 
 export function useLiveStream() {
   const church = useChurch();
-  const { liveStreamURL } = useHomeFlags();
-  const url = liveStreamURL || church.liveStreamURL;
-  if (!url) {
-    return { ...staticLiveStream, isLive: false, videoUrl: '', nextServiceDate: '' };
-  }
+  const url = church.liveStreamURL;
+  if (!url) return null;
   return {
-    ...staticLiveStream,
     isLive: true,
     videoUrl: url,
     title: church.name || 'Live Service',
@@ -66,5 +54,6 @@ export function useLiveStream() {
     nextService: '',
     nextServiceDate: '',
     thumbnail: '',
+    scheduleLabel: 'View Service Schedule',
   };
 }

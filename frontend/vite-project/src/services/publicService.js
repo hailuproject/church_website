@@ -7,13 +7,8 @@ export const publicService = {
     return unwrapData(response);
   },
 
-  getHome: async () => {
-    const response = await client.get('/home');
-    return unwrapData(response);
-  },
-
-  getActiveAnnouncements: async () => {
-    const response = await client.get('/announcements/active');
+  getContent: async (key) => {
+    const response = await client.get(`/content/${key}`);
     return unwrapData(response);
   },
 
@@ -39,21 +34,6 @@ export const publicService = {
 
   getEvent: async (id) => {
     const response = await client.get(`/events/${id}`);
-    return unwrapData(response);
-  },
-
-  getEventCalendar: async (params) => {
-    const response = await client.get('/events/calendar', { params });
-    return unwrapData(response);
-  },
-
-  getLiturgicalCalendar: async (params) => {
-    const response = await client.get('/events/liturgical-calendar', { params });
-    return unwrapData(response);
-  },
-
-  rsvpEvent: async (id, payload) => {
-    const response = await client.post(`/events/${id}/rsvp`, payload);
     return unwrapData(response);
   },
 
@@ -117,33 +97,8 @@ export const publicService = {
     return unwrapData(response);
   },
 
-  listSacraments: async (params) => {
-    const response = await client.get('/sacraments', { params });
-    return unwrapList(response);
-  },
-
-  getSacrament: async (id) => {
-    const response = await client.get(`/sacraments/${id}`);
-    return unwrapData(response);
-  },
-
-  getAbout: async () => {
-    const response = await client.get('/about');
-    return unwrapData(response);
-  },
-
-  getActiveLeadership: async (params) => {
-    const response = await client.get('/leadership/active', { params });
-    return unwrapList(response);
-  },
-
   submitContact: async (payload) => {
     const response = await client.post('/contact', payload);
-    return unwrapData(response);
-  },
-
-  submitPrayerRequest: async (payload) => {
-    const response = await client.post('/contact/prayer-request', payload);
     return unwrapData(response);
   },
 

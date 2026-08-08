@@ -1,15 +1,9 @@
 import { useEvents, useFeaturedEvents, useUpcomingEvents } from './usePublicData';
-import {
-  events as staticEvents,
-  featuredEvent as staticFeatured,
-  calendarEvents as staticCalendar,
-} from '../data/eventsData';
 import { formatDate, formatTimeRange, mediaUrl } from '../lib/publicMappers';
 
 export function useUpcomingEventsList() {
-  const { data, isError } = useUpcomingEvents({ limit: 9 });
+  const { data } = useUpcomingEvents({ limit: 9 });
   const items = data?.items || [];
-  if (!items.length && isError) return staticEvents;
   return items.map((event) => ({
     id: event._id,
     date: (event.date || '').slice(0, 10),
@@ -23,9 +17,8 @@ export function useUpcomingEventsList() {
 }
 
 export function useFeaturedEvent() {
-  const { data, isError } = useFeaturedEvents();
+  const { data } = useFeaturedEvents();
   const items = data?.items || [];
-  if (!items.length && isError) return staticFeatured;
   if (!items.length) return null;
   const event = items[0];
   const dateObj = new Date(event.date);
@@ -46,9 +39,8 @@ export function useFeaturedEvent() {
 }
 
 export function useCalendarEvents() {
-  const { data, isError } = useEvents({ limit: 100 });
+  const { data } = useEvents({ limit: 100 });
   const items = data?.items || [];
-  if (!items.length && isError) return staticCalendar;
   return items.map((event) => ({
     start: new Date(event.date),
     end: new Date(event.date),

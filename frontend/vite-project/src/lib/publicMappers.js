@@ -22,28 +22,32 @@ export const formatTimeRange = (start, end, { fallback = '' } = {}) => {
   return start || end;
 };
 
-export const mapHeroSlides = (home) => {
-  const slides = home?.hero?.slides || [];
-  const active = slides.filter((slide) => slide.isActive !== false);
-  if (!active.length) return null;
-  return active.map((slide) => ({
-    image: mediaUrl(slide.image),
-    title: slide.title,
-    subtitle: slide.subtitle,
-    ctaText: slide.ctaText,
-    ctaLink: slide.ctaLink,
-  }));
+export const mapHero = (hero = {}) => {
+  if (!hero || (!hero.heading && !hero.tagline && !mediaUrl(hero.image))) return null;
+  return {
+    heading: hero.heading || '',
+    tagline: hero.tagline || '',
+    image: mediaUrl(hero.image),
+    primaryCta: hero.primaryCta || null,
+    secondaryCta: hero.secondaryCta || null,
+  };
 };
 
-export const mapWelcome = (home, fallback) => {
-  const welcome = home?.welcome;
-  if (!welcome || (!welcome.title && !welcome.content && !mediaUrl(welcome.image))) return null;
+export const mapIntro = (intro = {}) => {
+  if (!intro || (!intro.title && !intro.content)) return null;
   return {
-    title: welcome.title || fallback?.title || '',
-    description: welcome.content || fallback?.description || '',
-    image: mediaUrl(welcome.image) || fallback?.image || '',
-    scripture: welcome.scripture || '',
-    features: fallback?.features || [],
+    title: intro.title || '',
+    content: intro.content || '',
+  };
+};
+
+export const mapHomeCta = (cta = {}) => {
+  if (!cta || (!cta.title && !cta.content)) return null;
+  return {
+    title: cta.title || '',
+    content: cta.content || '',
+    buttonLabel: cta.buttonLabel || 'Contact Us',
+    buttonHref: cta.buttonHref || '/contact',
   };
 };
 
@@ -97,17 +101,6 @@ export const stripHtml = (html = '') =>
     .replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim();
-
-export const mapAnnouncements = (announcements = []) => {
-  if (!announcements.length) return null;
-  return announcements.map((announcement, index) => ({
-    id: announcement._id || announcement.id || index,
-    title: announcement.title,
-    description: announcement.description,
-    startDate: announcement.startDate,
-    endDate: announcement.endDate,
-  }));
-};
 
 export const formatAddress = (address) => {
   if (!address) return '';

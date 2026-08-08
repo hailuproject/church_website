@@ -1,15 +1,9 @@
 import { useResourceCategories, useResources } from './usePublicData';
-import {
-  resources as staticResources,
-  featuredResource as staticFeatured,
-  resourceCategories as staticCategories,
-} from '../data/resourcesData';
 import { mediaUrl } from '../lib/publicMappers';
 
 export function useResourcesList() {
-  const { data, isError } = useResources({ limit: 20 });
+  const { data } = useResources({ limit: 20 });
   const items = data?.items || [];
-  if (!items.length && isError) return staticResources;
   return items.map((resource) => ({
     id: resource._id,
     image: mediaUrl(resource.thumbnail),
@@ -25,9 +19,8 @@ export function useResourcesList() {
 }
 
 export function useFeaturedResource() {
-  const { data, isError } = useResources({ limit: 1 });
+  const { data } = useResources({ limit: 1 });
   const items = data?.items || [];
-  if (!items.length && isError) return staticFeatured;
   if (!items.length) return null;
   const resource = items[0];
   return {
@@ -46,8 +39,8 @@ export function useFeaturedResource() {
 }
 
 export function useResourceCategoriesList() {
-  const { data, isError } = useResourceCategories();
-  if (!Array.isArray(data) || !data.length) return isError ? staticCategories : [];
+  const { data } = useResourceCategories();
+  if (!Array.isArray(data) || !data.length) return [];
   return data.map((cat) => ({
     id: cat._id,
     icon: 'book',
