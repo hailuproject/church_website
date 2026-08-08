@@ -2,18 +2,16 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Building2, Home, Palette, Share2, Save } from 'lucide-react';
+import { Building2, Share2, Video, Save } from 'lucide-react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import { Tabs } from '../../components/ui/Tabs';
 import { FormSection } from '../../components/ui/FormSection';
-import { Input, Select, Textarea } from '../../components/ui/Input';
-import { Switch } from '../../components/ui/Switch';
+import { Input, Textarea } from '../../components/ui/Input';
 import { FileUpload } from '../../components/ui/FileUpload';
 import { Spinner } from '../../components/ui/Loader';
 import { settingService } from '../../services/system.service';
 import { getErrorMessage } from '../../utils/api';
-import { LANGUAGES } from '../../constants/options';
 import { usePageMeta } from '../../hooks/usePageMeta';
 
 const SaveBar = ({ onSave, loading }) => (
@@ -123,154 +121,38 @@ const GeneralForm = ({ settings }) => {
   );
 };
 
-const HomepageForm = ({ settings }) => {
+const LiveStreamForm = ({ settings }) => {
   const queryClient = useQueryClient();
-  const heroMutation = useMutation({
-    mutationFn: (payload) => settingService.update(payload),
-    onSuccess: () => {
-      toast.success('Homepage hero updated');
-      queryClient.invalidateQueries({ queryKey: ['settings'] });
-    },
-    onError: (error) => toast.error(getErrorMessage(error)),
-  });
-  const liveMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: (payload) => settingService.updateLiveStream(payload),
-    onSuccess: () => toast.success('Live stream settings saved'),
-    onError: (error) => toast.error(getErrorMessage(error)),
-  });
-  const languageMutation = useMutation({
-    mutationFn: (payload) => settingService.updateLanguage(payload),
     onSuccess: () => {
-      toast.success('Language settings saved');
+      toast.success('Live stream settings saved');
       queryClient.invalidateQueries({ queryKey: ['settings'] });
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   });
 
-  const [heroFile, setHeroFile] = useState(null);
   const [liveStreamURL, setLiveStreamURL] = useState('');
-  const [defaultLanguage, setDefaultLanguage] = useState('english');
-  const [allowSwitch, setAllowSwitch] = useState(true);
 
   useEffect(() => {
-    if (settings) {
-      setLiveStreamURL(settings.liveStreamURL || '');
-      setDefaultLanguage(settings.languageSettings?.defaultLanguage || 'english');
-      setAllowSwitch(settings.languageSettings?.allowLanguageSwitch !== false);
-    }
+    if (settings) setLiveStreamURL(settings.liveStreamURL || '');
   }, [settings]);
 
   if (!settings) return <div className="flex justify-center py-16"><Spinner /></div>;
 
-  const saveAll = () => {
-    if (heroFile instanceof File || heroFile instanceof Blob) heroMutation.mutate({ heroImage: heroFile });
-    liveMutation.mutate({ liveStreamURL });
-    languageMutation.mutate({
-      defaultLanguage,
-      supportedLanguages: ['english', 'amharic'],
-      allowLanguageSwitch: allowSwitch,
-    });
-  };
-
-  const busy = heroMutation.isPending || liveMutation.isPending || languageMutation.isPending;
-
   return (
     <div>
-      <FormSection title="Hero image" description="Large banner image on the homepage">
-        <FileUpload type="image" label="Hero image" value={heroFile} onChange={setHeroFile} hint="Wide image, 1920×1080 recommended" />
-        {!heroFile && settings.heroImage?.url && (
-          <div className="mt-3 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-            <img src={settings.heroImage.url} alt="Current hero" className="max-h-48 w-full object-cover" />
-          </div>
-        )}
+      <FormSection title="Live stream" description="YouTube or other embed URL used for the live liturgy">
+        <Input
+          label="Live stream URL"
+          placeholder="https://www.youtube.com/watch?v=…"
+          value={liveStreamURL}
+          onChange={(e) => setLiveStreamURL(e.target.value)}
+        />
       </FormSection>
 
-      <div className="mt-4">
-        <FormSection title="Live stream" description="YouTube or other embed URL used for the live liturgy">
-          <Input
-            label="Live stream URL"
-            placeholder="https://www.youtube.com/watch?v=…"
-            value={liveStreamURL}
-            onChange={(e) => setLiveStreamURL(e.target.value)}
-          />
-        </FormSection>
-      </div>
-
-      <div className="mt-4">
-        <FormSection title="Languages" description="Default language and language switching behaviour">
-          <div className="space-y-4">
-            <Select label="Default language" value={defaultLanguage} onChange={(e) => setDefaultLanguage(e.target.value)}>
-              {LANGUAGES.map((l) => (
-                <option key={l.value} value={l.value}>{l.label}</option>
-              ))}
-            </Select>
-            <Switch
-              checked={allowSwitch}
-              onChange={setAllowSwitch}
-              label="Allow language switching"
-              description="Visitors can toggle between English and Amharic"
-            />
-          </div>
-        </FormSection>
-      </div>
-
-      <SaveBar onSave={saveAll} loading={busy} />
+      <SaveBar onSave={() => mutation.mutate({ liveStreamURL })} loading={mutation.isPending} />
     </div>
-  );
-};
-
-const AppearanceForm = ({ settings }) => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: (payload) => settingService.updateTheme(payload),
-    onSuccess: () => {
-      toast.success('Appearance updated');
-      queryClient.invalidateQueries({ queryKey: ['settings'] });
-    },
-    onError: (error) => toast.error(getErrorMessage(error)),
-  });
-
-  const { register, handleSubmit, reset, watch, setValue } = useForm();
-
-  useEffect(() => {
-    if (settings?.theme) reset(settings.theme);
-  }, [settings, reset]);
-  if (!settings) return <div className="flex justify-center py-16"><Spinner /></div>;
-
-  const onSubmit = (values) => mutation.mutate(values);
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <FormSection title="Theme" description="Colors and typography used across the website">
-        <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Primary color</label>
-              <div className="flex items-center gap-3">
-                <input type="color" className="h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white dark:border-gray-700" {...register('primaryColor')} />
-                <Input {...register('primaryColor')} />
-              </div>
-            </div>
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Secondary color</label>
-              <div className="flex items-center gap-3">
-                <input type="color" className="h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white dark:border-gray-700" {...register('secondaryColor')} />
-                <Input {...register('secondaryColor')} />
-              </div>
-            </div>
-          </div>
-          <Input label="Font family" placeholder="Georgia" {...register('fontFamily')} />
-          <Switch
-            checked={Boolean(watch('darkMode'))}
-            onChange={(val) => setValue('darkMode', val)}
-            label="Default to dark mode"
-            description="Site visitors see the dark theme first"
-          />
-        </div>
-      </FormSection>
-
-      <SaveBar onSave={handleSubmit(onSubmit)} loading={mutation.isPending} />
-    </form>
   );
 };
 
@@ -341,8 +223,7 @@ const SocialForm = ({ settings }) => {
 
 const TABS = [
   { key: 'general', label: 'General', icon: Building2 },
-  { key: 'homepage', label: 'Homepage', icon: Home },
-  { key: 'appearance', label: 'Appearance', icon: Palette },
+  { key: 'live', label: 'Live Stream', icon: Video },
   { key: 'social', label: 'Social & Footer', icon: Share2 },
 ];
 
@@ -369,8 +250,7 @@ export const SettingsPage = () => {
 
       {isLoading ? <div className="flex justify-center py-16"><Spinner /></div> : null}
       {!isLoading && tab === 'general' && <GeneralForm settings={settings} />}
-      {!isLoading && tab === 'homepage' && <HomepageForm settings={settings} />}
-      {!isLoading && tab === 'appearance' && <AppearanceForm settings={settings} />}
+      {!isLoading && tab === 'live' && <LiveStreamForm settings={settings} />}
       {!isLoading && tab === 'social' && <SocialForm settings={settings} />}
     </div>
   );
