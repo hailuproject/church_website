@@ -22,6 +22,11 @@ export const scriptureHighlight = {
   reference: 'John 1:1',
   explanation:
     'The Gospel of John opens with this profound declaration of Christ\u2019s divine nature. For the Ethiopian Orthodox Church, this verse affirms the eternal existence of the Logos, the Second Person of the Holy Trinity, who took flesh for our salvation.',
+  verseAm:
+    'በመጀመሪያ ቃል ነበረ፥ ቃልም በእግዚአብሔር ዘንድ ነበረ፥ ቃልም እግዚአብሔር ነበረ።',
+  referenceAm: 'ዮሐንስ ፩፡፩',
+  explanationAm:
+    'የዮሐንስ ወንጌል የሚከፈተው የክርስቶስን መለኮታዊ ባሕርይ በሚገልጽ ታላቅ ቃል ነው። ለኢትዮጵያ ኦርቶዶክስ ቤተ ክርስቲያን ይህ ጥቅስ የቃልን ዘላለማዊ ሕልውና ያረጋግጣል፣ ሁለተኛው የቅድስት ሥላሴ አካል ለመዳናችን ሥጋን የተጎናጸፈው።',
   image: '',
 };
 
