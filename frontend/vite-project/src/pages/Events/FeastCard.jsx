@@ -1,7 +1,13 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
+  const { language } = useLanguage();
+  const am = language === 'am';
+  const month = am && feast.monthAm ? feast.monthAm : feast.month;
+  const description = am && feast.descriptionAm ? feast.descriptionAm : feast.description;
+
   return (
     <motion.article
       className="group relative overflow-hidden rounded-xs shadow-sm hover:shadow-lg border border-border transition-all duration-500"
@@ -21,7 +27,7 @@ const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
         <div className="absolute top-4 right-4 bg-secondary/90 backdrop-blur-sm rounded-xs px-3 py-1.5">
-          <span className="text-xs font-semibold text-white">{feast.month}</span>
+          <span className="text-xs font-semibold text-white">{month}</span>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -36,7 +42,7 @@ const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
 
       <div className="p-5 bg-white">
         <p className="text-sm text-muted leading-relaxed">
-          {feast.description}
+          {description}
         </p>
       </div>
 

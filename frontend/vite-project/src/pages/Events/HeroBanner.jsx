@@ -2,8 +2,20 @@ import { motion } from 'framer-motion';
 import { FiArrowRight, FiCalendar } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/eventsData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function HeroBanner() {
+  const { t } = useTranslation();
+  const hero = {
+    ...heroData,
+    title: t('pages.events.title'),
+    subtitle: t('pages.events.heroSubtitle'),
+    churchName: t('common.churchName'),
+    breadcrumb: [
+      { label: t('common.home'), href: '/' },
+      { label: t('nav.events'), href: '/events' },
+    ],
+  };
   return (
     <section
       className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
@@ -27,7 +39,7 @@ export default function HeroBanner() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
         <nav aria-label="Breadcrumb" className="mb-10">
           <ol className="flex items-center gap-2 text-sm text-white/50">
-            {heroData.breadcrumb.map((crumb, i) => (
+            {hero.breadcrumb.map((crumb, i) => (
               <li key={crumb.href} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 <a
@@ -50,7 +62,7 @@ export default function HeroBanner() {
           >
             <FiCalendar className="text-secondary text-sm" />
             <span className="text-secondary text-xs font-semibold tracking-[0.2em] uppercase">
-              {heroData.churchName}
+              {hero.churchName}
             </span>
           </motion.div>
 
@@ -60,7 +72,7 @@ export default function HeroBanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            {heroData.title}
+            {hero.title}
           </motion.h1>
 
           <motion.p
@@ -69,7 +81,7 @@ export default function HeroBanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
           >
-            {heroData.subtitle}
+            {hero.subtitle}
           </motion.p>
 
           <motion.div
@@ -79,11 +91,11 @@ export default function HeroBanner() {
             transition={{ duration: 0.6, delay: 0.7 }}
           >
             <Button href="#calendar" variant="primary" size="lg">
-              View Calendar
+              {t('pages.events.viewCalendar')}
               <FiArrowRight className="text-lg" />
             </Button>
             <Button href="#upcoming" variant="outline" size="lg">
-              Upcoming Events
+              {t('pages.events.upcomingEvents')}
             </Button>
           </motion.div>
         </div>

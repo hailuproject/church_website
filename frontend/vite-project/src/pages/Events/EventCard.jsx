@@ -1,11 +1,14 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { FiClock, FiMapPin } from 'react-icons/fi';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { localeTag } from '../../lib/localize';
 
 const EventCard = memo(function EventCard({ event, delay = 0 }) {
+  const { language } = useLanguage();
   const dateObj = new Date(event.date + 'T00:00:00');
   const day = dateObj.getDate();
-  const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const month = dateObj.toLocaleDateString(localeTag(language), { month: 'short' }).toUpperCase();
 
   return (
     <motion.article

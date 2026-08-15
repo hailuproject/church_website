@@ -4,6 +4,7 @@ import {
   FiStar, FiSunrise, FiBookOpen, FiHeart,
   FiUsers, FiGlobe, FiClock, FiCalendar,
 } from 'react-icons/fi';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const iconMap = {
   FiStar,
@@ -18,6 +19,8 @@ const iconMap = {
 
 const CategoryCard = memo(function CategoryCard({ category, delay = 0 }) {
   const Icon = iconMap[category.icon] || FiCalendar;
+  const { language } = useLanguage();
+  const title = language === 'am' && category.titleAm ? category.titleAm : category.title;
 
   return (
     <motion.div
@@ -32,7 +35,7 @@ const CategoryCard = memo(function CategoryCard({ category, delay = 0 }) {
         <Icon className="text-xl" />
       </div>
       <h4 className="text-sm font-bold text-text group-hover:text-primary transition-colors duration-300">
-        {category.title}
+        {title}
       </h4>
     </motion.div>
   );

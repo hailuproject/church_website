@@ -7,6 +7,7 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import SectionHeader from '../../components/SectionHeader';
 import { weeklyServices } from '../../data/eventsData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const iconMap = {
   FiSunrise,
@@ -19,13 +20,14 @@ const iconMap = {
 };
 
 export default function ServiceTimeline() {
+  const { t } = useTranslation();
   return (
     <Section id="schedule" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Schedule"
-          title="Weekly Service Schedule"
-          description="Join us throughout the week for worship, prayer, and fellowship."
+          subtitle={t('pages.events.schedule')}
+          title={t('pages.events.weeklySchedule')}
+          description={t('pages.events.scheduleDescription')}
         />
 
         <div className="max-w-3xl mx-auto">

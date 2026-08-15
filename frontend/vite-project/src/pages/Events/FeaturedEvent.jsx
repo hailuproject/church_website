@@ -4,8 +4,10 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useFeaturedEvent } from '../../hooks/useEventsSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function FeaturedEvent() {
+  const { t } = useTranslation();
   const featuredEvent = useFeaturedEvent();
   if (!featuredEvent) return null;
   return (
@@ -19,7 +21,7 @@ export default function FeaturedEvent() {
           className="mb-16"
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Featured Event
+            {t('pages.events.featuredEvent')}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text mt-4 leading-tight">
             {featuredEvent.title}
@@ -50,17 +52,17 @@ export default function FeaturedEvent() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <span className="text-xs font-semibold tracking-wider uppercase block">
-                Countdown
+                {t('pages.events.countdown')}
               </span>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-2xl font-bold">{featuredEvent.countdown.days}</span>
-                <span className="text-xs text-gray-300">days</span>
+                <span className="text-xs text-gray-300">{t('pages.events.days')}</span>
                 <span className="text-lg font-semibold mx-1">:</span>
                 <span className="text-lg font-semibold">{featuredEvent.countdown.hours}</span>
-                <span className="text-xs text-gray-300">hr</span>
+                <span className="text-xs text-gray-300">{t('pages.events.hours')}</span>
                 <span className="text-lg font-semibold mx-1">:</span>
                 <span className="text-lg font-semibold">{featuredEvent.countdown.minutes}</span>
-                <span className="text-xs text-gray-300">min</span>
+                <span className="text-xs text-gray-300">{t('pages.events.minutes')}</span>
               </div>
             </motion.div>
           </motion.div>
@@ -94,10 +96,10 @@ export default function FeaturedEvent() {
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
               <Button href="/contact" variant="primary" size="md">
                 <FiCheckCircle className="text-lg" />
-                Register Now
+                {t('pages.events.registerNow')}
               </Button>
               <Button href="#calendar" variant="outline-dark" size="md">
-                View Details
+                {t('pages.events.viewDetails')}
                 <FiArrowRight className="text-lg" />
               </Button>
             </div>
