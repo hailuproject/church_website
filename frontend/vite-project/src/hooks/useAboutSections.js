@@ -1,4 +1,6 @@
 import { useContent } from './usePublicData';
+import { pickAm } from '../lib/localize';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function useAboutContent() {
   const { data } = useContent('about');
@@ -7,19 +9,28 @@ export function useAboutContent() {
 
 export function useAboutIntro() {
   const about = useAboutContent();
-  return about.intro || null;
+  const { language } = useLanguage();
+  const intro = about.intro || null;
+  if (!intro) return null;
+  return {
+    title: pickAm(intro, 'title', language),
+    content: pickAm(intro, 'content', language),
+  };
 }
 
 export function useHistoryBlocks() {
   const about = useAboutContent();
   const history = about.history || {};
   if (!history.title && !history.content) return [];
+  const { language } = useLanguage();
+  const title = pickAm(history, 'title', language);
+  const content = pickAm(history, 'content', language);
   return [
     {
-      title: history.title || 'Our History',
-      paragraphs: history.content ? history.content.split(/\n+/).filter(Boolean) : [],
+      title: title || 'Our History',
+      paragraphs: content ? content.split(/\n+/).filter(Boolean) : [],
       image: '',
-      imageAlt: 'Church history',
+      imageAlt: language === 'am' ? 'የቤተክርስቲያን ታሪክ' : 'Church history',
       imageLabel: '',
     },
   ];
@@ -27,5 +38,12 @@ export function useHistoryBlocks() {
 
 export function useAboutLocation() {
   const about = useAboutContent();
-  return about.location || null;
+  const { language } = useLanguage();
+  const location = about.location || null;
+  if (!location) return null;
+  return {
+    title: pickAm(location, 'title', language),
+    address: pickAm(location, 'address', language),
+    mapQuery: location.mapQuery || '',
+  };
 }
