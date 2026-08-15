@@ -1,13 +1,26 @@
 import { NavLink } from 'react-router-dom';
 import { navigationLinks } from '../../data/navigation';
+import { useTranslation } from '../../i18n/LanguageContext';
+
+const linkKeys = {
+  Home: 'nav.home',
+  About: 'nav.about',
+  Sermons: 'nav.sermons',
+  Events: 'nav.events',
+  Resources: 'nav.resources',
+  Gallery: 'nav.gallery',
+  Contact: 'nav.contact',
+  Donate: 'nav.donate',
+};
 
 export default function NavLinks({ vertical = false, onNavigate }) {
+  const { t } = useTranslation();
   const base = vertical
     ? 'flex flex-col gap-1'
     : 'flex items-center gap-1';
 
   return (
-    <nav className={base} aria-label={vertical ? 'Mobile navigation' : 'Main navigation'}>
+    <nav className={base} aria-label={vertical ? t('nav.mobileNav') : t('nav.mainNav')}>
       {navigationLinks.map((link) => (
         <NavLink
           key={link.href}
@@ -23,7 +36,7 @@ export default function NavLinks({ vertical = false, onNavigate }) {
         >
           {({ isActive }) => (
             <>
-              {link.label}
+              {t(linkKeys[link.label] || link.label)}
               {isActive && (
                 <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-secondary rounded-full" />
               )}

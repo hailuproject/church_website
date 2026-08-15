@@ -5,6 +5,7 @@ import Footer from './components/layout/Footer';
 import AdminEntry from './components/layout/AdminEntry';
 import ScrollToTop from './components/layout/ScrollToTop';
 import AdminApp from './admin/AdminApp';
+import { useLanguage } from './i18n/LanguageContext';
 
 const AboutPage = lazy(() => import('./pages/About/AboutPage'));
 const SermonsPage = lazy(() => import('./pages/Sermons/SermonsPage'));
@@ -16,27 +17,30 @@ const DonatePage = lazy(() => import('./pages/Donate/DonatePage'));
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
 
 function Loading() {
+  const { language } = useLanguage();
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="flex flex-col items-center gap-4">
         <div className="w-12 h-12 border-4 border-secondary/30 border-t-secondary rounded-full animate-spin" />
-        <p className="text-muted text-sm">Loading...</p>
+        <p className="text-muted text-sm">{language === 'am' ? 'በመጫን ላይ...' : 'Loading...'}</p>
       </div>
     </div>
   );
 }
 
 function NotFound() {
+  const { language } = useLanguage();
+  const am = language === 'am';
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface pt-20">
       <div className="text-center">
         <h1 className="text-7xl font-bold text-primary mb-4">404</h1>
-        <p className="text-muted mb-6">Page not found</p>
+        <p className="text-muted mb-6">{am ? 'ገጹ አልተገኘም' : 'Page not found'}</p>
         <a
           href="/"
           className="inline-flex items-center gap-2 bg-primary text-white px-7 py-3 rounded-xs font-medium hover:bg-primary-dark transition-colors duration-300"
         >
-          Return Home
+          {am ? 'ወደ መነሻ ተመለስ' : 'Return Home'}
         </a>
       </div>
     </div>

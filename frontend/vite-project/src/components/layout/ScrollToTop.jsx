@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowUp } from 'react-icons/fi';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 400);
@@ -26,7 +28,7 @@ export default function ScrollToTop() {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          aria-label="Scroll to top"
+          aria-label={language === 'am' ? 'ወደ ላይ ይውጡ' : 'Scroll to top'}
         >
           <FiArrowUp className="text-lg" />
         </motion.button>

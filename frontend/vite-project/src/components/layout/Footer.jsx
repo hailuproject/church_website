@@ -5,6 +5,7 @@ import { FiFacebook, FiYoutube, FiSend, FiInstagram, FiTwitter } from 'react-ico
 import { footerQuickLinks, footerServices } from '../../data/navigation';
 import { useChurch } from '../../hooks/useHomeSections';
 import { publicService } from '../../services/publicService';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const socialIcons = {
   facebook: FiFacebook,
@@ -15,7 +16,25 @@ const socialIcons = {
   tiktok: null,
 };
 
+const quickLinkKeys = {
+  Home: 'nav.home',
+  About: 'nav.about',
+  Events: 'nav.events',
+  Sermons: 'nav.sermons',
+  Resources: 'nav.resources',
+  Gallery: 'nav.gallery',
+  Contact: 'nav.contact',
+  Donate: 'nav.donate',
+};
+
+const serviceKeys = {
+  'Sunday Liturgy': 'footer.sundayLiturgy',
+  'Prayer Requests': 'footer.prayerRequests',
+  'Bible Study': 'footer.bibleStudy',
+};
+
 export default function Footer() {
+  const { t } = useTranslation();
   const church = useChurch();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -23,9 +42,9 @@ export default function Footer() {
   const [error, setError] = useState('');
 
   const contactItems = [
-    { icon: FiMapPin, label: 'Address', value: church.address },
-    { icon: FiPhone, label: 'Phone', value: church.phone },
-    { icon: FiMail, label: 'Email', value: church.email },
+    { icon: FiMapPin, label: t('footer.address'), value: church.address },
+    { icon: FiPhone, label: t('footer.phone'), value: church.phone },
+    { icon: FiMail, label: t('footer.email'), value: church.email },
   ].filter((item) => item.value);
 
   const socialLinks = Object.entries(church.socialLinks || {})
@@ -37,11 +56,11 @@ export default function Footer() {
     e.preventDefault();
     setError('');
     if (!email.trim()) {
-      setError('Please enter your email address.');
+      setError(t('footer.emailError'));
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address.');
+      setError(t('footer.emailInvalid'));
       return;
     }
     setSubscribing(true);
@@ -56,7 +75,7 @@ export default function Footer() {
       setSubscribed(true);
       setEmail('');
     } catch (err) {
-      setError(err?.message || 'Unable to subscribe right now. Please try again.');
+      setError(err?.message || t('footer.subscribeError'));
     } finally {
       setSubscribing(false);
     }
@@ -93,8 +112,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
-              {church.footerText ||
-                'Serving God and His people through faith, tradition, and love. Join our community and experience the beauty of the Ethiopian Orthodox heritage.'}
+              {church.footerText || t('footer.aboutText')}
             </p>
 
             {/* Social */}
@@ -122,7 +140,7 @@ export default function Footer() {
           {/* Column 2 - Quick Links */}
           <div className="lg:col-span-2">
             <h3 className="text-sm font-bold text-white tracking-wide uppercase mb-5">
-              Quick Links
+              {t('footer.quickLinks')}
             </h3>
             <ul className="flex flex-col gap-3">
               {footerQuickLinks.map((link) => (
@@ -132,7 +150,7 @@ export default function Footer() {
                     className="text-sm text-gray-400 hover:text-secondary transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-2 h-px bg-secondary transition-all duration-200" />
-                    {link.label}
+                    {t(quickLinkKeys[link.label] || link.label)}
                   </a>
                 </li>
               ))}
@@ -142,7 +160,7 @@ export default function Footer() {
           {/* Column 3 - Services */}
           <div className="lg:col-span-3">
             <h3 className="text-sm font-bold text-white tracking-wide uppercase mb-5">
-              Church Services
+              {t('footer.services')}
             </h3>
             <ul className="flex flex-col gap-3">
               {footerServices.map((link) => (
@@ -152,7 +170,7 @@ export default function Footer() {
                     className="text-sm text-gray-400 hover:text-secondary transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-2 h-px bg-secondary transition-all duration-200" />
-                    {link.label}
+                    {t(serviceKeys[link.label] || link.label)}
                   </a>
                 </li>
               ))}
@@ -162,7 +180,7 @@ export default function Footer() {
           {/* Column 4 - Contact */}
           <div className="lg:col-span-3">
             <h3 className="text-sm font-bold text-white tracking-wide uppercase mb-5">
-              Contact
+              {t('footer.contact')}
             </h3>
             <div className="flex flex-col gap-4 mb-6">
               {contactItems.map((item) => {
@@ -189,7 +207,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium text-secondary hover:text-secondary-light transition-colors duration-200"
               >
-                View on Google Maps
+                {t('common.viewOnMap')}
                 <FiArrowRight className="text-sm" />
               </a>
             )}
@@ -199,9 +217,9 @@ export default function Footer() {
         {/* Newsletter */}
         <div className="mt-16 pt-12 border-t border-white/10">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="text-xl font-bold text-white mb-2">Stay Connected</h3>
+            <h3 className="text-xl font-bold text-white mb-2">{t('common.stayConnected')}</h3>
             <p className="text-sm text-gray-400 mb-6">
-              Subscribe to our newsletter for the latest updates, events, and spiritual reflections.
+              {t('common.newsletterDescription')}
             </p>
 
             {subscribed ? (
@@ -210,7 +228,7 @@ export default function Footer() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                Thank you for subscribing! God bless you.
+                {t('common.thankYouSubscribe')}
               </motion.div>
             ) : (
               <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
@@ -222,11 +240,11 @@ export default function Footer() {
                       setEmail(e.target.value);
                       setError('');
                     }}
-                    placeholder="Enter your email address"
+                    placeholder={t('footer.emailPlaceholder')}
                     className={`w-full px-5 py-3.5 rounded-xs bg-white/5 border ${
                       error ? 'border-red-500/50' : 'border-white/10'
                     } text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary/50 transition-all duration-200`}
-                    aria-label="Email address for newsletter"
+                    aria-label={t('footer.emailPlaceholder')}
                   />
                   {error && (
                     <p className="text-red-400 text-xs mt-1.5 text-left">{error}</p>
@@ -239,7 +257,7 @@ export default function Footer() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  {subscribing ? 'Subscribing...' : 'Subscribe'}
+                  {subscribing ? t('footer.subscribing') : t('footer.subscribe')}
                 </motion.button>
               </form>
             )}
@@ -251,15 +269,15 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} {church.name} {church.tagline ? `(${church.tagline})` : 'Church'}. All rights reserved.
+            &copy; {new Date().getFullYear()} {church.name} {church.tagline ? `(${church.tagline})` : 'Church'}. {t('footer.allRightsReserved')}.
           </p>
           <div className="flex items-center gap-1 text-sm text-gray-500">
-            Built with <span className="text-primary mx-1">&hearts;</span> for the Church
+            {t('footer.builtWith')}
           </div>
           <div className="flex items-center gap-5">
             <span className="text-gray-600" aria-hidden="true">|</span>
             <a href="/admin/login" className="text-sm text-gray-500 hover:text-secondary transition-colors duration-200">
-              Admin Login
+              {t('nav.adminLogin')}
             </a>
           </div>
         </div>

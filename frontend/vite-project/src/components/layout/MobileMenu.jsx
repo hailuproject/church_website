@@ -5,6 +5,7 @@ import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
 import Button from '../Button';
 import { socialLinks } from '../../data/navigation';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const overlay = {
   hidden: { opacity: 0 },
@@ -18,6 +19,7 @@ const drawer = {
 };
 
 export default function MobileMenu({ isOpen, onClose }) {
+  const { t } = useTranslation();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -42,7 +44,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             exit="exit"
             role="dialog"
             aria-modal="true"
-            aria-label="Mobile navigation"
+            aria-label={t('nav.mobileNav')}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -50,7 +52,7 @@ export default function MobileMenu({ isOpen, onClose }) {
               <button
                 onClick={onClose}
                 className="w-9 h-9 flex items-center justify-center rounded-xs hover:bg-surface text-muted hover:text-text transition-colors duration-200"
-                aria-label="Close menu"
+                aria-label={t('common.close')}
               >
                 <FiX className="text-xl" />
               </button>
@@ -68,9 +70,9 @@ export default function MobileMenu({ isOpen, onClose }) {
               </div>
 
               <div className="mb-4">
-                <Button href="/admin/login" variant="outline-dark" size="sm" className="w-full" ariaLabel="Admin Login">
+                <Button href="/admin/login" variant="outline-dark" size="sm" className="w-full" ariaLabel={t('nav.adminLogin')}>
                   <FiLock className="text-sm" />
-                  Admin Login
+                  {t('nav.adminLogin')}
                 </Button>
               </div>
 

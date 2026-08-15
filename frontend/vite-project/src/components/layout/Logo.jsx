@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 import { useChurch } from '../../hooks/useHomeSections';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function Logo({ collapsed = false }) {
   const church = useChurch();
+  const { language } = useLanguage();
   return (
     <motion.a
       href="/"
       className="flex items-center gap-3 shrink-0"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      aria-label={`${church.name} - Home`}
+      aria-label={language === 'am' ? `${church.name} - መነሻ` : `${church.name} - Home`}
     >
       {/* Logo icon or cross */}
       {church.logo ? (

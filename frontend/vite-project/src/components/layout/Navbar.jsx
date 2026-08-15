@@ -6,8 +6,10 @@ import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
 import MobileMenu from './MobileMenu';
 import Button from '../Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -53,7 +55,7 @@ export default function Navbar() {
               <LanguageSwitcher />
               <Button href="/admin/login" variant="outline-dark" size="sm">
                 <FiLock className="text-sm" />
-                Admin Login
+                {t('nav.adminLogin')}
               </Button>
             </div>
 
@@ -61,7 +63,7 @@ export default function Navbar() {
             <button
               className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xs hover:bg-black/5 text-text transition-colors duration-200"
               onClick={() => setMobileOpen(true)}
-              aria-label="Open menu"
+              aria-label={t('nav.openMenu')}
               aria-expanded={mobileOpen}
             >
               <FiMenu className="text-lg" />

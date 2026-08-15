@@ -2,10 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGlobe } from 'react-icons/fi';
 import { languages } from '../../data/navigation';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const [current, setCurrent] = useState(languages[0]);
+  const { language, setLanguage, t } = useLanguage();
   const ref = useRef(null);
 
   useEffect(() => {
@@ -23,12 +24,12 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted hover:text-text rounded-xs hover:bg-black/5 transition-colors duration-200"
-        aria-label="Switch language"
+        aria-label={t('lang.switchLabel')}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
         <FiGlobe className="text-base" />
-        <span className="hidden sm:inline">{current.native}</span>
+        <span className="hidden sm:inline">{languages.find((l) => l.code === language)?.native}</span>
       </button>
 
       <AnimatePresence>
@@ -40,25 +41,25 @@ export default function LanguageSwitcher() {
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             role="listbox"
-            aria-label="Select language"
+            aria-label={t('lang.selectLabel')}
           >
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => {
-                  setCurrent(lang);
+                  setLanguage(lang.code);
                   setIsOpen(false);
                 }}
                 className={`w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors duration-150 ${
-                  current.code === lang.code
+                  language === lang.code
                     ? 'bg-primary/5 text-primary font-medium'
                     : 'text-text hover:bg-surface'
                 }`}
                 role="option"
-                aria-selected={current.code === lang.code}
+                aria-selected={language === lang.code}
               >
                 <span>{lang.native}</span>
-                {current.code === lang.code && (
+                {language === lang.code && (
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
                 )}
               </button>

@@ -30,5 +30,5 @@ export const socialLinks = [];
 
 export const languages = [
   { code: 'en', label: 'English', native: 'English' },
-  { code: 'am', label: 'Amharic', native: '\u12A0\u12CD\u1295\u129B' },
+  { code: 'am', label: 'Amharic', native: '\u12A0\u121B\u122D\u129B' },
 ];
