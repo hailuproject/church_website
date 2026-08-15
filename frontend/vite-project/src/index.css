@@ -1,6 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Benaiah';
+  src: url('/fonts/Benaiah_536454528f.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -15,8 +23,9 @@
   --color-muted: #6B7280;
   --color-border: #E5E7EB;
 
-  --font-lexend: 'Lexend Deca', system-ui, sans-serif;
-  --font-sans: 'Lexend Deca', system-ui, sans-serif;
+  --font-lexend: 'Benaiah', 'Lexend Deca', system-ui, sans-serif;
+  --font-sans: 'Benaiah', 'Lexend Deca', system-ui, sans-serif;
+  --font-amharic: 'Benaiah', 'Lexend Deca', system-ui, sans-serif;
 
   /* Church maroon scale shared by the admin dashboard */
   --color-primary-50: #FBF2F2;
@@ -46,6 +55,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  html:lang(am) {
+    font-family: var(--font-amharic);
+  }
+
   body {
     font-family: var(--font-lexend);
     color: var(--color-text);
@@ -57,6 +70,11 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-lexend);
     line-height: 1.2;
+  }
+
+  :lang(am), :lang(am) h1, :lang(am) h2, :lang(am) h3,
+  :lang(am) h4, :lang(am) h5, :lang(am) h6 {
+    font-family: var(--font-amharic);
   }
 
   img {
