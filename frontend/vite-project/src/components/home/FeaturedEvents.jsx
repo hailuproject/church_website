@@ -6,8 +6,10 @@ import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
 import { useFeaturedEvents } from '../../hooks/useHomeSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const EventCard = memo(function EventCard({ event, index }) {
+  const { t } = useTranslation();
   return (
     <motion.article
       className="group bg-white rounded-xs overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-500"
@@ -53,7 +55,7 @@ const EventCard = memo(function EventCard({ event, index }) {
           href="/events"
           className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors duration-200"
         >
-          Learn More
+          {t('common.learnMore')}
           <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-200" />
         </a>
       </div>
@@ -62,15 +64,16 @@ const EventCard = memo(function EventCard({ event, index }) {
 });
 
 export default function FeaturedEvents() {
+  const { t } = useTranslation();
   const featuredEvents = useFeaturedEvents();
   if (!featuredEvents?.length) return null;
   return (
     <Section id="events" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Events"
-          title="Upcoming Events"
-          description="Join us in celebration, worship, and community fellowship."
+          subtitle={t('nav.events')}
+          title={t('pages.home.upcomingEvents')}
+          description={t('pages.home.eventsDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredEvents.map((event, i) => (
@@ -79,7 +82,7 @@ export default function FeaturedEvents() {
         </div>
         <div className="text-center mt-12">
           <Button href="/events" variant="outline-dark">
-            View Full Calendar
+            {t('common.viewFullCalendar')}
           </Button>
         </div>
       </Container>

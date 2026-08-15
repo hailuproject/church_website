@@ -5,16 +5,18 @@ import SectionHeader from '../SectionHeader';
 import Button from '../Button';
 import { useChurch } from '../../hooks/useHomeSections';
 import { useContent } from '../../hooks/usePublicData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function ChurchInformation() {
+  const { t } = useTranslation();
   const church = useChurch();
   const { data: contactContent } = useContent('contact');
   const contact = contactContent?.data || {};
 
   const items = [
-    { icon: FiMapPin, label: 'Address', value: church.address || contact.address },
-    { icon: FiPhone, label: 'Phone', value: church.phone || contact.phone },
-    { icon: FiMail, label: 'Email', value: church.email || contact.email },
+    { icon: FiMapPin, label: t('footer.address'), value: church.address || contact.address },
+    { icon: FiPhone, label: t('footer.phone'), value: church.phone || contact.phone },
+    { icon: FiMail, label: t('footer.email'), value: church.email || contact.email },
   ].filter((item) => item.value);
 
   if (!items.length) return null;
@@ -23,9 +25,9 @@ export default function ChurchInformation() {
     <Section id="information" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Visit Us"
-          title="Church Information"
-          description="Find us and connect with our community."
+          subtitle={t('pages.about.visitUs')}
+          title={t('pages.home.churchInformation')}
+          description={t('pages.home.churchInformationDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item) => {
@@ -43,9 +45,9 @@ export default function ChurchInformation() {
           })}
           <div className="bg-primary rounded-xs p-6 text-center flex flex-col items-center justify-center">
             <FiClock className="text-2xl text-white mb-3" />
-            <h3 className="text-sm font-semibold text-white mb-2">Service Times</h3>
+            <h3 className="text-sm font-semibold text-white mb-2">{t('pages.home.serviceTimes')}</h3>
             <Button href="/contact" variant="outline" size="sm">
-              View Schedule
+              {t('common.viewSchedule')}
             </Button>
           </div>
         </div>

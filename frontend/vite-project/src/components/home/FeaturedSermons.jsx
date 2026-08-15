@@ -6,8 +6,10 @@ import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
 import { useFeaturedSermons } from '../../hooks/useHomeSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const SermonCard = memo(function SermonCard({ sermon, index }) {
+  const { t } = useTranslation();
   return (
     <motion.article
       className="group bg-white rounded-xs overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-500"
@@ -51,7 +53,7 @@ const SermonCard = memo(function SermonCard({ sermon, index }) {
             href="/sermons"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors duration-200"
           >
-            Watch
+            {t('common.watch')}
             <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform duration-200" />
           </a>
         </div>
@@ -61,15 +63,16 @@ const SermonCard = memo(function SermonCard({ sermon, index }) {
 });
 
 export default function FeaturedSermons() {
+  const { t } = useTranslation();
   const featuredSermons = useFeaturedSermons();
   if (!featuredSermons?.length) return null;
   return (
     <Section id="sermons" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Sermons"
-          title="Featured Sermons"
-          description="Deepen your faith through the inspiring teachings of our clergy."
+          subtitle={t('nav.sermons')}
+          title={t('pages.home.featuredSermons')}
+          description={t('pages.home.featuredSermonsDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredSermons.map((sermon, i) => (
@@ -78,7 +81,7 @@ export default function FeaturedSermons() {
         </div>
         <div className="text-center mt-12">
           <Button href="/sermons" variant="outline-dark">
-            View All Sermons
+            {t('common.viewAllSermons')}
           </Button>
         </div>
       </Container>

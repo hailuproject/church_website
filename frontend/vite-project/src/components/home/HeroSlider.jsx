@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
 import { useHeroData } from '../../hooks/useHomeSections';
 import Button from '../Button';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function HeroSlider() {
+  const { t, language } = useLanguage();
   const hero = useHeroData();
   if (!hero) return null;
+  const heading = language === 'am' ? hero.headingAm || hero.heading : hero.heading;
 
   return (
     <section className="relative w-full h-screen min-h-[600px] flex items-center justify-center" aria-label="Hero">
@@ -23,10 +26,10 @@ export default function HeroSlider() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="inline-block text-secondary text-sm font-semibold tracking-[0.2em] uppercase mb-6">
-            Ethiopian Orthodox Tewahedo Church
+            {t('common.churchName')}
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
-            {hero.heading}
+            {heading}
           </h1>
           <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
             {hero.tagline}

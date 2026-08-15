@@ -4,17 +4,19 @@ import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
 import { useGalleryPreview } from '../../hooks/useHomeSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function GalleryPreview() {
+  const { t } = useTranslation();
   const galleryPreview = useGalleryPreview();
   if (!galleryPreview?.length) return null;
   return (
     <Section id="gallery" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Gallery"
-          title="Sacred Moments"
-          description="A glimpse into the beauty of our worship, community, and sacred traditions."
+          subtitle={t('nav.gallery')}
+          title={t('pages.home.sacredMoments')}
+          description={t('pages.home.galleryDescription')}
         />
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {galleryPreview.map((item, i) => (
@@ -44,7 +46,7 @@ export default function GalleryPreview() {
         </div>
         <div className="text-center mt-12">
           <Button href="/gallery" variant="outline-dark">
-            View Gallery
+            {t('common.viewGallery')}
           </Button>
         </div>
       </Container>
