@@ -84,6 +84,17 @@ const seedSettings = async () => {
       country: 'United States',
       postalCode: '90301',
     },
+    addressAm: {
+      street: '4808 ደብልዩ 99ኛ ስትሪት',
+      city: 'ኢንግልውድ',
+      region: 'CA',
+      country: 'ዩናይትድ ስቴትስ',
+      postalCode: '90301',
+    },
+    footerText:
+      'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church, a community of faith in Los Angeles, California.',
+    footerTextAm:
+      'የቅድስት ሥላሴ ገብረ ክርስቶስ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን፣ በሎስ አንጀለስ፣ ካሊፎርኒያ የምትገኝ የእምነት ማህበረሰብ።',
     socialLinks: {
       facebook: '',
       youtube: '',
@@ -110,47 +121,63 @@ const seedSettings = async () => {
 const CONTENT_DEFAULTS = {
   home: {
     hero: {
-      heading: 'Welcome to Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church',
+      heading: 'Welcome to Holy Trinity – Gebre Christos Church',
+      headingAm: 'እንኳን ወደ ቅዱሳት ሦስት – ገብረ ክርስቶስ ቤተክርስቲያን ደህና መጡ',
       tagline: 'A community of faith in Los Angeles, California',
-      primaryCta: { label: 'Plan Your Visit', href: '/contact' },
-      secondaryCta: { label: 'Donate', href: '/donate' },
+      taglineAm: 'በሎስ አንጀለስ፣ ካሊፎርኒያ የእምነት ማህበረሰብ',
+      primaryCta: { label: 'Plan Your Visit', labelAm: 'ጉብኝትዎን ያቅዱ', href: '/contact' },
+      secondaryCta: { label: 'Donate', labelAm: 'ለግሱ', href: '/donate' },
       image: null,
     },
     intro: {
       title: 'Welcome to our church',
+      titleAm: 'እንኳን ወደ ቤተክርስቲያናችን ደህና መጡ',
       content:
         'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church is a community of faith serving the faithful in Los Angeles, California, in the spirit of the Ethiopian Orthodox Tewahedo tradition.',
+      contentAm:
+        'የቅድስት ሥላሴ ገብረ ክርስቶስ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሎስ አንጀለስ፣ ካሊፎርኒያ የሚገኙትን ምእመናን በኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ትውፊት መንፈስ የምታገለግል የእምነት ማህበረሰብ ናት።',
     },
     showUpcomingEvents: true,
     showLatestSermons: true,
     showGalleryPreview: true,
     cta: {
       title: 'Come Worship With Us',
+      titleAm: 'ከእኛ ጋር ለማምለክ ይምጡ',
       content: 'We would love to welcome you to our church community.',
+      contentAm: 'ወደ ቤተክርስቲያን ማህበረሰባችን በክፍት ልብ እንቀበላችኋለን።',
       buttonLabel: 'Contact Us',
+      buttonLabelAm: 'ያግኙን',
       buttonHref: '/contact',
     },
   },
   about: {
     intro: {
       title: 'About Our Church',
+      titleAm: 'ስለ ቤተክርስቲያናችን',
       content:
         'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church is a congregation of the Ethiopian Orthodox Tewahedo Church in Los Angeles, California.',
+      contentAm:
+        'የቅድስት ሥላሴ ገብረ ክርስቶስ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን በሎስ አንጀለስ፣ ካሊፎርኒያ የሚገኝ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ማህበረሰብ ነው።',
     },
     history: {
       title: 'Our History',
+      titleAm: 'ታሪካችን',
       content: '',
     },
     location: {
       title: 'Our Location',
+      titleAm: 'ያለንበት ቦታ',
       address: ADDRESS,
+      addressAm: '4808 ደብልዩ 99ኛ ስትሪት፣ ኢንግልውድ፣ ካሊፎርኒያ 90301፣ ዩናይትድ ስቴትስ',
       mapQuery: MAP_QUERY,
     },
   },
   contact: {
     intro: {
       title: 'Get In Touch',
+      titleAm: 'ይገናኙ',
       content: 'Send us a message using the form below and we will get back to you.',
+      contentAm: 'ከታች ባለው ቅጽ መልእክት ይላኩልን እና እንመልስልዎታለን።',
     },
     address: ADDRESS,
     phone: '',
@@ -162,7 +189,9 @@ const CONTENT_DEFAULTS = {
   donate: {
     intro: {
       title: 'Support Our Church',
+      titleAm: 'ቤተክርስቲያናችንን ይደግፉ',
       content: 'Your generosity helps our church continue its mission of worship, fellowship, and service.',
+      contentAm: 'ልግስናዎ ቤተክርስቲያናችን የአምልኮ፣ የኅብረት እና የአገልግሎት ተልዕኮዋን እንድትቀጥል ይረዳል።',
     },
     methods: [],
     contactNote: '',
@@ -170,6 +199,8 @@ const CONTENT_DEFAULTS = {
   footer: {
     aboutText:
       'Holy Trinity – Gebre Christos Ethiopian Orthodox Tewahedo Church, a community of faith in Los Angeles, California.',
+    aboutTextAm:
+      'የቅድስት ሥላሴ ገብረ ክርስቶስ የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን፣ በሎስ አንጀለስ፣ ካሊፎርኒያ የምትገኝ የእምነት ማህበረሰብ።',
   },
 };
 
