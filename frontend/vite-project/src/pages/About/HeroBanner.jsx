@@ -3,12 +3,20 @@ import { FiArrowRight } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/aboutData';
 import { useChurch } from '../../hooks/useHomeSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function HeroBanner() {
+  const { t } = useTranslation();
   const church = useChurch();
   const hero = {
     ...heroData,
-    churchName: church.name || heroData.churchName,
+    title: t('pages.about.title'),
+    subtitle: t('pages.about.heroSubtitle'),
+    churchName: church.name || t('common.churchName'),
+    breadcrumb: [
+      { label: t('common.home'), href: '/' },
+      { label: t('nav.about'), href: '/about' },
+    ],
   };
   return (
     <section
@@ -86,11 +94,11 @@ export default function HeroBanner() {
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             <Button href="/contact" variant="primary" size="lg">
-              Visit Us
+              {t('pages.about.visitUsBtn')}
               <FiArrowRight className="text-lg" />
             </Button>
             <Button href="/contact" variant="outline" size="lg">
-              Contact Church
+              {t('pages.about.contactChurchBtn')}
             </Button>
           </motion.div>
         </div>

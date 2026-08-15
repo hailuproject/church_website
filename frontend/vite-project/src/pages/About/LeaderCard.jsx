@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { FiMail } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function LeaderCard({ name, role, bio, image, delay = 0 }) {
+  const { t } = useTranslation();
   const initials = name
     .split(' ')
     .map((w) => w[0])
@@ -49,7 +51,7 @@ export default function LeaderCard({ name, role, bio, image, delay = 0 }) {
           aria-label={`Contact ${name}`}
         >
           <FiMail className="text-base" />
-          Contact
+          {t('pages.about.contactLeader')}
         </a>
       </div>
     </motion.div>

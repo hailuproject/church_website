@@ -2,10 +2,12 @@ import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function CTASection() {
+  const { t } = useTranslation();
   return (
-    <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Call to action">
+    <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
       {/* Background */}
       <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
 
@@ -27,25 +29,24 @@ export default function CTASection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-secondary text-xs font-semibold tracking-[0.25em] uppercase">
-            You Are Welcome
+            {t('pages.about.welcome')}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-            Become Part of Our Church Family
+            {t('pages.about.ctaTitle')}
           </h2>
 
           <p className="text-lg text-gray-300/80 max-w-xl leading-relaxed">
-            Join us in worship, fellowship, and the beautiful traditions of the Ethiopian Orthodox
-            Tewahedo Church. All are welcome in our community.
+            {t('pages.about.ctaDescription')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
             <Button href="/contact" variant="secondary" size="lg">
-              Visit Church
+              {t('pages.about.visitChurch')}
               <FiArrowRight className="text-lg" />
             </Button>
             <Button href="/contact" variant="outline" size="lg">
-              Contact Us
+              {t('common.contactUs')}
             </Button>
           </div>
         </motion.div>
