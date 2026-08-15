@@ -27,16 +27,18 @@ import {
   useResourcesList,
 } from '../../hooks/useResourcesSections';
 import { useSeo } from '../../hooks/useSeo';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 function ResourceCategories() {
+  const { t } = useTranslation();
   const resourceCategories = useResourceCategoriesList();
   return (
     <Section id="categories" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Browse By Category"
-          title="Resource Categories"
-          description="Find exactly what you need across our carefully organized collection of spiritual resources."
+          subtitle={t('pages.resources.browseByCategory')}
+          title={t('pages.resources.resourceCategories')}
+          description={t('pages.resources.categoriesDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {resourceCategories.map((category, i) => (
@@ -49,6 +51,7 @@ function ResourceCategories() {
 }
 
 function DigitalLibrary() {
+  const { t, language } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('All');
   const resources = useResourcesList();
   if (!resources.length) return null;
@@ -66,25 +69,25 @@ function DigitalLibrary() {
     <Section id="library" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Digital Collection"
-          title="Digital Library"
-          description="Browse our curated collection of spiritual resources available for reading and download."
+          subtitle={t('pages.resources.digitalCollection')}
+          title={t('pages.resources.digitalLibrary')}
+          description={t('pages.resources.libraryDescription')}
         />
 
         <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
           {resourceFilters.map((filter) => (
             <motion.button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
               className={`px-5 py-2 rounded-xs text-sm font-medium transition-all duration-300 cursor-pointer ${
-                activeFilter === filter
+                activeFilter === filter.id
                   ? 'bg-primary text-white shadow-md'
                   : 'bg-white text-muted border border-border hover:border-primary/30 hover:text-primary'
               }`}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              {filter}
+              {language === 'am' ? filter.am : filter.en}
             </motion.button>
           ))}
         </div>
@@ -100,14 +103,15 @@ function DigitalLibrary() {
 }
 
 function PrayerLibrary() {
+  const { t } = useTranslation();
   if (!prayerResources.length) return null;
   return (
     <Section id="prayers" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Commune with God"
-          title="Prayer Library"
-          description="A collection of prayers for every moment of your spiritual life, from morning devotions to family gatherings."
+          subtitle={t('pages.resources.communeWithGod')}
+          title={t('pages.resources.prayerLibrary')}
+          description={t('pages.resources.prayersDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {prayerResources.map((prayer, i) => (
@@ -120,13 +124,14 @@ function PrayerLibrary() {
 }
 
 function EthiopianSaints() {
+  const { t } = useTranslation();
   return (
     <Section id="saints" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Holy Ones"
-          title="Ethiopian Orthodox Saints"
-          description="Explore the inspiring lives of the saints who shaped the faith, monasticism, and liturgical traditions of the Ethiopian Orthodox Church."
+          subtitle={t('pages.resources.holyOnes')}
+          title={t('pages.resources.saintsTitle')}
+          description={t('pages.resources.saintsDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {saints.map((saint, i) => (
@@ -139,14 +144,15 @@ function EthiopianSaints() {
 }
 
 function Downloads() {
+  const { t } = useTranslation();
   if (!downloads.length) return null;
   return (
     <Section id="downloads" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Free Materials"
-          title="Downloads"
-          description="Free printable and downloadable materials for personal study, church use, and sharing with your community."
+          subtitle={t('pages.resources.freeMaterials')}
+          title={t('pages.resources.downloadsTitle')}
+          description={t('pages.resources.downloadsDescription')}
         />
         <div className="grid sm:grid-cols-2 gap-4">
           {downloads.map((item, i) => (
@@ -159,14 +165,15 @@ function Downloads() {
 }
 
 function FAQ() {
+  const { t } = useTranslation();
   if (!faqs.length) return null;
   return (
     <Section id="faq" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Have Questions?"
-          title="Frequently Asked Questions"
-          description="Find answers to common questions about our resources and how to use them."
+          subtitle={t('pages.resources.haveQuestions')}
+          title={t('pages.resources.faqTitle')}
+          description={t('pages.resources.faqDescription')}
         />
         <div className="max-w-3xl mx-auto">
           <Accordion items={faqs} defaultOpen={-1} />
@@ -177,7 +184,8 @@ function FAQ() {
 }
 
 export default function ResourcesPage() {
-  useSeo({ title: 'Resources' });
+  const { t } = useTranslation();
+  useSeo({ title: t('pages.resources.title') });
   return (
     <main className="min-h-screen">
       <HeroBanner />

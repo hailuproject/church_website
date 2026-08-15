@@ -4,8 +4,10 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useFeaturedResource } from '../../hooks/useResourcesSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function FeaturedResource() {
+  const { t } = useTranslation();
   const featuredResource = useFeaturedResource();
   if (!featuredResource) return null;
   return (
@@ -31,7 +33,7 @@ export default function FeaturedResource() {
             </div>
             <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-xs flex items-center gap-1.5">
               <FiDownload className="w-3.5 h-3.5" />
-              {featuredResource.downloads.toLocaleString()} downloads
+              {t('pages.resources.downloadsCount', { count: featuredResource.downloads.toLocaleString() })}
             </div>
           </motion.div>
 
@@ -44,7 +46,7 @@ export default function FeaturedResource() {
           >
             <div>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-                Featured Resource
+                {t('pages.resources.featuredResource')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
                 {featuredResource.title}
@@ -59,28 +61,28 @@ export default function FeaturedResource() {
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiGlobe className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Language</p>
+                  <p className="text-xs text-muted">{t('pages.resources.language')}</p>
                   <p className="text-sm font-semibold text-text">{featuredResource.language}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiFileText className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Pages</p>
+                  <p className="text-xs text-muted">{t('pages.resources.pages')}</p>
                   <p className="text-sm font-semibold text-text">{featuredResource.pages}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiBookOpen className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Author</p>
+                  <p className="text-xs text-muted">{t('pages.resources.author')}</p>
                   <p className="text-sm font-semibold text-text">{featuredResource.author}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiCalendar className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Updated</p>
+                  <p className="text-xs text-muted">{t('pages.resources.updated')}</p>
                   <p className="text-sm font-semibold text-text">
                     {new Date(featuredResource.updatedDate).toLocaleDateString('en-US', {
                       month: 'short',
@@ -96,7 +98,7 @@ export default function FeaturedResource() {
               {featuredResource.fileUrl && (
                 <Button href={featuredResource.fileUrl} target="_blank" rel="noopener noreferrer" variant="primary" size="md">
                   <FiDownload className="text-lg" />
-                  Download PDF
+                  {t('pages.resources.downloadPdf')}
                 </Button>
               )}
             </div>

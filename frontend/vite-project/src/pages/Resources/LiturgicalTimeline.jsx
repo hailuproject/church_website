@@ -12,6 +12,7 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import { liturgicalResources } from '../../data/resourcesData';
 import Button from '../../components/Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const liturgicalIcons = {
   liturgy: FiBookOpen,
@@ -23,6 +24,7 @@ const liturgicalIcons = {
 };
 
 export default function LiturgicalTimeline() {
+  const { t } = useTranslation();
   if (!liturgicalResources.length) return null;
   return (
     <Section id="liturgical" className="bg-surface">
@@ -35,14 +37,13 @@ export default function LiturgicalTimeline() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Sacred Texts
+            {t('pages.resources.sacredTexts')}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text leading-tight">
-            Liturgical Resources
+            {t('pages.resources.liturgicalResources')}
           </h2>
           <p className="text-base sm:text-lg leading-relaxed max-w-2xl text-muted">
-            Essential texts and guides for understanding and participating in the beautiful
-            liturgical services of the Ethiopian Orthodox Church.
+            {t('pages.resources.liturgicalDescription')}
           </p>
         </motion.div>
 
@@ -86,7 +87,7 @@ export default function LiturgicalTimeline() {
                       {resource.fileUrl && (
                         <Button href={resource.fileUrl} target="_blank" rel="noopener noreferrer" variant="outline-dark" size="sm">
                           <FiDownload className="text-sm" />
-                          Download
+                          {t('pages.resources.download')}
                         </Button>
                       )}
                     </div>

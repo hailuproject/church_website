@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FiDownload, FiBook, FiCalendar, FiMusic, FiFileText, FiBookOpen, FiGrid } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const fileIcons = {
   book: FiBook,
@@ -11,6 +12,7 @@ const fileIcons = {
 };
 
 export default function DownloadCard({ item, index }) {
+  const { t } = useTranslation();
   const IconComponent = fileIcons[item.icon] || FiFileText;
 
   return (
@@ -49,7 +51,7 @@ export default function DownloadCard({ item, index }) {
           className="flex items-center justify-center w-10 h-10 rounded-xs bg-surface text-primary hover:bg-primary hover:text-white transition-all duration-500 flex-shrink-0"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          aria-label={`Download ${item.title}`}
+          aria-label={t('pages.resources.downloadItem', { title: item.title })}
         >
           <FiDownload className="w-4 h-4" />
         </motion.a>

@@ -4,6 +4,7 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { bibleStudyFeatures } from '../../data/resourcesData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const featureIcons = {
   weekly: FiBookOpen,
@@ -13,6 +14,7 @@ const featureIcons = {
 };
 
 export default function BibleStudySection() {
+  const { t } = useTranslation();
   return (
     <Section id="bible-study" className="bg-white">
       <Container>
@@ -36,17 +38,15 @@ export default function BibleStudySection() {
           >
             <div>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-                Deepen Your Knowledge
+                {t('pages.resources.bibleStudyEyebrow')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
-                Bible Study Resources
+                {t('pages.resources.bibleStudyTitle')}
               </h2>
             </div>
 
             <p className="text-muted text-base leading-[1.8]">
-              Explore the riches of the 81-book Ethiopian Orthodox canon with structured study
-              guides, discussion questions, and reading plans designed to deepen your understanding of
-              Scripture and strengthen your relationship with God.
+              {t('pages.resources.bibleStudyDescription')}
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4 mt-2">
@@ -72,11 +72,11 @@ export default function BibleStudySection() {
 
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-4">
               <Button href="#library" variant="primary" size="md">
-                Start Reading
+                {t('pages.resources.startReading')}
                 <FiArrowRight className="text-lg" />
               </Button>
               <Button href="#library" variant="outline-dark" size="md">
-                View All Studies
+                {t('pages.resources.viewAllStudies')}
               </Button>
             </div>
           </motion.div>

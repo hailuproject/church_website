@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { FiDownload } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function ResourceCard({ resource, index }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       className="group bg-white rounded-xs overflow-hidden border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
@@ -44,7 +46,7 @@ export default function ResourceCard({ resource, index }) {
             {resource.language}
           </span>
           <span className="text-border">|</span>
-          <span>{resource.downloads.toLocaleString()} downloads</span>
+          <span>{t('pages.resources.downloadsCount', { count: resource.downloads.toLocaleString() })}</span>
         </div>
 
         <div className="flex items-center gap-3 pt-2 border-t border-border mt-1">
@@ -56,7 +58,7 @@ export default function ResourceCard({ resource, index }) {
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
             >
               <FiDownload className="w-3.5 h-3.5" />
-              Download
+              {t('pages.resources.download')}
             </a>
           )}
         </div>
