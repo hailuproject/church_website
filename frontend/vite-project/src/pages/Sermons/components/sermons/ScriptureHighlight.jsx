@@ -1,15 +1,21 @@
 import { motion } from 'framer-motion';
 import { scriptureHighlight } from '../../../../data/sermonsData';
+import { useLanguage } from '../../../../i18n/LanguageContext';
 
 export default function ScriptureHighlight() {
+  const { t, language } = useLanguage();
+  const am = language === 'am';
   const { verse, reference, explanation } = scriptureHighlight;
+  const verseText = am ? scriptureHighlight.verseAm : verse;
+  const referenceText = am ? scriptureHighlight.referenceAm : reference;
+  const explanationText = am ? scriptureHighlight.explanationAm : explanation;
 
   return (
-    <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Scripture highlight">
+    <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('pages.sermons.scriptureHighlight')}>
       <div className="absolute inset-0">
         <img
           src={scriptureHighlight.image}
-          alt="Open Bible"
+          alt={t('pages.sermons.openBible')}
           className="w-full h-full object-cover"
           loading="lazy"
         />
@@ -46,7 +52,7 @@ export default function ScriptureHighlight() {
           transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="text-2xl sm:text-3xl md:text-4xl text-white/95 font-bold leading-[1.3] italic">
-            &ldquo;{verse}&rdquo;
+            &ldquo;{verseText}&rdquo;
           </p>
         </motion.blockquote>
 
@@ -58,7 +64,7 @@ export default function ScriptureHighlight() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <span className="h-px w-10 bg-secondary/40" />
-          <cite className="text-secondary text-lg font-semibold not-italic">{reference}</cite>
+          <cite className="text-secondary text-lg font-semibold not-italic">{referenceText}</cite>
           <span className="h-px w-10 bg-secondary/40" />
         </motion.div>
 
@@ -69,7 +75,7 @@ export default function ScriptureHighlight() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          {explanation}
+          {explanationText}
         </motion.p>
       </div>
     </section>

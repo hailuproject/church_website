@@ -8,6 +8,7 @@ import {
   FiTrendingUp,
 } from 'react-icons/fi';
 import { sidebarContent } from '../../../../data/sermonsData';
+import { useTranslation } from '../../../../i18n/LanguageContext';
 
 function SectionHeading({ icon: Icon, title }) {
   return (
@@ -21,11 +22,12 @@ function SectionHeading({ icon: Icon, title }) {
 }
 
 function UpcomingServices() {
+  const { t } = useTranslation();
   const { upcomingServices } = sidebarContent;
   if (!upcomingServices.length) return null;
   return (
     <div className="bg-white border border-border rounded-xs p-5">
-      <SectionHeading icon={FiCalendar} title="Upcoming Services" />
+      <SectionHeading icon={FiCalendar} title={t('pages.sermons.upcomingServices')} />
       <div className="space-y-3">
         {upcomingServices.map((s) => (
           <div
@@ -51,7 +53,7 @@ function UpcomingServices() {
         href="/contact#schedule"
         className="flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:text-primary-dark mt-4 pt-3 border-t border-border transition-colors"
       >
-        Full Schedule
+        {t('pages.sermons.fullSchedule')}
         <FiArrowRight />
       </a>
     </div>
@@ -59,11 +61,12 @@ function UpcomingServices() {
 }
 
 function PopularSermons() {
+  const { t } = useTranslation();
   const { popularSermons } = sidebarContent;
   if (!popularSermons.length) return null;
   return (
     <div className="bg-white border border-border rounded-xs p-5">
-      <SectionHeading icon={FiTrendingUp} title="Popular Sermons" />
+      <SectionHeading icon={FiTrendingUp} title={t('pages.sermons.popularSermons')} />
       <div className="space-y-3">
         {popularSermons.map((s) => (
           <a
@@ -79,7 +82,7 @@ function PopularSermons() {
                 <FiUser className="text-xs" />
                 {s.priest}
               </span>
-              <span>{s.views.toLocaleString()} views</span>
+              <span>{t('pages.sermons.viewsCount', { count: s.views.toLocaleString() })}</span>
             </div>
           </a>
         ))}
@@ -89,6 +92,7 @@ function PopularSermons() {
 }
 
 function PrayerRequestButton() {
+  const { t } = useTranslation();
   return (
     <motion.a
       href="/contact#form"
@@ -97,14 +101,15 @@ function PrayerRequestButton() {
       className="flex items-center justify-center gap-2.5 bg-primary/5 border border-primary/20 text-primary font-semibold text-sm px-6 py-4 rounded-xs hover:bg-primary hover:text-white transition-all duration-300"
     >
       <FiHeart className="text-lg" />
-      Prayer Request
+      {t('pages.sermons.prayerRequest')}
     </motion.a>
   );
 }
 
 export default function Sidebar() {
+  const { t } = useTranslation();
   return (
-    <aside className="lg:sticky lg:top-28 space-y-6" aria-label="Sidebar">
+    <aside className="lg:sticky lg:top-28 space-y-6" aria-label={t('pages.sermons.sidebar')}>
       <UpcomingServices />
       <PopularSermons />
       <PrayerRequestButton />

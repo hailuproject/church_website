@@ -7,8 +7,10 @@ import {
   FiPlay,
   FiPause,
 } from 'react-icons/fi';
+import { useTranslation } from '../../../../i18n/LanguageContext';
 
 const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
+  const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -23,7 +25,7 @@ const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
         <button
           onClick={() => setIsPlaying(!isPlaying)}
           className="shrink-0 w-11 h-11 bg-primary/10 rounded-xs flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300"
-          aria-label={isPlaying ? `Pause ${audio.title}` : `Play ${audio.title}`}
+          aria-label={isPlaying ? t('pages.sermons.pauseAudio', { title: audio.title }) : t('pages.sermons.playAudio', { title: audio.title })}
         >
           {isPlaying ? (
             <FiPause className="text-lg text-primary group-hover:text-white transition-colors" />
@@ -64,10 +66,10 @@ const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
           <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border">
             <button
               className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-text transition-colors"
-              aria-label={`Download ${audio.title}`}
+              aria-label={t('pages.resources.downloadItem', { title: audio.title })}
             >
               <FiDownload className="text-xs" />
-              Download
+              {t('pages.resources.download')}
             </button>
           </div>
         </div>

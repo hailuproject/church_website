@@ -2,12 +2,14 @@ import { motion } from "framer-motion";
 import { FiPlay, FiClock, FiUser, FiCalendar } from "react-icons/fi";
 import { featuredTeaching } from "../../../../data/sermonsData";
 import Button from "../../../../components/Button";
+import { useTranslation } from "../../../../i18n/LanguageContext";
 
 export default function FeaturedTeaching() {
+  const { t } = useTranslation();
   const sermon = featuredTeaching;
   if (!sermon) return null;
   return (
-    <section className="py-20 md:py-28 bg-white" aria-label="Featured teaching">
+    <section className="py-20 md:py-28 bg-white" aria-label={t('pages.sermons.featuredTeaching')}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -18,7 +20,7 @@ export default function FeaturedTeaching() {
         >
           <div className="p-8 md:p-12 flex flex-col justify-center">
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary mb-4">
-              Featured Teaching
+              {t('pages.sermons.featuredTeaching')}
             </span>
 
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text mb-4">
@@ -48,7 +50,7 @@ export default function FeaturedTeaching() {
             <div>
               <Button variant="primary">
                 <FiPlay className="text-lg" />
-                Watch Now
+                {t('pages.sermons.watchNow')}
               </Button>
             </div>
           </div>
@@ -65,7 +67,7 @@ export default function FeaturedTeaching() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-xs flex items-center justify-center shadow-lg"
-                aria-label={`Play featured teaching: ${sermon.title}`}
+                aria-label={t('pages.sermons.playFeatured', { title: sermon.title })}
               >
                 <FiPlay className="text-2xl text-primary ml-0.5" />
               </motion.button>

@@ -4,8 +4,10 @@ import { FiPlay, FiCalendar, FiClock } from "react-icons/fi";
 import ReactPlayer from "react-player";
 import Button from "../../../../components/Button";
 import { useLiveStream } from "../../../../hooks/useSermonsSections";
+import { useTranslation } from "../../../../i18n/LanguageContext";
 
 function CountdownTimer({ targetDate }) {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState("");
   const [isClient, setIsClient] = useState(false);
 
@@ -23,7 +25,7 @@ function CountdownTimer({ targetDate }) {
       const diff = target - now;
 
       if (diff <= 0) {
-        setTimeLeft("Service starting soon");
+        setTimeLeft(t("pages.sermons.serviceStartingSoon"));
         return;
       }
 
@@ -35,16 +37,16 @@ function CountdownTimer({ targetDate }) {
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
       if (days > 0) {
-        setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+        setTimeLeft(`${days}${t('pages.sermons.days')} ${hours}${t('pages.sermons.hours')} ${minutes}${t('pages.sermons.minutes')} ${seconds}${t('pages.sermons.seconds')}`);
       } else {
-        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+        setTimeLeft(`${hours}${t('pages.sermons.hours')} ${minutes}${t('pages.sermons.minutes')} ${seconds}${t('pages.sermons.seconds')}`);
       }
     }
 
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [targetDate, t]);
 
   if (!isClient) return null;
 
@@ -56,6 +58,7 @@ function CountdownTimer({ targetDate }) {
 }
 
 const LiveStreamCard = memo(function LiveStreamCard() {
+  const { t } = useTranslation();
   const stream = useLiveStream();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -65,7 +68,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
     <section
       id="live"
       className="py-20 md:py-28 bg-surface"
-      aria-label="Live stream"
+      aria-label={t("pages.sermons.liveStream")}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
@@ -94,7 +97,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsPlaying(true)}
                     className="relative z-10 w-16 h-16 bg-white/90 backdrop-blur-sm rounded-xs flex items-center justify-center shadow-xl hover:bg-white transition-colors"
-                    aria-label="Watch live stream"
+                    aria-label={t("pages.sermons.watchLive")}
                   >
                     <FiPlay className="text-2xl text-primary ml-0.5" />
                   </motion.button>
@@ -110,7 +113,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
                 </span>
-                {stream.isLive ? "LIVE" : "Offline"}
+                {stream.isLive ? t("pages.sermons.live") : t("pages.sermons.offline")}
               </span>
               {stream.isLive && (
                 <span className="text-xs text-muted font-medium">
@@ -150,7 +153,7 @@ const LiveStreamCard = memo(function LiveStreamCard() {
               {stream.isLive && (
                 <Button onClick={() => setIsPlaying(true)} variant="primary">
                   <FiPlay className="text-lg" />
-                  Watch Live
+                  {t("pages.sermons.watchLive")}
                 </Button>
               )}
               <Button href="/events" variant="outline-dark">

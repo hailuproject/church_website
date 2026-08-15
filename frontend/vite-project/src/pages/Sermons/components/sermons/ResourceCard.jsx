@@ -10,6 +10,7 @@ import {
   FiHeadphones,
   FiFileText,
 } from 'react-icons/fi';
+import { useTranslation } from '../../../../i18n/LanguageContext';
 
 const iconMap = {
   cross: FiCrosshair,
@@ -20,6 +21,7 @@ const iconMap = {
 };
 
 const ResourceCard = memo(function ResourceCard({ resource, delay = 0 }) {
+  const { t } = useTranslation();
   const IconComponent = iconMap[resource.icon] || FiBookOpen;
 
   return (
@@ -52,29 +54,29 @@ const ResourceCard = memo(function ResourceCard({ resource, delay = 0 }) {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           className="flex items-center gap-1.5 text-xs font-medium bg-primary/10 text-primary px-3 py-2 rounded-xs hover:bg-primary hover:text-white transition-all duration-300"
-          aria-label={`Download PDF: ${resource.title}`}
+          aria-label={t('pages.resources.downloadPdf')}
         >
           <FiDownload className="text-xs" />
-          Download
+          {t('pages.resources.download')}
         </motion.a>
         <motion.a
           href={resource.audioUrl}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           className="flex items-center gap-1.5 text-xs font-medium bg-surface text-text px-3 py-2 rounded-xs hover:bg-border transition-all duration-300"
-          aria-label={`Listen to ${resource.title}`}
+          aria-label={t('pages.sermons.listenTo', { title: resource.title })}
         >
           <FiHeadphones className="text-xs" />
-          Listen
+          {t('pages.sermons.listen')}
         </motion.a>
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           className="flex items-center gap-1.5 text-xs font-medium bg-surface text-text px-3 py-2 rounded-xs hover:bg-border transition-all duration-300 ml-auto"
-          aria-label={`Read ${resource.title}`}
+          aria-label={t('pages.sermons.readResource', { title: resource.title })}
         >
           <FiFileText className="text-xs" />
-          Read
+          {t('pages.sermons.read')}
         </motion.button>
       </div>
     </motion.div>

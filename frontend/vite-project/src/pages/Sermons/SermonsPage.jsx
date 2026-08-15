@@ -18,9 +18,11 @@ import {
   useSermonCategoriesList,
 } from '../../hooks/useSermonsSections';
 import { useSeo } from '../../hooks/useSeo';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function SermonsPage() {
-  useSeo({ title: 'Sermons & Media' });
+  const { t } = useTranslation();
+  useSeo({ title: t('pages.sermons.title') });
   const sermons = useLatestSermons();
   const sermonCategories = useSermonCategoriesList();
   const audioSermons = useAudioSermons();
@@ -32,14 +34,14 @@ export default function SermonsPage() {
 
       {/* Latest Sermons + Sidebar */}
       {sermons.length > 0 && (
-        <section id="sermons" className="py-20 md:py-28 bg-surface" aria-label="Latest sermons">
+        <section id="sermons" className="py-20 md:py-28 bg-surface" aria-label={t('pages.sermons.latestSermons')}>
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-[1fr_300px] lg:gap-10">
               <div>
                 <SectionHeader
-                  subtitle="Sermons"
-                  title="Latest Sermons"
-                  description="Explore our recent teachings and sermons from our clergy."
+                  subtitle={t('pages.sermons.sermons')}
+                  title={t('pages.sermons.latestSermons')}
+                  description={t('pages.sermons.latestSermonsDescription')}
                   align="left"
                 />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5 -mt-8">
@@ -58,12 +60,12 @@ export default function SermonsPage() {
 
       {/* Sermon Categories */}
       {sermonCategories.length > 0 && (
-        <section className="py-20 md:py-28 bg-white" aria-label="Sermon categories">
+        <section className="py-20 md:py-28 bg-white" aria-label={t('pages.sermons.categories')}>
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <SectionHeader
-              subtitle="Browse"
-              title="Sermon Categories"
-              description="Find teachings organized by topic and tradition."
+              subtitle={t('pages.sermons.browse')}
+              title={t('pages.sermons.categories')}
+              description={t('pages.sermons.categoriesDescription')}
             />
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 -mt-8">
               {sermonCategories.map((cat, i) => (
@@ -76,12 +78,12 @@ export default function SermonsPage() {
 
       {/* Audio Sermons */}
       {audioSermons.length > 0 && (
-        <section className="py-20 md:py-28 bg-surface" aria-label="Audio sermons">
+        <section className="py-20 md:py-28 bg-surface" aria-label={t('pages.sermons.audioSermons')}>
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <SectionHeader
-              subtitle="Listen"
-              title="Audio Sermons"
-              description="Listen to sermons and teachings on the go."
+              subtitle={t('pages.sermons.listen')}
+              title={t('pages.sermons.audioSermons')}
+              description={t('pages.sermons.audioSermonsDescription')}
             />
             <div className="grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto -mt-8">
               {audioSermons.map((audio, i) => (
@@ -94,12 +96,12 @@ export default function SermonsPage() {
 
       {/* Ge'ez Resources */}
       {geEzResources.length > 0 && (
-        <section className="py-20 md:py-28 bg-white" aria-label="Ge'ez resources">
+        <section className="py-20 md:py-28 bg-white" aria-label={t('pages.sermons.geezResources')}>
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <SectionHeader
-              subtitle="Resources"
-              title="Ge'ez Liturgical Resources"
-              description="Access ancient prayers, liturgies, and sacred texts of the Church."
+              subtitle={t('pages.sermons.resources')}
+              title={t('pages.sermons.geezResources')}
+              description={t('pages.sermons.geezResourcesDescription')}
             />
             <div className="grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto -mt-8">
               {geEzResources.map((resource, i) => (
