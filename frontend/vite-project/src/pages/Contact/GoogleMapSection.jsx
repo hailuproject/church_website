@@ -4,10 +4,12 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useChurch } from '../../hooks/useHomeSections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const encodeQuery = (value) => encodeURIComponent(value).replace(/%20/g, '+');
 
 export default function GoogleMapSection() {
+  const { t } = useTranslation();
   const church = useChurch();
   const address = church.address || '';
   const phone = church.phone || '';
@@ -32,16 +34,16 @@ export default function GoogleMapSection() {
                 <FiMapPin className="w-7 h-7 text-primary" />
               </div>
               <div className="max-w-md">
-                <h3 className="text-lg font-bold text-text mb-1">{church.name || 'Our Church'}</h3>
+                <h3 className="text-lg font-bold text-text mb-1">{church.name || t('pages.contact.ourChurch')}</h3>
                 <p className="text-sm text-muted leading-relaxed">
-                  {address || 'Visit us at our church location. Contact the office for directions.'}
+                  {address || t('pages.contact.visitFallback')}
                 </p>
               </div>
             </div>
             <div className="p-5 border-t border-border flex justify-center">
               <Button href={mapsUrl} target="_blank" rel="noopener noreferrer" variant="outline-dark" size="md">
                 <FiExternalLink className="text-lg" />
-                Open in Google Maps
+                {t('common.openInGoogleMaps')}
               </Button>
             </div>
           </motion.div>
@@ -55,10 +57,10 @@ export default function GoogleMapSection() {
           >
             <div>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-                Find Us
+                {t('pages.contact.findUs')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
-                Church Location
+                {t('pages.contact.churchLocation')}
               </h2>
             </div>
 
@@ -67,7 +69,7 @@ export default function GoogleMapSection() {
                 <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
                   <FiMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-text">Full Address</h4>
+                    <h4 className="text-sm font-bold text-text">{t('pages.contact.fullAddress')}</h4>
                     <p className="text-sm text-muted mt-1">{address}</p>
                   </div>
                 </div>
@@ -77,7 +79,7 @@ export default function GoogleMapSection() {
                 <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
                   <FiPhone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-text">Phone</h4>
+                    <h4 className="text-sm font-bold text-text">{t('footer.phone')}</h4>
                     <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-sm text-muted mt-1 block hover:text-primary">
                       {phone}
                     </a>
@@ -89,7 +91,7 @@ export default function GoogleMapSection() {
                 <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
                   <FiMail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-text">Email</h4>
+                    <h4 className="text-sm font-bold text-text">{t('footer.email')}</h4>
                     <a href={`mailto:${email}`} className="text-sm text-muted mt-1 block hover:text-primary">
                       {email}
                     </a>
@@ -101,9 +103,9 @@ export default function GoogleMapSection() {
                 <div className="flex items-start gap-4 bg-white rounded-xs p-5 border border-border">
                   <FiMapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-text">Location</h4>
+                    <h4 className="text-sm font-bold text-text">{t('pages.contact.location')}</h4>
                     <p className="text-sm text-muted mt-1">
-                      Contact the church office for our address and contact details.
+                      {t('pages.contact.locationFallback')}
                     </p>
                   </div>
                 </div>
@@ -113,12 +115,12 @@ export default function GoogleMapSection() {
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
               <Button href={mapsUrl} target="_blank" rel="noopener noreferrer" variant="primary" size="md">
                 <FiExternalLink className="text-lg" />
-                Open in Google Maps
+                {t('common.openInGoogleMaps')}
               </Button>
               {phone && (
                 <Button href={`tel:${phone.replace(/\s/g, '')}`} variant="outline-dark" size="md">
                   <FiPhone className="text-lg" />
-                  Call Church
+                  {t('pages.contact.callChurch')}
                 </Button>
               )}
             </div>

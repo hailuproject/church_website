@@ -7,6 +7,7 @@ import {
   FiInstagram,
   FiTwitter,
 } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const platformIcons = {
   facebook: FiFacebook,
@@ -25,6 +26,7 @@ const platformColors = {
 };
 
 export default function SocialCard({ link, index }) {
+  const { t } = useTranslation();
   const SocialIcon = platformIcons[link.icon] || FiExternalLink;
 
   return (
@@ -62,7 +64,7 @@ export default function SocialCard({ link, index }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
         >
-          Visit {link.platform}
+          {t('common.visit')} {link.platform}
           <FiExternalLink className="w-3.5 h-3.5" />
         </a>
       </div>

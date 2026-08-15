@@ -10,6 +10,7 @@ import {
   FiUsers,
   FiGift,
 } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const deptIcons = {
   office: FiGrid,
@@ -23,6 +24,7 @@ const deptIcons = {
 };
 
 export default function DepartmentCard({ department, index }) {
+  const { t } = useTranslation();
   const DeptIcon = deptIcons[department.icon] || FiGrid;
 
   return (
@@ -72,7 +74,7 @@ export default function DepartmentCard({ department, index }) {
         {!department.phone && !department.email && (
           <p className="flex items-center gap-2 text-xs text-muted">
             <FiMail className="w-3.5 h-3.5 flex-shrink-0" />
-            Contact the church office
+            {t('pages.contact.contactOffice')}
           </p>
         )}
       </div>

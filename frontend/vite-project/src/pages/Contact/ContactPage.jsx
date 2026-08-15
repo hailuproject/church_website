@@ -7,27 +7,29 @@ import GoogleMapSection from './GoogleMapSection';
 import CTASection from './CTASection';
 import { useChurch } from '../../hooks/useHomeSections';
 import { useSeo } from '../../hooks/useSeo';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 function ContactInformation() {
+  const { t } = useTranslation();
   const church = useChurch();
   const cards = [
     {
       id: 'address',
-      title: 'Visit Us',
+      title: t('pages.contact.visitUs'),
       icon: 'location',
-      details: [{ label: 'Address', value: church.address }].filter((d) => d.value),
+      details: [{ label: t('footer.address'), value: church.address }].filter((d) => d.value),
     },
     {
       id: 'phone',
-      title: 'Call Us',
+      title: t('pages.contact.callUs'),
       icon: 'phone',
-      details: [{ label: 'Church Office', value: church.phone }].filter((d) => d.value),
+      details: [{ label: t('pages.contact.churchOffice'), value: church.phone }].filter((d) => d.value),
     },
     {
       id: 'email',
-      title: 'Email Us',
+      title: t('pages.contact.emailUs'),
       icon: 'email',
-      details: [{ label: 'General', value: church.email }].filter((d) => d.value),
+      details: [{ label: t('pages.contact.general'), value: church.email }].filter((d) => d.value),
     },
   ].filter((card) => card.details.length);
 
@@ -57,7 +59,8 @@ function ContactFormSection() {
 }
 
 export default function ContactPage() {
-  useSeo({ title: 'Contact Us' });
+  const { t } = useTranslation();
+  useSeo({ title: t('pages.contact.title') });
   return (
     <main className="min-h-screen">
       <HeroBanner />

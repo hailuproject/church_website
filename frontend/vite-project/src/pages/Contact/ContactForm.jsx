@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { FiSend, FiSmile, FiHeart, FiClock, FiUsers } from 'react-icons/fi';
 import { useSubmitContact } from '../../hooks/usePublicData';
 import { contactCategories, quickHighlights } from '../../data/contactData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const highlightIcons = {
   smile: FiSmile,
@@ -14,6 +15,7 @@ const highlightIcons = {
 };
 
 export default function ContactForm() {
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const submitContact = useSubmitContact();
   const {
@@ -37,7 +39,7 @@ export default function ContactForm() {
       reset();
       setTimeout(() => setSubmitted(false), 5000);
     } catch (error) {
-      toast.error(error.message || 'Failed to send message. Please try again.');
+      toast.error(error.message || t('pages.contact.error'));
     }
   };
 
@@ -52,16 +54,15 @@ export default function ContactForm() {
       >
         <div>
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Get In Touch
+            {t('pages.contact.getInTouch')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
-            We&apos;d Love to Hear From You
+            {t('pages.contact.formTitle')}
           </h2>
         </div>
 
         <p className="text-muted text-base leading-[1.8]">
-          Whether you have a question, need prayer, or want to learn more about our church
-          community, please don&apos;t hesitate to reach out. Our team is here to help.
+          {t('pages.contact.formDescription')}
         </p>
 
         <div className="flex flex-col gap-4 mt-2">
@@ -104,9 +105,9 @@ export default function ContactForm() {
             <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
               <FiSend className="w-7 h-7 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-text">Message Sent!</h3>
+            <h3 className="text-xl font-bold text-text">{t('pages.contact.sentTitle')}</h3>
             <p className="text-muted text-sm">
-              Thank you for reaching out. We will get back to you within 24\u201348 hours.
+              {t('pages.contact.sentDescription')}
             </p>
           </motion.div>
         ) : (
@@ -118,16 +119,16 @@ export default function ContactForm() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="name" className="text-sm font-semibold text-text">
-                  Full Name <span className="text-primary">*</span>
+                  {t('forms.fullName')} <span className="text-primary">*</span>
                 </label>
                 <input
                   id="name"
                   type="text"
-                  {...register('name', { required: 'Full name is required' })}
+                  {...register('name', { required: t('forms.fullNameRequired') })}
                   className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 ${
                     errors.name ? 'border-red-400' : 'border-border'
                   }`}
-                  placeholder="Your full name"
+                  placeholder={t('forms.fullNamePlaceholder')}
                 />
                 {errors.name && (
                   <p className="text-xs text-red-500">{errors.name.message}</p>
@@ -136,22 +137,22 @@ export default function ContactForm() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="email" className="text-sm font-semibold text-text">
-                  Email <span className="text-primary">*</span>
+                  {t('forms.email')} <span className="text-primary">*</span>
                 </label>
                 <input
                   id="email"
                   type="email"
                   {...register('email', {
-                    required: 'Email is required',
+                    required: t('forms.emailRequired'),
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Please enter a valid email',
+                      message: t('forms.invalidEmail'),
                     },
                   })}
                   className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 ${
                     errors.email ? 'border-red-400' : 'border-border'
                   }`}
-                  placeholder="your@email.com"
+                  placeholder={t('forms.emailPlaceholder')}
                 />
                 {errors.email && (
                   <p className="text-xs text-red-500">{errors.email.message}</p>
@@ -160,29 +161,29 @@ export default function ContactForm() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="phone" className="text-sm font-semibold text-text">
-                  Phone Number
+                  {t('forms.phone')}
                 </label>
                 <input
                   id="phone"
                   type="tel"
                   {...register('phone')}
                   className="rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
-                  placeholder="Your phone number"
+                  placeholder={t('forms.phonePlaceholder')}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="category" className="text-sm font-semibold text-text">
-                  Category <span className="text-primary">*</span>
+                  {t('forms.category')} <span className="text-primary">*</span>
                 </label>
                 <select
                   id="category"
-                  {...register('category', { required: 'Please select a category' })}
+                  {...register('category', { required: t('forms.categoryRequired') })}
                   className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 cursor-pointer ${
                     errors.category ? 'border-red-400' : 'border-border'
                   }`}
                 >
-                  <option value="">Select a category</option>
+                  <option value="">{t('forms.selectCategory')}</option>
                   {contactCategories.map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
@@ -197,16 +198,16 @@ export default function ContactForm() {
 
             <div className="flex flex-col gap-1.5 mt-5">
               <label htmlFor="subject" className="text-sm font-semibold text-text">
-                Subject <span className="text-primary">*</span>
+                {t('forms.subject')} <span className="text-primary">*</span>
               </label>
               <input
                 id="subject"
                 type="text"
-                {...register('subject', { required: 'Subject is required' })}
+                {...register('subject', { required: t('forms.subjectRequired') })}
                 className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 ${
                   errors.subject ? 'border-red-400' : 'border-border'
                 }`}
-                placeholder="How can we help you?"
+                placeholder={t('forms.subjectPlaceholder')}
               />
               {errors.subject && (
                 <p className="text-xs text-red-500">{errors.subject.message}</p>
@@ -215,16 +216,16 @@ export default function ContactForm() {
 
             <div className="flex flex-col gap-1.5 mt-5">
               <label htmlFor="message" className="text-sm font-semibold text-text">
-                Message <span className="text-primary">*</span>
+                {t('forms.message')} <span className="text-primary">*</span>
               </label>
               <textarea
                 id="message"
                 rows={5}
-                {...register('message', { required: 'Message is required' })}
+                {...register('message', { required: t('forms.messageRequired') })}
                 className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none ${
                   errors.message ? 'border-red-400' : 'border-border'
                 }`}
-                placeholder="Write your message here..."
+                placeholder={t('forms.messagePlaceholder')}
               />
               {errors.message && (
                 <p className="text-xs text-red-500">{errors.message.message}</p>
@@ -236,13 +237,12 @@ export default function ContactForm() {
                 id="privacy"
                 type="checkbox"
                 {...register('privacy', {
-                  required: 'You must agree to the privacy policy',
+                  required: t('forms.privacyRequired'),
                 })}
                 className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 cursor-pointer accent-primary"
               />
               <label htmlFor="privacy" className="text-xs text-muted cursor-pointer">
-                I agree to the church&apos;s privacy practices and consent to being contacted
-                regarding my inquiry.
+                {t('forms.privacyText')}
               </label>
             </div>
             {errors.privacy && (
@@ -257,7 +257,7 @@ export default function ContactForm() {
               disabled={isSubmitting || submitContact.isPending}
             >
               <FiSend className="text-base" />
-              {isSubmitting || submitContact.isPending ? 'Sending...' : 'Send Message'}
+              {isSubmitting || submitContact.isPending ? t('pages.contact.sending') : t('pages.contact.sendMessage')}
             </motion.button>
           </form>
         )}
