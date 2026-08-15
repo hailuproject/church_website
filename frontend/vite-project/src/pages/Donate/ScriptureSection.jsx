@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import Container from '../../components/Container';
 import { scriptureVerse } from '../../data/donationData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function ScriptureSection() {
+  const { t } = useTranslation();
   return (
     <section
       className="relative py-24 md:py-32 overflow-hidden"
-      aria-label="Stewardship scripture"
+      aria-label={t('pages.donate.scriptureLabel')}
     >
       <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-stone-900" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

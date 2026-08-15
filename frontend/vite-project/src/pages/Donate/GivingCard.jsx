@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiGift, FiHeart, FiDollarSign, FiTarget, FiClock, FiBookOpen, FiFlag } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const optionIcons = {
   offering: FiGift,
@@ -12,6 +13,7 @@ const optionIcons = {
 };
 
 export default function GivingCard({ option, index }) {
+  const { t } = useTranslation();
   const [selectedAmount, setSelectedAmount] = useState(null);
   const OptionIcon = optionIcons[option.icon] || FiGift;
 
@@ -60,7 +62,7 @@ export default function GivingCard({ option, index }) {
         className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xs font-medium text-sm hover:bg-primary-dark shadow-md hover:shadow-lg transition-all duration-300"
       >
         <FiHeart className="text-sm" />
-        Donate
+        {t('nav.donate')}
       </a>
     </motion.div>
   );

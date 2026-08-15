@@ -2,10 +2,12 @@ import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function CTASection() {
+  const { t } = useTranslation();
   return (
-    <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Call to action">
+    <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
       <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -25,26 +27,24 @@ export default function CTASection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-secondary text-xs font-semibold tracking-[0.25em] uppercase">
-            Be a Faithful Steward
+            {t('pages.donate.ctaEyebrow')}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-            Support God&apos;s Work
+            {t('pages.donate.ctaTitle')}
           </h2>
 
           <p className="text-lg text-gray-300/80 max-w-xl leading-relaxed">
-            Become a faithful steward through regular giving and participation in the
-            church&apos;s mission. Your generosity transforms lives and strengthens our
-            community.
+            {t('pages.donate.ctaDescription')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
             <Button href="#donate" variant="secondary" size="lg">
-              Donate Today
+              {t('pages.donate.donateToday')}
               <FiArrowRight className="text-lg" />
             </Button>
             <Button href="/contact" variant="outline" size="lg">
-              Contact Church
+              {t('pages.about.contactChurchBtn')}
             </Button>
           </div>
         </motion.div>

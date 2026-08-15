@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import { donationTypes, frequencyOptions, trustFeatures } from '../../data/donationData';
 import { publicService } from '../../services/publicService';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 const trustIcons = {
   lock: FiLock,
@@ -21,6 +22,7 @@ const trustIcons = {
 };
 
 export default function DonationForm() {
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [customAmount, setCustomAmount] = useState('');
   const [submitError, setSubmitError] = useState('');
@@ -34,7 +36,7 @@ export default function DonationForm() {
   const onSubmit = async (data) => {
     setSubmitError('');
     if (!customAmount || Number(customAmount) <= 0) {
-      setSubmitError('Please enter a donation amount.');
+      setSubmitError(t('pages.donate.amountError'));
       return;
     }
     try {
@@ -56,7 +58,7 @@ export default function DonationForm() {
       setCustomAmount('');
       setTimeout(() => setSubmitted(false), 8000);
     } catch (error) {
-      setSubmitError(error?.message || 'Unable to record your donation. Please try again.');
+      setSubmitError(error?.message || t('pages.donate.submitError'));
     }
   };
 
@@ -71,16 +73,15 @@ export default function DonationForm() {
       >
         <div>
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Secure Giving
+            {t('pages.donate.secureGiving')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
-            Make Your Donation
+            {t('pages.donate.makeDonation')}
           </h2>
         </div>
 
         <p className="text-muted text-base leading-[1.8]">
-          Your generous giving supports the worship, ministries, and community outreach of our
-          church. Every gift, regardless of size, makes a meaningful impact.
+          {t('pages.donate.formDescription')}
         </p>
 
         <div className="flex flex-col gap-3 mt-2">
@@ -123,10 +124,9 @@ export default function DonationForm() {
             <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
               <FiHeart className="w-7 h-7 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-text">Thank You for Your Gift!</h3>
+            <h3 className="text-xl font-bold text-text">{t('pages.donate.thankYou')}</h3>
             <p className="text-muted text-sm">
-              Your donation has been recorded. Our team will follow up with you to arrange
-              payment and issue your receipt.
+              {t('pages.donate.thankYouDescription')}
             </p>
           </motion.div>
         ) : (
@@ -138,16 +138,16 @@ export default function DonationForm() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="donationType" className="text-sm font-semibold text-text">
-                  Donation Type <span className="text-primary">*</span>
+                  {t('pages.donate.donationType')} <span className="text-primary">*</span>
                 </label>
                 <select
                   id="donationType"
-                  {...register('donationType', { required: 'Please select a donation type' })}
+                  {...register('donationType', { required: t('pages.donate.donationTypeRequired') })}
                   className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 cursor-pointer ${
                     errors.donationType ? 'border-red-400' : 'border-border'
                   }`}
                 >
-                  <option value="">Select type</option>
+                  <option value="">{t('pages.donate.selectType')}</option>
                   {donationTypes.map((type) => (
                     <option key={type} value={type}>
                       {type}
@@ -161,16 +161,16 @@ export default function DonationForm() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="frequency" className="text-sm font-semibold text-text">
-                  Frequency <span className="text-primary">*</span>
+                  {t('pages.donate.frequency')} <span className="text-primary">*</span>
                 </label>
                 <select
                   id="frequency"
-                  {...register('frequency', { required: 'Please select frequency' })}
+                  {...register('frequency', { required: t('pages.donate.frequencyRequired') })}
                   className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 cursor-pointer ${
                     errors.frequency ? 'border-red-400' : 'border-border'
                   }`}
                 >
-                  <option value="">Select frequency</option>
+                  <option value="">{t('pages.donate.selectFrequency')}</option>
                   {frequencyOptions.map((freq) => (
                     <option key={freq} value={freq}>
                       {freq}
@@ -185,7 +185,7 @@ export default function DonationForm() {
 
             <div className="flex flex-col gap-1.5 mt-5">
               <label className="text-sm font-semibold text-text">
-                Amount <span className="text-primary">*</span>
+                {t('pages.donate.amount')} <span className="text-primary">*</span>
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {[25, 50, 100, 250].map((amt) => (
@@ -210,7 +210,7 @@ export default function DonationForm() {
               </div>
               <input
                 type="number"
-                placeholder="Or enter custom amount"
+                placeholder={t('pages.donate.customAmountPlaceholder')}
                 value={customAmount}
                 onChange={(e) => setCustomAmount(e.target.value)}
                 className="mt-2 rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
@@ -220,21 +220,21 @@ export default function DonationForm() {
 
             <div className="border-t border-border mt-6 pt-6">
               <h4 className="text-sm font-bold text-text uppercase tracking-wider mb-4">
-                Personal Information
+                {t('pages.donate.personalInfo')}
               </h4>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="donorName" className="text-sm font-semibold text-text">
-                    Full Name <span className="text-primary">*</span>
+                    {t('forms.fullName')} <span className="text-primary">*</span>
                   </label>
                   <input
                     id="donorName"
                     type="text"
-                    {...register('donorName', { required: 'Full name is required' })}
+                    {...register('donorName', { required: t('forms.fullNameRequired') })}
                     className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 ${
                       errors.donorName ? 'border-red-400' : 'border-border'
                     }`}
-                    placeholder="Your full name"
+                    placeholder={t('forms.fullNamePlaceholder')}
                   />
                   {errors.donorName && (
                     <p className="text-xs text-red-500">{errors.donorName.message}</p>
@@ -243,22 +243,22 @@ export default function DonationForm() {
 
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="donorEmail" className="text-sm font-semibold text-text">
-                    Email <span className="text-primary">*</span>
+                    {t('forms.email')} <span className="text-primary">*</span>
                   </label>
                   <input
                     id="donorEmail"
                     type="email"
                     {...register('donorEmail', {
-                      required: 'Email is required',
+                      required: t('forms.emailRequired'),
                       pattern: {
                         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: 'Please enter a valid email',
+                        message: t('forms.invalidEmail'),
                       },
                     })}
                     className={`rounded-xs border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 ${
                       errors.donorEmail ? 'border-red-400' : 'border-border'
                     }`}
-                    placeholder="your@email.com"
+                    placeholder={t('forms.emailPlaceholder')}
                   />
                   {errors.donorEmail && (
                     <p className="text-xs text-red-500">{errors.donorEmail.message}</p>
@@ -267,14 +267,14 @@ export default function DonationForm() {
 
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                   <label htmlFor="donorPhone" className="text-sm font-semibold text-text">
-                    Phone Number
+                    {t('forms.phone')}
                   </label>
                   <input
                     id="donorPhone"
                     type="tel"
                     {...register('donorPhone')}
                     className="rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20"
-                    placeholder="Your phone number"
+                    placeholder={t('forms.phonePlaceholder')}
                   />
                 </div>
               </div>
@@ -286,14 +286,14 @@ export default function DonationForm() {
 
             <div className="flex flex-col gap-1.5 mt-5">
               <label htmlFor="prayerRequest" className="text-sm font-semibold text-text">
-                Prayer Request (Optional)
+                {t('pages.donate.prayerRequest')}
               </label>
               <textarea
                 id="prayerRequest"
                 rows={3}
                 {...register('prayerRequest')}
                 className="rounded-xs border border-border px-4 py-3 text-sm text-text bg-white outline-none transition-colors duration-300 focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
-                placeholder="Share any prayer requests with our pastoral team..."
+                placeholder={t('pages.donate.prayerRequestPlaceholder')}
               />
             </div>
 
@@ -304,7 +304,7 @@ export default function DonationForm() {
                   {...register('anonymous')}
                   className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 accent-primary"
                 />
-                <span className="text-xs text-muted">Make this an anonymous donation</span>
+                <span className="text-xs text-muted">{t('pages.donate.anonymousDonation')}</span>
               </label>
 
               <label className="flex items-start gap-3 cursor-pointer">
@@ -314,18 +314,17 @@ export default function DonationForm() {
                   defaultChecked
                   className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 accent-primary"
                 />
-                <span className="text-xs text-muted">Send me an email receipt</span>
+                <span className="text-xs text-muted">{t('pages.donate.emailReceipt')}</span>
               </label>
 
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  {...register('terms', { required: 'You must agree to the terms' })}
+                  {...register('terms', { required: t('pages.donate.termsRequired') })}
                   className="mt-0.5 w-4 h-4 rounded-xs border-border text-primary focus:ring-primary/20 accent-primary"
                 />
                 <span className="text-xs text-muted">
-                  I agree to the church&apos;s terms and conditions and consent to my donation
-                  being processed.
+                  {t('pages.donate.termsText')}
                 </span>
               </label>
               {errors.terms && (
@@ -341,7 +340,7 @@ export default function DonationForm() {
               disabled={isSubmitting}
             >
               <FiSend className="text-base" />
-              {isSubmitting ? 'Processing...' : 'Donate Now'}
+              {isSubmitting ? t('pages.donate.processing') : t('pages.donate.donateNow')}
             </motion.button>          </form>
         )}
       </motion.div>
