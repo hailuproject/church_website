@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Container from '../../components/Container';
 import { statistics } from '../../data/galleryData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 function CounterItem({ value, suffix, label, index }) {
   const [count, setCount] = useState(0);
@@ -49,11 +50,12 @@ function CounterItem({ value, suffix, label, index }) {
 }
 
 export default function StatisticsSection() {
+  const { t } = useTranslation();
   if (!statistics.length) return null;
   return (
     <section
       className="relative py-24 md:py-32 overflow-hidden"
-      aria-label="Gallery statistics"
+      aria-label={t('pages.gallery.statisticsLabel')}
     >
       <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-stone-900" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

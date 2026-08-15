@@ -4,8 +4,10 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useFeaturedAlbum } from '../../hooks/useGallerySections';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function FeaturedGallery() {
+  const { t } = useTranslation();
   const featuredGallery = useFeaturedAlbum();
   if (!featuredGallery) return null;
   return (
@@ -40,7 +42,7 @@ export default function FeaturedGallery() {
           >
             <div>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-                Featured Album
+                {t('pages.gallery.featuredAlbum')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
                 {featuredGallery.title}
@@ -55,28 +57,28 @@ export default function FeaturedGallery() {
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiCalendar className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Event Date</p>
+                  <p className="text-xs text-muted">{t('pages.gallery.eventDate')}</p>
                   <p className="text-sm font-semibold text-text">{featuredGallery.eventDate}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiMapPin className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Location</p>
+                  <p className="text-xs text-muted">{t('pages.gallery.location')}</p>
                   <p className="text-sm font-semibold text-text line-clamp-1">{featuredGallery.location}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiImage className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Photos</p>
+                  <p className="text-xs text-muted">{t('pages.gallery.photos')}</p>
                   <p className="text-sm font-semibold text-text">{featuredGallery.photos}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
                 <FiVideo className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted">Videos</p>
+                  <p className="text-xs text-muted">{t('pages.gallery.videos')}</p>
                   <p className="text-sm font-semibold text-text">{featuredGallery.videos}</p>
                 </div>
               </div>
@@ -85,10 +87,10 @@ export default function FeaturedGallery() {
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
               <Button href="#photos" variant="primary" size="md">
                 <FiImage className="text-lg" />
-                Open Album
+                {t('pages.gallery.openAlbum')}
               </Button>
               <Button href="#photos" variant="outline-dark" size="md">
-                View Slideshow
+                {t('pages.gallery.viewSlideshow')}
               </Button>
             </div>
           </motion.div>

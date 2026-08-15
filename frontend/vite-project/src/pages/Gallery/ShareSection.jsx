@@ -3,8 +3,10 @@ import { FiArrowRight, FiPhone } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function ShareSection() {
+  const { t } = useTranslation();
   return (
     <Section id="share" className="bg-white">
       <Container>
@@ -28,51 +30,49 @@ export default function ShareSection() {
           >
             <div>
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-                Contribute
+                {t('pages.gallery.contribute')}
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-text mt-4 leading-tight">
-                Share Your Church Moments
+                {t('pages.gallery.shareTitle')}
               </h2>
             </div>
 
             <p className="text-muted text-base leading-[1.8]">
-              We invite all members of our community to contribute their cherished photographs from
-              church events, feast celebrations, baptisms, weddings, and other memorable occasions.
-              Your photos help preserve the living history of our parish.
+              {t('pages.gallery.shareDescription')}
             </p>
 
             <div className="bg-surface rounded-xs p-6 border border-border">
               <h3 className="text-sm font-bold text-text uppercase tracking-wider mb-3">
-                What to Share
+                {t('pages.gallery.whatToShare')}
               </h3>
               <ul className="flex flex-col gap-2 text-sm text-muted">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0" />
-                  Feast day celebrations and processions
+                  {t('pages.gallery.shareItem1')}
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0" />
-                  Worship services and liturgical moments
+                  {t('pages.gallery.shareItem2')}
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0" />
-                  Community gatherings and fellowship
+                  {t('pages.gallery.shareItem3')}
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0" />
-                  Youth activities and ministries
+                  {t('pages.gallery.shareItem4')}
                 </li>
               </ul>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
               <Button href="/contact" variant="primary" size="md">
-                Submit Photos
+                {t('pages.gallery.submitPhotos')}
                 <FiArrowRight className="text-lg" />
               </Button>
               <Button href="/contact" variant="outline-dark" size="md">
                 <FiPhone className="text-lg" />
-                Contact Church
+                {t('pages.gallery.contactChurch')}
               </Button>
             </div>
           </motion.div>

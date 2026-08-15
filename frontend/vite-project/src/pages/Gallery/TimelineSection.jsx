@@ -2,8 +2,10 @@ import { motion } from 'framer-motion';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import { timeline } from '../../data/galleryData';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function TimelineSection() {
+  const { t } = useTranslation();
   if (!timeline.length) return null;
   return (
     <Section id="history" className="bg-surface">
@@ -16,13 +18,13 @@ export default function TimelineSection() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Our Journey
+            {t('pages.gallery.ourJourney')}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text leading-tight">
-            Church Through the Years
+            {t('pages.gallery.timelineTitle')}
           </h2>
           <p className="text-base sm:text-lg leading-relaxed max-w-2xl text-muted">
-            A visual journey through the milestones and moments that have shaped our parish community.
+            {t('pages.gallery.timelineDescription')}
           </p>
         </motion.div>
 

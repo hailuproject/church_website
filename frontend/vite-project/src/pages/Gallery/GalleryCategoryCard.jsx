@@ -9,6 +9,7 @@ import {
   FiStar,
   FiHeart,
 } from 'react-icons/fi';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const iconMap = {
   feast: FiSunset,
@@ -23,6 +24,10 @@ const iconMap = {
 
 export default function GalleryCategoryCard({ category, index }) {
   const IconComponent = iconMap[category.icon] || FiImage;
+  const { t, language } = useLanguage();
+  const am = language === 'am';
+  const title = am && category.titleAm ? category.titleAm : category.title;
+  const description = am && category.descriptionAm ? category.descriptionAm : category.description;
 
   return (
     <motion.div
@@ -42,14 +47,14 @@ export default function GalleryCategoryCard({ category, index }) {
           <IconComponent className="w-5.5 h-5.5 text-primary group-hover:text-white transition-colors duration-500" />
         </div>
         <span className="text-xs font-semibold text-muted bg-surface rounded-xs px-2.5 py-1">
-          {category.count} photos
+          {category.count} {t('pages.gallery.photos')}
         </span>
       </div>
 
       <h3 className="text-lg font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">
-        {category.title}
+        {title}
       </h3>
-      <p className="text-sm text-muted leading-relaxed">{category.description}</p>
+      <p className="text-sm text-muted leading-relaxed">{description}</p>
 
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-b-xs" />
     </motion.div>

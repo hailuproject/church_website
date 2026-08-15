@@ -2,10 +2,12 @@ import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function CTASection() {
+  const { t } = useTranslation();
   return (
-    <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Call to action">
+    <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
       <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -25,25 +27,24 @@ export default function CTASection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-secondary text-xs font-semibold tracking-[0.25em] uppercase">
-            Preserving Our Heritage
+            {t('pages.gallery.ctaEyebrow')}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-            Celebrating Our Faith in Every Frame
+            {t('pages.gallery.ctaTitle')}
           </h2>
 
           <p className="text-lg text-gray-300/80 max-w-xl leading-relaxed">
-            Our gallery captures the sacred beauty, vibrant celebrations, and loving community of
-            the Ethiopian Orthodox Tewahedo Church. Explore and be inspired.
+            {t('pages.gallery.ctaDescription')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
             <Button href="#photos" variant="secondary" size="lg">
-              Browse Gallery
+              {t('pages.gallery.browseGallery')}
               <FiArrowRight className="text-lg" />
             </Button>
             <Button href="/contact" variant="outline" size="lg">
-              Contact Us
+              {t('common.contactUs')}
             </Button>
           </div>
         </motion.div>

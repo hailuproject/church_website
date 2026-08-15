@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { FiPlay, FiCalendar } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function VideoCard({ video, index, onPlay }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       className="group bg-white rounded-xs overflow-hidden border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
@@ -26,7 +28,7 @@ export default function VideoCard({ video, index, onPlay }) {
         }}
         tabIndex={0}
         role="button"
-        aria-label={`Play ${video.title}`}
+        aria-label={t('pages.gallery.playVideo', { title: video.title })}
       >
         <img
           src={video.thumbnail}

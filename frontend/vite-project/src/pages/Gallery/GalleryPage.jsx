@@ -25,17 +25,19 @@ import {
   useVideoItems,
 } from '../../hooks/useGallerySections';
 import { useSeo } from '../../hooks/useSeo';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 function GalleryCategories() {
+  const { t } = useTranslation();
   const albums = useAlbums();
   if (!albums.length) return null;
   return (
     <Section id="categories" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Browse By Category"
-          title="Gallery Categories"
-          description="Explore our photographs organized by theme, event, and ministry."
+          subtitle={t('pages.gallery.browseByCategory')}
+          title={t('pages.gallery.galleryCategories')}
+          description={t('pages.gallery.categoriesDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {galleryCategories.map((category, i) => (
@@ -48,14 +50,15 @@ function GalleryCategories() {
 }
 
 function FeaturedAlbums() {
+  const { t } = useTranslation();
   const albums = useAlbums();
   return (
     <Section id="albums" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Curated Collections"
-          title="Featured Albums"
-          description="Explore our curated photo albums from the most significant events and celebrations."
+          subtitle={t('pages.gallery.curatedCollections')}
+          title={t('pages.gallery.featuredAlbums')}
+          description={t('pages.gallery.albumsDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {albums.map((album, i) => (
@@ -68,6 +71,7 @@ function FeaturedAlbums() {
 }
 
 function VideoGallery() {
+  const { t } = useTranslation();
   const [selectedVideo, setSelectedVideo] = useState(null);
   const videos = useVideoItems();
 
@@ -85,9 +89,9 @@ function VideoGallery() {
     <Section id="videos" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Watch & Experience"
-          title="Video Gallery"
-          description="Watch highlights from our worship services, feast celebrations, and community events."
+          subtitle={t('pages.gallery.watchExperience')}
+          title={t('pages.gallery.videoGallery')}
+          description={t('pages.gallery.videoDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {videos.map((video, i) => (
@@ -104,7 +108,7 @@ function VideoGallery() {
             }}
             role="dialog"
             aria-modal="true"
-            aria-label={`Playing ${selectedVideo.title}`}
+            aria-label={t('pages.gallery.playingVideo', { title: selectedVideo.title })}
             tabIndex={-1}
           >
             <motion.div
@@ -135,7 +139,7 @@ function VideoGallery() {
                   <button
                     onClick={handleClose}
                     className="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-muted hover:text-text transition-colors duration-300 cursor-pointer"
-                    aria-label="Close video"
+                    aria-label={t('pages.gallery.closeVideo')}
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -152,13 +156,14 @@ function VideoGallery() {
 }
 
 function SacredMoments() {
+  const { t } = useTranslation();
   return (
     <Section id="sacred-moments" className="bg-surface">
       <Container>
         <SectionHeader
-          subtitle="Holy Traditions"
-          title="Sacred Moments"
-          description="The blessed sacraments and sacred moments that define the spiritual life of our church."
+          subtitle={t('pages.gallery.holyTraditions')}
+          title={t('pages.home.sacredMoments')}
+          description={t('pages.gallery.sacredMomentsDescription')}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sacredMoments.map((moment, i) => (
@@ -171,14 +176,15 @@ function SacredMoments() {
 }
 
 function CommunityHighlights() {
+  const { t } = useTranslation();
   if (!communityHighlights.length) return null;
   return (
     <Section id="community" className="bg-white">
       <Container>
         <SectionHeader
-          subtitle="Our People"
-          title="Community Highlights"
-          description="The ministries, programs, and service initiatives that make our church community thrive."
+          subtitle={t('pages.gallery.ourPeople')}
+          title={t('pages.gallery.communityHighlights')}
+          description={t('pages.gallery.communityDescription')}
         />
         <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
           {communityHighlights.map((item, i) => (
@@ -191,7 +197,8 @@ function CommunityHighlights() {
 }
 
 export default function GalleryPage() {
-  useSeo({ title: 'Gallery' });
+  const { t } = useTranslation();
+  useSeo({ title: t('pages.gallery.title') });
   return (
     <main className="min-h-screen">
       <HeroBanner />

@@ -7,8 +7,10 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import { galleryFilterTabs } from '../../data/galleryData';
 import { useMasonryImages } from '../../hooks/useGallerySections';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function MasonryGallery() {
+  const { t, language } = useLanguage();
   const galleryImages = useMasonryImages();
   const [activeFilter, setActiveFilter] = useState('All');
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -42,31 +44,30 @@ export default function MasonryGallery() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary">
-            Visual Journey
+            {t('pages.gallery.visualJourney')}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text leading-tight">
-            Photo Gallery
+            {t('pages.gallery.photoGallery')}
           </h2>
           <p className="text-base sm:text-lg leading-relaxed max-w-2xl text-muted">
-            Browse through our collection of photographs capturing the beauty of worship, feast
-            celebrations, and community life.
+            {t('pages.gallery.photoDescription')}
           </p>
         </motion.div>
 
         <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
           {galleryFilterTabs.map((filter) => (
             <motion.button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
               className={`px-5 py-2 rounded-xs text-sm font-medium transition-all duration-300 cursor-pointer ${
-                activeFilter === filter
+                activeFilter === filter.id
                   ? 'bg-primary text-white shadow-md'
                   : 'bg-surface text-muted border border-border hover:border-primary/30 hover:text-primary'
               }`}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              {filter}
+              {language === 'am' ? filter.am : filter.en}
             </motion.button>
           ))}
         </div>
@@ -93,7 +94,7 @@ export default function MasonryGallery() {
               }}
               tabIndex={0}
               role="button"
-              aria-label={`View ${image.alt}`}
+              aria-label={t('pages.gallery.viewImage', { alt: image.alt })}
             >
               <img
                 src={image.src}
