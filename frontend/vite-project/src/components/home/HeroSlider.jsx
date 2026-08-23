@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useHeroData } from '../../hooks/useHomeSections';
 import Button from '../Button';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { HERO_IMAGE, HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function HeroSlider() {
   const { t, language } = useLanguage();
@@ -11,12 +12,15 @@ export default function HeroSlider() {
 
   return (
     <section className="relative w-full h-screen min-h-[600px] flex items-center justify-center" aria-label="Hero">
-      <img
-        src={hero.image}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="eager"
-      />
+      <picture className="absolute inset-0 w-full h-full">
+        <source srcSet={hero.image || HERO_IMAGE} type="image/webp" />
+        <img
+          src={hero.image || HERO_IMAGE_FALLBACK}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+      </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">

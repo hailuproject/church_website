@@ -2,12 +2,14 @@ import { motion } from 'framer-motion';
 import { FiArrowRight, FiMapPin } from 'react-icons/fi';
 import Button from '../../../../components/Button';
 import { useTranslation } from '../../../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../../../lib/images';
 
 export default function CTASection() {
   const { t } = useTranslation();
   return (
     <section className="relative py-24 md:py-32 overflow-hidden" aria-label={t('common.callToAction')}>
-      <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-primary-dark to-stone-900" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-br from-stone-900/95 via-primary-dark/90 to-stone-900/90" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')]" />
       </div>

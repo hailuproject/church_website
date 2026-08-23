@@ -3,6 +3,7 @@ import { FiArrowRight, FiPlay } from 'react-icons/fi';
 import Button from '../../../../components/Button';
 import { heroData } from '../../../../data/sermonsData';
 import { useTranslation } from '../../../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../../../lib/images';
 
 export default function HeroBanner() {
   const { t } = useTranslation();
@@ -20,7 +21,8 @@ export default function HeroBanner() {
       className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden"
       aria-label={t('pages.sermons.heroLabel')}
     >
-      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900/90 via-primary-dark/80 to-primary/60" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
         <nav aria-label="Breadcrumb" className="mb-10">

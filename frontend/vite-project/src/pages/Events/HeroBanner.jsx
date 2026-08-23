@@ -3,6 +3,7 @@ import { FiArrowRight, FiCalendar } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/eventsData';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function HeroBanner() {
   const { t } = useTranslation();
@@ -21,7 +22,8 @@ export default function HeroBanner() {
       className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
       aria-label="Events page hero"
     >
-      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900/90 via-primary-dark/80 to-primary/60" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -54,17 +56,17 @@ export default function HeroBanner() {
         </nav>
 
         <div className="flex flex-col items-start gap-6 max-w-3xl">
-          <motion.div
+          {/* <motion.div
             className="inline-flex items-center gap-2 bg-secondary/10 border border-secondary/20 rounded-xs px-4 py-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <FiCalendar className="text-secondary text-sm" />
+          > */}
+            {/* <FiCalendar className="text-secondary text-sm" /> */}
             <span className="text-secondary text-xs font-semibold tracking-[0.2em] uppercase">
               {hero.churchName}
             </span>
-          </motion.div>
+          {/* </motion.div> */}
 
           <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08]"
@@ -101,7 +103,7 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-surface to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-linear-to-t from-surface to-transparent" />
     </section>
   );
 }

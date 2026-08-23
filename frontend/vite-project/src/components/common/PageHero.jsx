@@ -2,9 +2,10 @@ import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
 import Button from '../Button';
 import { useChurch } from '../../hooks/useHomeSections';
+import { HERO_IMAGE, HERO_IMAGE_FALLBACK } from '../../lib/images';
 
-const DEFAULT_IMAGE = '/images/hero.webp';
-const FALLBACK_IMAGE = '/images/hero.jpg';
+const DEFAULT_IMAGE = HERO_IMAGE;
+const FALLBACK_IMAGE = HERO_IMAGE_FALLBACK;
 
 const ease = [0.22, 1, 0.36, 1];
 

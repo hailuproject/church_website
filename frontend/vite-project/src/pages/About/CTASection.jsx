@@ -3,13 +3,15 @@ import { FiArrowRight } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function CTASection() {
   const { t } = useTranslation();
   return (
     <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
       {/* Background */}
-      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary/95 via-primary-dark/90 to-primary/80" />
 
       {/* Floating orb */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

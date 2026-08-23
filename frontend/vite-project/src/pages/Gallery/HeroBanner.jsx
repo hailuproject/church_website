@@ -3,6 +3,7 @@ import { FiCamera, FiPlay } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/galleryData';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function HeroBanner() {
   const { t } = useTranslation();
@@ -21,7 +22,8 @@ export default function HeroBanner() {
       className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
       aria-label="Gallery page hero"
     >
-      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900/90 via-primary-dark/80 to-primary/60" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div

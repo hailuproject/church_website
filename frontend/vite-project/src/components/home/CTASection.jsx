@@ -2,12 +2,14 @@ import Container from '../Container';
 import AnimatedSection from '../AnimatedSection';
 import Button from '../Button';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function CTASection() {
   const { t } = useTranslation();
   return (
     <section className="relative py-24 md:py-32 overflow-hidden" aria-label={t('common.callToAction')}>
-      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary/95 via-primary-dark/90 to-primary/80" />
 
       <Container className="relative z-10">
         <div className="max-w-3xl mx-auto text-center">
