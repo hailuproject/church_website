@@ -6,7 +6,9 @@ import { generateReferenceNumber } from '../utils/tokens.js';
 import { sendEmail } from '../utils/email.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 import { toCSV } from '../utils/csv.js';
-import { DONATION_STATUSES, DONATION_PAYMENT_METHODS } from '../constants/index.js';
+import { DONATION_STATUSES, DONATION_PAYMENT_METHODS, DONATION_CURRENCIES } from '../constants/index.js';
+import { createPaymentIntent } from './stripe.service.js';
+import config from '../config/index.js';
 
 class DonationService {
   async list(queryString) {
@@ -48,6 +50,79 @@ class DonationService {
     });
 
     return { donation, paymentIntent: null };
+  }
+
+  async createStripeDonation(data) {
+    if (!config.stripe.secretKey) {
+      throw new AppError('Online payments are not available right now. Please contact the church office.', 503);
+    }
+
+    const amount = Number(data.amount);
+    if (!amount || amount <= 0) throw new AppError('amount must be greater than 0', 400);
+
+    const currency = (data.currency || 'USD').toUpperCase();
+    if (!DONATION_CURRENCIES.includes(currency)) {
+      throw new AppError(`currency must be one of: ${DONATION_CURRENCIES.join(', ')}`, 400);
+    }
+
+    const donation = await Donation.create({
+      donorName: data.donorName || '',
+      email: (data.email || '').toLowerCase(),
+      phone: data.phone || '',
+      amount,
+      currency,
+      campaign: data.campaign || '',
+      paymentMethod: 'card',
+      status: 'pending',
+      receiptNumber: generateReferenceNumber('RCPT'),
+      isAnonymous: Boolean(data.isAnonymous),
+    });
+
+    const paymentIntent = await createPaymentIntent({
+      amount,
+      currency: currency.toLowerCase(),
+      receiptEmail: data.email,
+      metadata: { donationId: String(donation._id), campaign: donation.campaign || '' },
+    });
+
+    await Donation.findByIdAndUpdate(donation._id, { transactionId: paymentIntent.id });
+
+    return {
+      clientSecret: paymentIntent.client_secret,
+      publishableKey: config.stripe.publishableKey,
+      donationId: donation._id,
+      amount: donation.amount,
+      currency: donation.currency,
+    };
+  }
+
+  async handleStripeWebhook(event) {
+    if (event.type === 'payment_intent.succeeded') {
+      await this.completeStripeDonation(event.data.object);
+    } else if (event.type === 'payment_intent.payment_failed') {
+      await Donation.findOneAndUpdate({ transactionId: event.data.object.id }, { status: 'failed' });
+    }
+    return true;
+  }
+
+  async completeStripeDonation(paymentIntent) {
+    const transactionId = paymentIntent.id;
+    let donation = await Donation.findOne({ transactionId });
+
+    if (!donation && paymentIntent.metadata?.donationId) {
+      await Donation.findByIdAndUpdate(paymentIntent.metadata.donationId, {
+        transactionId,
+        status: 'completed',
+      });
+      donation = await Donation.findById(paymentIntent.metadata.donationId);
+    }
+
+    if (!donation) return null;
+    if (donation.status === 'completed') return donation;
+
+    donation = await Donation.findByIdAndUpdate(donation._id, { status: 'completed' }, { returnDocument: 'after' });
+    await this.sendReceipt(donation);
+    return donation;
   }
 
   async update(id, data, actor, reqMeta) {

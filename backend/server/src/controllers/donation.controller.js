@@ -24,6 +24,16 @@ export const createDonation = asyncHandler(async (req, res) => {
   sendSuccess(res, { statusCode: 201, message: 'Donation processed', data: result });
 });
 
+export const createStripePaymentIntent = asyncHandler(async (req, res) => {
+  const result = await donationService.createStripeDonation(req.body);
+  sendSuccess(res, { statusCode: 201, message: 'Payment intent created', data: result });
+});
+
+export const handleStripeWebhook = asyncHandler(async (req, res) => {
+  await donationService.handleStripeWebhook(req.stripeEvent);
+  sendSuccess(res, { message: 'Webhook received' });
+});
+
 export const updateDonation = asyncHandler(async (req, res) => {
   const donation = await donationService.update(req.params.id, req.body, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: 'Donation updated', data: donation });

@@ -3,6 +3,7 @@ import {
   listDonations,
   getDonation,
   createDonation,
+  createStripePaymentIntent,
   updateDonation,
   confirmDonation,
   changeDonationStatus,
@@ -28,6 +29,7 @@ import { objectIdValidator } from '../validators/common.validators.js';
 const router = Router();
 
 router.post('/', validate(createDonationValidation), createDonation);
+router.post('/payment-intent', validate(createDonationValidation), createStripePaymentIntent);
 router.get('/history', validate(paymentHistoryValidation), getPaymentHistory);
 
 router.use(authenticate);

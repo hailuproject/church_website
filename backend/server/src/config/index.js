@@ -47,6 +47,12 @@ const config = {
     apiSecret: process.env.CLOUDINARY_API_SECRET,
   },
 
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY || '',
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
+  },
+
   mail: {
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: numberOr(process.env.EMAIL_PORT, 465),

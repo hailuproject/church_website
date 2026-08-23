@@ -1261,11 +1261,11 @@ components:
           minimum: 1
         currency:
           type: string
-          default: ETB
+          default: USD
         campaign: { type: string }
         paymentMethod:
           type: string
-          enum: [stripe, telebirr, cbe-birr, cash, bank-transfer, other]
+          enum: [card, cash, bank-transfer]
         isAnonymous:
           type: boolean
     ContactMessage:

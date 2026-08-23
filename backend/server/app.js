@@ -16,6 +16,8 @@ import { apiLimiter } from './src/middlewares/rateLimiter.js';
 import { requestLogger } from './src/utils/logger.js';
 import { normalizeBody } from './src/middlewares/parseBody.js';
 import { sanitizeMutationBody } from './src/helpers/sanitize.js';
+import { constructWebhookEvent } from './src/services/stripe.service.js';
+import { handleStripeWebhook } from './src/controllers/donation.controller.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,6 +40,21 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
+
+app.post(
+  `${config.apiPrefix}/donations/webhook`,
+  express.raw({ type: 'application/json' }),
+  (req, res, next) => {
+    try {
+      req.stripeEvent = constructWebhookEvent(req.body, req.headers['stripe-signature']);
+      next();
+    } catch (error) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+  },
+  handleStripeWebhook
+);
+
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));

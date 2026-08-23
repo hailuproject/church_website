@@ -85,7 +85,8 @@ export const RESOURCE_CATEGORIES = ['Books', 'Prayers', 'Hymns', 'Scriptures', '
 export const RESOURCE_LANGUAGES = SERMON_LANGUAGES;
 export const GALLERY_CATEGORIES = ['Liturgy', 'Festival', 'Ordination', 'Baptism', 'Community', 'Conference', 'Other'];
 export const DONATION_STATUSES = ['pending', 'completed', 'failed', 'refunded'];
-export const DONATION_PAYMENT_METHODS = ['cash', 'bank-transfer', 'telebirr', 'cbe-birr', 'other'];
+export const DONATION_PAYMENT_METHODS = ['card', 'cash', 'bank-transfer'];
+export const DONATION_CURRENCIES = ['USD', 'ETB'];
 export const CONTACT_CATEGORIES = ['General', 'Prayer Request', 'Membership', 'Donation', 'Event', 'Bible Question', 'Support', 'Other'];
 export const CONTACT_STATUSES = ['new', 'read', 'replied', 'archived'];
 export const AUDIT_ACTIONS = ['create', 'update', 'delete', 'login', 'logout', 'register', 'approve', 'reject', 'status-change', 'upload', 'download', 'send', 'reset-password', 'verify-email'];
@@ -130,6 +131,7 @@ export const CONSTANTS = {
   GALLERY_CATEGORIES,
   DONATION_STATUSES,
   DONATION_PAYMENT_METHODS,
+  DONATION_CURRENCIES,
   CONTACT_CATEGORIES,
   CONTACT_STATUSES,
   AUDIT_ACTIONS,

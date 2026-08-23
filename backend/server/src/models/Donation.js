@@ -9,7 +9,7 @@ const donationSchema = new Schema(
     email: { type: String, lowercase: true, trim: true, default: '' },
     phone: { type: String, trim: true, default: '' },
     amount: { type: Number, required: [true, 'Amount is required'], min: [1, 'Amount must be greater than 0'] },
-    currency: { type: String, uppercase: true, default: 'ETB' },
+    currency: { type: String, uppercase: true, default: 'USD' },
     campaign: { type: String, trim: true, default: '' },
     paymentMethod: { type: String, enum: DONATION_PAYMENT_METHODS, default: 'cash', index: true },
     transactionId: { type: String, trim: true, default: '' },
