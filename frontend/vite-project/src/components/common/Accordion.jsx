@@ -17,7 +17,7 @@ function AccordionItem({ item, index, isOpen, onToggle }) {
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 p-6 text-left cursor-pointer hover:bg-surface/50 transition-colors duration-300"
+        className="w-full flex items-center justify-between gap-4 p-4 sm:p-6 text-left cursor-pointer hover:bg-surface/50 transition-colors duration-300"
         aria-expanded={isOpen}
         aria-controls={`accordion-answer-${index}`}
       >
@@ -44,7 +44,7 @@ function AccordionItem({ item, index, isOpen, onToggle }) {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-6">
+            <div className="px-4 pb-4 sm:px-6 sm:pb-6">
               <p className="text-muted text-sm sm:text-base leading-relaxed">
                 {item.answer}
               </p>
