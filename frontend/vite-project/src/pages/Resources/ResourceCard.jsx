@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
 import { FiDownload } from 'react-icons/fi';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
+import { useResourceDownload } from '../../hooks/usePublicData';
 
 export default function ResourceCard({ resource, index }) {
   const { t } = useTranslation();
+  const incrementDownload = useResourceDownload();
   return (
     <motion.div
       className="group bg-white rounded-xs overflow-hidden border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
@@ -19,7 +22,7 @@ export default function ResourceCard({ resource, index }) {
     >
       <div className="relative overflow-hidden">
         <img
-          src={resource.image}
+          src={resource.image || HERO_IMAGE_FALLBACK}
           alt={resource.imageAlt}
           className="w-full aspect-[3/2] object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"
@@ -55,6 +58,7 @@ export default function ResourceCard({ resource, index }) {
               href={resource.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => incrementDownload.mutate(resource.id)}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-300"
             >
               <FiDownload className="w-3.5 h-3.5" />

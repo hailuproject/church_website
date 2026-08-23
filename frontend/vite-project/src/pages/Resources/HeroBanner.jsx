@@ -3,6 +3,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { heroData } from '../../data/resourcesData';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function HeroBanner() {
   const { t } = useTranslation();
@@ -18,10 +19,11 @@ export default function HeroBanner() {
   };
   return (
     <section
-      className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-[80vh] md:min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-0"
       aria-label={t('pages.resources.heroLabel')}
     >
-      <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-primary" />
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div className="absolute inset-0 bg-linear-to-br from-stone-900/90 via-primary-dark/80 to-primary/60" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -37,8 +39,8 @@ export default function HeroBanner() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        <nav aria-label="Breadcrumb" className="mb-10">
-          <ol className="flex items-center gap-2 text-sm text-white/50">
+        <nav aria-label="Breadcrumb" className="mb-8 md:mb-10 overflow-x-auto pb-1">
+          <ol className="flex items-center gap-2 text-sm text-white/50 whitespace-nowrap">
             {hero.breadcrumb.map((crumb, i) => (
               <li key={crumb.href} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
@@ -64,7 +66,7 @@ export default function HeroBanner() {
           </motion.span>
 
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08] text-balance"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -73,7 +75,7 @@ export default function HeroBanner() {
           </motion.h1>
 
           <motion.p
-            className="text-lg sm:text-xl text-gray-300/90 max-w-xl leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-300/90 max-w-xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
@@ -82,16 +84,16 @@ export default function HeroBanner() {
           </motion.p>
 
           <motion.div
-            className="flex flex-col sm:flex-row items-start gap-4 mt-2"
+            className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4 w-full sm:w-auto mt-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <Button href="#library" variant="primary" size="lg">
+            <Button href="#library" variant="primary" size="lg" className="w-full sm:w-auto justify-center">
               {t('pages.resources.exploreLibrary')}
               <FiArrowRight className="text-lg" />
             </Button>
-            <Button href="#downloads" variant="outline" size="lg">
+            <Button href="#downloads" variant="outline" size="lg" className="w-full sm:w-auto justify-center">
               {t('pages.resources.downloadResources')}
             </Button>
           </motion.div>

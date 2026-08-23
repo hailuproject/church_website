@@ -5,29 +5,19 @@ import Section from '../../components/Section';
 import SectionHeader from '../../components/SectionHeader';
 import Accordion from '../../components/common/Accordion';
 import HeroBanner from './HeroBanner';
-import FeaturedResource from './FeaturedResource';
 import ResourceCategoryCard from './ResourceCategoryCard';
 import ResourceCard from './ResourceCard';
-import BibleStudySection from './BibleStudySection';
-import PrayerCard from './PrayerCard';
-import LiturgicalTimeline from './LiturgicalTimeline';
-import FastingCalendar from './FastingCalendar';
-import SaintCard from './SaintCard';
 import DownloadCard from './DownloadCard';
 import CTASection from './CTASection';
-import {
-  resourceFilters,
-  prayerResources,
-  saints,
-  downloads,
-  faqs,
-} from '../../data/resourcesData';
+import { resourceFilters, faqs } from '../../data/resourcesData';
 import {
   useResourceCategoriesList,
   useResourcesList,
+  useDownloads,
 } from '../../hooks/useResourcesSections';
 import { useSeo } from '../../hooks/useSeo';
-import { useLanguage } from '../../i18n/LanguageContext';
+import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
+import { pickAm } from '../../lib/localize';
 
 function ResourceCategories() {
   const { t } = useTranslation();
@@ -40,7 +30,7 @@ function ResourceCategories() {
           title={t('pages.resources.resourceCategories')}
           description={t('pages.resources.categoriesDescription')}
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {resourceCategories.map((category, i) => (
             <ResourceCategoryCard key={category.id} category={category} index={i} />
           ))}
@@ -62,7 +52,8 @@ function DigitalLibrary() {
       : resources.filter(
           (r) =>
             r.fileType === activeFilter ||
-            r.category === activeFilter
+            r.category === activeFilter ||
+            (activeFilter === 'Audio' && r.fileType === 'MP3')
         );
 
   return (
@@ -74,12 +65,12 @@ function DigitalLibrary() {
           description={t('pages.resources.libraryDescription')}
         />
 
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+        <div className="flex items-center gap-2 mb-10 md:mb-12 overflow-x-auto pb-2 -mx-1 px-1 md:flex-wrap md:justify-center md:overflow-visible md:mx-0 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {resourceFilters.map((filter) => (
             <motion.button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-5 py-2 rounded-xs text-sm font-medium transition-all duration-300 cursor-pointer ${
+              className={`px-3.5 sm:px-5 py-2 rounded-xs text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
                 activeFilter === filter.id
                   ? 'bg-primary text-white shadow-md'
                   : 'bg-white text-muted border border-border hover:border-primary/30 hover:text-primary'
@@ -92,7 +83,7 @@ function DigitalLibrary() {
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {filteredResources.map((resource, i) => (
             <ResourceCard key={resource.id} resource={resource} index={i} />
           ))}
@@ -102,49 +93,9 @@ function DigitalLibrary() {
   );
 }
 
-function PrayerLibrary() {
-  const { t } = useTranslation();
-  if (!prayerResources.length) return null;
-  return (
-    <Section id="prayers" className="bg-white">
-      <Container>
-        <SectionHeader
-          subtitle={t('pages.resources.communeWithGod')}
-          title={t('pages.resources.prayerLibrary')}
-          description={t('pages.resources.prayersDescription')}
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {prayerResources.map((prayer, i) => (
-            <PrayerCard key={prayer.id} prayer={prayer} index={i} />
-          ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
-function EthiopianSaints() {
-  const { t } = useTranslation();
-  return (
-    <Section id="saints" className="bg-surface">
-      <Container>
-        <SectionHeader
-          subtitle={t('pages.resources.holyOnes')}
-          title={t('pages.resources.saintsTitle')}
-          description={t('pages.resources.saintsDescription')}
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {saints.map((saint, i) => (
-            <SaintCard key={saint.id} saint={saint} index={i} />
-          ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
 function Downloads() {
   const { t } = useTranslation();
+  const downloads = useDownloads();
   if (!downloads.length) return null;
   return (
     <Section id="downloads" className="bg-white">
@@ -158,15 +109,18 @@ function Downloads() {
           {downloads.map((item, i) => (
             <DownloadCard key={item.id} item={item} index={i} />
           ))}
-        </div>
-      </Container>
+        </div>      </Container>
     </Section>
   );
 }
 
 function FAQ() {
-  const { t } = useTranslation();
+  const { t, language } = useLanguage();
   if (!faqs.length) return null;
+  const items = faqs.map((faq) => ({
+    question: pickAm(faq, 'question', language),
+    answer: pickAm(faq, 'answer', language),
+  }));
   return (
     <Section id="faq" className="bg-surface">
       <Container>
@@ -176,7 +130,7 @@ function FAQ() {
           description={t('pages.resources.faqDescription')}
         />
         <div className="max-w-3xl mx-auto">
-          <Accordion items={faqs} defaultOpen={-1} />
+          <Accordion items={items} defaultOpen={-1} />
         </div>
       </Container>
     </Section>
@@ -189,14 +143,8 @@ export default function ResourcesPage() {
   return (
     <main className="min-h-screen">
       <HeroBanner />
-      <FeaturedResource />
       <ResourceCategories />
       <DigitalLibrary />
-      <BibleStudySection />
-      <PrayerLibrary />
-      <LiturgicalTimeline />
-      <FastingCalendar />
-      <EthiopianSaints />
       <Downloads />
       <FAQ />
       <CTASection />

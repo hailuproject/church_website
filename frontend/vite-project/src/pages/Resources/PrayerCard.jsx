@@ -7,6 +7,8 @@ import {
   FiClock,
   FiHome,
 } from 'react-icons/fi';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { pickAm } from '../../lib/localize';
 
 const prayerIcons = {
   sunrise: FiSunrise,
@@ -18,11 +20,14 @@ const prayerIcons = {
 };
 
 export default function PrayerCard({ prayer, index }) {
+  const { language } = useLanguage();
   const IconComponent = prayerIcons[prayer.icon] || FiHeart;
+  const title = pickAm(prayer, 'title', language);
+  const description = pickAm(prayer, 'description', language);
 
   return (
     <motion.div
-      className="group bg-white rounded-xs p-6 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
+      className="group bg-white rounded-xs p-5 sm:p-6 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -38,9 +43,9 @@ export default function PrayerCard({ prayer, index }) {
       </div>
 
       <h3 className="text-lg font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">
-        {prayer.title}
+        {title}
       </h3>
-      <p className="text-sm text-muted leading-relaxed mb-4">{prayer.description}</p>
+      <p className="text-sm text-muted leading-relaxed mb-4">{description}</p>
     </motion.div>
   );
 }

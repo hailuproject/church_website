@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function SaintCard({ saint, index }) {
   const { language } = useLanguage();
@@ -23,8 +24,8 @@ export default function SaintCard({ saint, index }) {
     >
       <div className="relative overflow-hidden">
         <img
-          src={saint.image}
-          alt={saint.imageAlt}
+          src={saint.image || HERO_IMAGE_FALLBACK}
+          alt={saint.imageAlt || name}
           className="w-full aspect-[3/2] object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"
         />
@@ -34,8 +35,8 @@ export default function SaintCard({ saint, index }) {
         </div>
       </div>
 
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">
+      <div className="p-4 sm:p-5">
+        <h3 className="text-base sm:text-lg font-bold text-text mb-2 group-hover:text-primary transition-colors duration-300">
           {name}
         </h3>
         <p className="text-sm text-muted leading-relaxed line-clamp-3 mb-4">

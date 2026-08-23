@@ -31,7 +31,7 @@ export default function ResourceCategoryCard({ category, index }) {
 
   return (
     <motion.div
-      className="group relative bg-white rounded-xs p-8 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg cursor-pointer"
+      className="group relative bg-white rounded-xs p-6 sm:p-8 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg cursor-pointer"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}

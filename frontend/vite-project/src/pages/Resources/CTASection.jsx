@@ -3,12 +3,14 @@ import { FiArrowRight } from 'react-icons/fi';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { HERO_IMAGE_FALLBACK } from '../../lib/images';
 
 export default function CTASection() {
   const { t } = useTranslation();
   return (
-    <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
-      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-dark" />
+    <section className="relative py-24 md:py-36 overflow-hidden" aria-label={t('common.callToAction')}>
+      <img src={HERO_IMAGE_FALLBACK} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary/95 via-primary-dark/90 to-primary/80" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -38,12 +40,12 @@ export default function CTASection() {
             {t('pages.resources.ctaDescription')}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
-            <Button href="#library" variant="secondary" size="lg">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-2 w-full sm:w-auto max-w-sm sm:max-w-none mx-auto sm:mx-0">
+            <Button href="#library" variant="secondary" size="lg" className="w-full sm:w-auto justify-center">
               {t('pages.resources.exploreResources')}
               <FiArrowRight className="text-lg" />
             </Button>
-            <Button href="/contact" variant="outline" size="lg">
+            <Button href="/contact" variant="outline" size="lg" className="w-full sm:w-auto justify-center">
               {t('common.contactUs')}
             </Button>
           </div>

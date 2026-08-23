@@ -12,7 +12,7 @@ export default function FastingCard({ period, index }) {
 
   return (
     <motion.div
-      className="group bg-white rounded-xs p-6 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
+      className="group bg-white rounded-xs p-5 sm:p-6 border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}

@@ -4,7 +4,8 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { bibleStudyFeatures } from '../../data/resourcesData';
-import { useTranslation } from '../../i18n/LanguageContext';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { pickAm } from '../../lib/localize';
 
 const featureIcons = {
   weekly: FiBookOpen,
@@ -14,11 +15,11 @@ const featureIcons = {
 };
 
 export default function BibleStudySection() {
-  const { t } = useTranslation();
+  const { t, language } = useLanguage();
   return (
     <Section id="bible-study" className="bg-white">
       <Container>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <motion.div
             className="relative overflow-hidden rounded-xs shadow-lg group"
             initial={{ opacity: 0, x: -30 }}
@@ -56,26 +57,26 @@ export default function BibleStudySection() {
                 return (
                   <motion.div
                     key={feature.title}
-                    className="bg-surface rounded-xs p-5 border border-border"
+                    className="bg-surface rounded-xs p-4 sm:p-5 border border-border"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                   >
                     <FeatureIcon className="w-5 h-5 text-primary mb-3" />
-                    <h4 className="text-sm font-bold text-text mb-1">{feature.title}</h4>
-                    <p className="text-xs text-muted leading-relaxed">{feature.description}</p>
+                    <h4 className="text-sm font-bold text-text mb-1">{pickAm(feature, 'title', language)}</h4>
+                    <p className="text-xs text-muted leading-relaxed">{pickAm(feature, 'description', language)}</p>
                   </motion.div>
                 );
               })}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start gap-4 mt-4">
-              <Button href="#library" variant="primary" size="md">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4 mt-4">
+              <Button href="#library" variant="primary" size="md" className="w-full sm:w-auto justify-center">
                 {t('pages.resources.startReading')}
                 <FiArrowRight className="text-lg" />
               </Button>
-              <Button href="#library" variant="outline-dark" size="md">
+              <Button href="#library" variant="outline-dark" size="md" className="w-full sm:w-auto justify-center">
                 {t('pages.resources.viewAllStudies')}
               </Button>
             </div>

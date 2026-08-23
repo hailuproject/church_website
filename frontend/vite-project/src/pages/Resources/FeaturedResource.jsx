@@ -4,16 +4,18 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useFeaturedResource } from '../../hooks/useResourcesSections';
+import { useResourceDownload } from '../../hooks/usePublicData';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function FeaturedResource() {
   const { t } = useTranslation();
+  const incrementDownload = useResourceDownload();
   const featuredResource = useFeaturedResource();
   if (!featuredResource) return null;
   return (
     <Section id="featured" className="bg-surface">
       <Container>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <motion.div
             className="relative overflow-hidden rounded-xs shadow-lg group order-2 lg:order-1"
             initial={{ opacity: 0, x: -30 }}
@@ -57,33 +59,33 @@ export default function FeaturedResource() {
               {featuredResource.description}
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 bg-white rounded-xs p-3 sm:p-4 border border-border min-w-0">
                 <FiGlobe className="w-5 h-5 text-primary flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-muted">{t('pages.resources.language')}</p>
-                  <p className="text-sm font-semibold text-text">{featuredResource.language}</p>
+                <div className="min-w-0">
+                  <p className="text-xs text-muted truncate">{t('pages.resources.language')}</p>
+                  <p className="text-sm font-semibold text-text truncate">{featuredResource.language}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
+              <div className="flex items-center gap-3 bg-white rounded-xs p-3 sm:p-4 border border-border min-w-0">
                 <FiFileText className="w-5 h-5 text-primary flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-muted">{t('pages.resources.pages')}</p>
-                  <p className="text-sm font-semibold text-text">{featuredResource.pages}</p>
+                <div className="min-w-0">
+                  <p className="text-xs text-muted truncate">{t('pages.resources.pages')}</p>
+                  <p className="text-sm font-semibold text-text truncate">{featuredResource.pages}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
+              <div className="flex items-center gap-3 bg-white rounded-xs p-3 sm:p-4 border border-border min-w-0">
                 <FiBookOpen className="w-5 h-5 text-primary flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-muted">{t('pages.resources.author')}</p>
-                  <p className="text-sm font-semibold text-text">{featuredResource.author}</p>
+                <div className="min-w-0">
+                  <p className="text-xs text-muted truncate">{t('pages.resources.author')}</p>
+                  <p className="text-sm font-semibold text-text truncate">{featuredResource.author}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xs p-4 border border-border">
+              <div className="flex items-center gap-3 bg-white rounded-xs p-3 sm:p-4 border border-border min-w-0">
                 <FiCalendar className="w-5 h-5 text-primary flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-muted">{t('pages.resources.updated')}</p>
-                  <p className="text-sm font-semibold text-text">
+                <div className="min-w-0">
+                  <p className="text-xs text-muted truncate">{t('pages.resources.updated')}</p>
+                  <p className="text-sm font-semibold text-text truncate">
                     {new Date(featuredResource.updatedDate).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -94,9 +96,17 @@ export default function FeaturedResource() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start gap-4 mt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4 mt-2">
               {featuredResource.fileUrl && (
-                <Button href={featuredResource.fileUrl} target="_blank" rel="noopener noreferrer" variant="primary" size="md">
+                <Button
+                  href={featuredResource.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="primary"
+                  size="md"
+                  className="w-full sm:w-auto justify-center"
+                  onClick={() => incrementDownload.mutate(featuredResource.id)}
+                >
                   <FiDownload className="text-lg" />
                   {t('pages.resources.downloadPdf')}
                 </Button>

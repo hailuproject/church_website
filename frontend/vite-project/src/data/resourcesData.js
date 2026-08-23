@@ -94,18 +94,153 @@ export const resourceFilters = [
   { id: 'All', en: 'All', am: 'ሁሉም' },
   { id: 'PDF', en: 'PDF', am: 'PDF' },
   { id: 'Audio', en: 'Audio', am: 'ድምጽ' },
-  { id: 'Video', en: 'Video', am: 'ቪዲዮ' },
   { id: 'Books', en: 'Books', am: 'መጻሕፍት' },
-  { id: 'Prayer', en: 'Prayer', am: 'ጸሎት' },
-  { id: 'Bible', en: 'Bible', am: 'መጽሐፍ ቅዱስ' },
-  { id: 'Study', en: 'Study', am: 'ጥናት' },
+  { id: 'Prayers', en: 'Prayers', am: 'ጸሎት' },
+  { id: 'Hymns', en: 'Hymns', am: 'ዜማ' },
+  { id: 'Scriptures', en: 'Scriptures', am: 'መጽሐፍ ቅዱስ' },
+  { id: 'Liturgy', en: 'Liturgy', am: 'ቅዳሴ' },
+  { id: 'Music', en: 'Music', am: 'ሙዚቃ' },
+  { id: 'Other', en: 'Other', am: 'ሌላ' },
 ];
 
-export const bibleStudyFeatures = [];
+export const bibleStudyFeatures = [
+  {
+    title: 'Weekly Bible Study',
+    titleAm: 'ሳምንታዊ የመጽሐፍ ቅዱስ ጥናት',
+    description: 'Join our Sunday afternoon group study exploring the books of the Ethiopian Orthodox canon together.',
+    descriptionAm: 'የኢትዮጵያ ኦርቶዶክስ ቀኖና መጻሕፍትን በጋራ የምናጠናበት የእሁድ ከሰዓት በኋላ የቡድን ጥናት ይቀላቀሉ።',
+    icon: 'weekly',
+  },
+  {
+    title: 'Discussion Guides',
+    titleAm: 'የውይይት መመሪያዎች',
+    description: 'Guided questions for small-group reflection, fellowship, and application to daily life.',
+    descriptionAm: 'ለአነስተኛ ቡድን ውይይት፣ ለኅብረት እና ለዕለት ተዕለት ሕይወት ተግባራዊ ለማድረግ የሚያግዙ የውይይት ጥያቄዎች።',
+    icon: 'discussion',
+  },
+  {
+    title: 'Memory Verses',
+    titleAm: 'የመታሰቢያ ጥቅሶች',
+    description: 'Key scriptures from the Ethiopian canon to memorize and meditate on each week.',
+    descriptionAm: 'በየሳምንቱ ለማስታወስ እና ለማሰላሰል ከኢትዮጵያ ቀኖና የተመረጡ ቁልፍ የቅዱስ ጽሑፍ ጥቅሶች።',
+    icon: 'memory',
+  },
+  {
+    title: 'Reading Plans',
+    titleAm: 'የንባብ መርሃ ግብሮች',
+    description: 'Structured plans covering the 81 books of the Ethiopian Orthodox Bible throughout the year.',
+    descriptionAm: 'በዓመቱ ሁሉ የኢትዮጵያ ኦርቶዶክስ መጽሐፍ ቅዱስ ፹፩ መጻሕፍትን የሚሸፍኑ የተደራጁ የንባብ ዕቅዶች።',
+    icon: 'reading',
+  },
+];
 
-export const prayerResources = [];
+export const prayerResources = [
+  {
+    id: 1,
+    title: "Morning Prayer (Se'at)",
+    titleAm: 'የጧት ጸሎት (ሰዓት)',
+    description: 'Begin each day with the traditional hours of praise, thanksgiving, and intercession.',
+    descriptionAm: 'እያንዳንዱን ቀን በባህላዊ የምስጋና፣ የውዳሴ እና የአማላጅ ጸሎት ሰዓታት ይጀምሩ።',
+    icon: 'sunrise',
+  },
+  {
+    id: 2,
+    title: 'Evening Prayer',
+    titleAm: 'የማታ ጸሎት',
+    description: 'Close the day in quiet reflection, confession, and gratitude before the Lord.',
+    descriptionAm: 'ቀኑን በጸጥታ ማሰላሰል፣ በንስሐ እና በእግዚአብሔር ፊት በምስጋና ይጨርሱ።',
+    icon: 'sunset',
+  },
+  {
+    id: 3,
+    title: 'Prayer of Thanksgiving',
+    titleAm: 'የምስጋና ጸሎት',
+    description: 'Give thanks for God\u2019s blessings in every season of life, in joy and in trial.',
+    descriptionAm: 'በሕይወት ወቅቶች ሁሉ፣ በደስታም ሆነ በመከራ ለእግዚአብሔር በረከት አመሰግኑ።',
+    icon: 'communion',
+  },
+  {
+    id: 4,
+    title: 'Prayer for the Sick',
+    titleAm: 'የበሽተኞች ጸሎት',
+    description: 'Intercessions for healing, comfort, and strength for those who are suffering.',
+    descriptionAm: 'ለበሽተኞች ፈውስ፣ መጽናናት እና ጥንካሬ የሚለምኑ አማላጅ ጸሎቶች።',
+    icon: 'healing',
+  },
+  {
+    id: 5,
+    title: 'Prayers for the Fasting Seasons',
+    titleAm: 'የጾም ወቅት ጸሎቶች',
+    description: 'Special prayers and meditations to accompany Great Lent and other fasting periods.',
+    descriptionAm: 'ዐቢይ ጾምን እና ሌሎች የጾም ወቅቶችን የሚያጅቡ ልዩ ጸሎቶች እና ማሰላሰሎች።',
+    icon: 'fasting',
+  },
+  {
+    id: 6,
+    title: 'Family Prayer',
+    titleAm: 'የቤተሰብ ጸሎት',
+    description: 'Gather the household together in prayer for the home, the children, and the community.',
+    descriptionAm: 'ለቤት፣ ለልጆች እና ለማህበረሰብ የቤተሰብ አባላት በአንድነት የሚጸልዩበት ጸሎት።',
+    icon: 'family',
+  },
+];
 
-export const liturgicalResources = [];
+export const liturgicalResources = [
+  {
+    id: 1,
+    title: 'The Divine Liturgy',
+    titleAm: 'ቅዳሴ',
+    description: 'A guide to the order and meaning of the Divine Liturgy celebrated every Sunday.',
+    descriptionAm: 'በየእሁዱ የሚከበረውን የቅዳሴ ሥርዓት ቅደም ተከተል እና ትርጉም የሚያስረዳ መመሪያ።',
+    icon: 'liturgy',
+    fileUrl: '',
+  },
+  {
+    id: 2,
+    title: "Ge'ez Hymns (Zema)",
+    titleAm: 'የግዕዝ መዝሙራት (ዜማ)',
+    description: 'The traditional chant tradition, including the three modes of Ge\u0027ez, Ezel, and Araray.',
+    descriptionAm: 'ግዕዝ፣ ዕዝል እና ዐራራይ የተባሉትን ሦስቱን የዜማ ዘዴዎች የሚያካትት ባህላዊ የመዝሙር ትውፊት።',
+    icon: 'hymns',
+    fileUrl: '',
+  },
+  {
+    id: 3,
+    title: 'Psalms of David (Dawit)',
+    titleAm: 'መዝሙረ ዳዊት',
+    description: 'The 151 psalms chanted in the daily offices and during the Divine Liturgy.',
+    descriptionAm: 'በዕለታዊ ሰዓታት እና በቅዳሴ ወቅት የሚዘመሩት ፻፶፩ መዝሙራት።',
+    icon: 'psalms',
+    fileUrl: '',
+  },
+  {
+    id: 4,
+    title: 'The Feasts of the Church',
+    titleAm: 'የቤተክርስቲያን በዓላት',
+    description: 'Understanding the major and minor feast days that shape the Ethiopian Church year.',
+    descriptionAm: 'የኢትዮጵያ ቤተክርስቲያን ዓመትን የሚቀርጹትን ዋና እና ታናሽ የበዓላት ቀናት መረዳት።',
+    icon: 'feast',
+    fileUrl: '',
+  },
+  {
+    id: 5,
+    title: 'Holy Week Services',
+    titleAm: 'የሕማማት ሥርዓት',
+    description: 'The rich order of services from Palm Sunday through the Passion and Resurrection.',
+    descriptionAm: 'ከሆሣዕና እስከ ሕማማት እና ትንሳኤ ድረስ ያለው የበለጸገ የሥርዓት ቅደም ተከተል።',
+    icon: 'holyweek',
+    fileUrl: '',
+  },
+  {
+    id: 6,
+    title: 'Lenten Prayers',
+    titleAm: 'የጾም ጸሎቶች',
+    description: 'Prayers, hymns, and readings appointed for the season of Great Lent.',
+    descriptionAm: 'ለዐቢይ ጾም ወቅት የተወሰኑ ጸሎቶች፣ መዝሙራት እና ንባቦች።',
+    icon: 'lent',
+    fileUrl: '',
+  },
+];
 
 export const fastingPeriods = [
   {
@@ -245,6 +380,114 @@ export const saints = [
   },
 ];
 
-export const downloads = [];
+export const downloads = [
+  {
+    id: 1,
+    title: 'The Holy Bible: Ethiopian Canon',
+    titleAm: 'መጽሐፍ ቅዱስ፡ የኢትዮጵያ ቀኖና',
+    description: 'The 81-book Orthodox canon in a readable translation.',
+    descriptionAm: 'የ፹፩ መጻሕፍት የኦርቶዶክስ ቀኖና በሚነበብ ትርጉም።',
+    icon: 'bible',
+    fileSize: '12.4 MB',
+    language: 'English',
+    url: '',
+  },
+  {
+    id: 2,
+    title: 'Orthodox Prayer Book',
+    titleAm: 'የኦርቶዶክስ ጸሎት መጽሐፍ',
+    description: 'Morning, evening, and occasional prayers in English and Amharic.',
+    descriptionAm: 'የጧት፣ የማታ እና የልዩ ጊዜ ጸሎቶች በእንግሊዝኛ እና በአማርኛ።',
+    icon: 'book',
+    fileSize: '3.1 MB',
+    language: 'Both',
+    url: '',
+  },
+  {
+    id: 3,
+    title: 'Fasting Calendar 2026',
+    titleAm: 'የጾም ካላንደር 2026',
+    description: 'A printable calendar of all fasting seasons and holy days.',
+    descriptionAm: 'የሁሉም የጾም ወቅቶች እና የበዓላት ቀናት ማተሚያ ካላንደር።',
+    icon: 'calendar',
+    fileSize: '1.8 MB',
+    language: 'English',
+    url: '',
+  },
+  {
+    id: 4,
+    title: "Children's Faith Workbook",
+    titleAm: 'የልጆች የእምነት መልመጃ መጽሐፍ',
+    description: 'Stories, activities, and lessons for young disciples.',
+    descriptionAm: 'ለወጣት ደቀ መዛሙርት ታሪኮች፣ ተግባራት እና ትምህርቶች።',
+    icon: 'children',
+    fileSize: '5.6 MB',
+    language: 'English',
+    url: '',
+  },
+  {
+    id: 5,
+    title: 'Hymnal: Selected Ge\u0027ez Hymns',
+    titleAm: 'የመዝሙር መጽሐፍ፡ የተመረጡ የግዕዝ መዝሙራት',
+    description: 'A selection of traditional hymns with translations.',
+    descriptionAm: 'ከትርጉም ጋር የተመረጡ ባህላዊ መዝሙራት።',
+    icon: 'music',
+    fileSize: '2.2 MB',
+    language: 'Both',
+    url: '',
+  },
+  {
+    id: 6,
+    title: 'Church Newsletter Archive',
+    titleAm: 'የቤተክርስቲያን ጋዜጣ ማህደር',
+    description: 'Past issues of our parish newsletter and announcements.',
+    descriptionAm: 'ያለፉ የቤተክርስቲያናችን ጋዜጣዎች እና ማስታወቂያዎች።',
+    icon: 'magazine',
+    fileSize: '8.9 MB',
+    language: 'English',
+    url: '',
+  },
+];
 
-export const faqs = [];
+export const faqs = [
+  {
+    question: 'Are all the resources free to use?',
+    questionAm: 'ሁሉም ሀብቶች በነጻ ይገኛሉ?',
+    answer:
+      'Yes. All resources on this page are offered freely by our parish to support the spiritual growth of the faithful.',
+    answerAm:
+      'አዎ። በዚህ ገጽ ላይ ያሉ ሀብቶች ሁሉ የምእመናንን መንፈሳዊ እድገት ለመደገፍ በቤተክርስቲያናችን በነጻ ይቀርባሉ።',
+  },
+  {
+    question: 'Can I download resources in Amharic?',
+    questionAm: 'ሀብቶችን በአማርኛ ማውረድ እችላለሁ?',
+    answer:
+      'Yes. Many of our materials are available in English and Amharic, and the language is shown on each resource.',
+    answerAm:
+      'አዎ። አብዛኛዎቹ ጽሑፎቻችን በእንግሊዝኛ እና በአማርኛ ይገኛሉ፤ የቋንቋው መረጃ በእያንዳንዱ ሀብት ላይ ይታያል።',
+  },
+  {
+    question: 'Which Bible translation do you use?',
+    questionAm: 'የትኛውን የመጽሐፍ ቅዱስ ትርጉም ትጠቀማላችሁ?',
+    answer:
+      'We follow the Ethiopian Orthodox canon, which includes 81 books, and we recommend translations that preserve the fullness of that canon.',
+    answerAm:
+      'የኢትዮጵያ ኦርቶዶክስ ቀኖናን እንከተላለን፤ እርሱም ፹፩ መጻሕፍትን ያካትታል፤ የዚያን ቀኖና ሙሉነት የሚጠብቁ ትርጉሞችን እንመክራለን።',
+  },
+  {
+    question: 'May I share these materials with my community?',
+    questionAm: 'እነዚህን ጽሑፎች ከማህበረሰቤ ጋር ማካፈል እችላለሁ?',
+    answer:
+      'Yes. You are welcome to print and share these resources freely for teaching and edification within the Church.',
+    answerAm:
+      'አዎ። እነዚህን ሀብቶች በቤተክርስቲያን ውስጥ ለትምህርት እና ለመንፈሳዊ ግንባታ በነጻ ማተም እና ማካፈል ትችላላችሁ።',
+  },
+  {
+    question: 'How often is the digital library updated?',
+    questionAm: 'ዲጂታል ቤተ መጻሕፍት ምን ያህል ጊዜ ይዘመናል?',
+    answer:
+      'Our parish team adds new materials throughout the year, especially before fasting seasons and major feasts.',
+    answerAm:
+      'የቤተክርስቲያናችን ቡድን ዓመቱን ሙሉ፣ በተለይ ከጾም ወቅቶች እና ከዋና በዓላት በፊት አዳዲስ ጽሑፎችን ይጨምራል።',
+  },
+];
