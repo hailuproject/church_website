@@ -21,7 +21,10 @@ const resourceSchema = new Schema(
   { timestamps: true }
 );
 
-resourceSchema.index({ title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text' });
+resourceSchema.index(
+  { title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text' },
+  { language_override: 'textLanguage' }
+);
 
 const Resource = mongoose.model('Resource', resourceSchema);
 

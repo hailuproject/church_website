@@ -3,6 +3,7 @@ import config from '../config/index.js';
 import Admin from '../models/Admin.js';
 import Setting from '../models/Setting.js';
 import ChurchContent from '../models/ChurchContent.js';
+import Resource from '../models/Resource.js';
 import { ROLES } from '../constants/index.js';
 
 const ADDRESS = '4808 W 99th St, Inglewood, CA 90301, United States';
@@ -220,6 +221,151 @@ const seedContent = async () => {
   return { created, skipped };
 };
 
+const RESOURCE_DEFAULTS = [
+  {
+    title: 'The Orthodox Faith: An Introduction',
+    titleAm: 'የኦርቶዶክስ እምነት፡ መግቢያ',
+    description:
+      'A concise introduction to the doctrine, worship, and traditions of the Ethiopian Orthodox Tewahedo Church.',
+    descriptionAm:
+      'የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን አስተምህሮ፣ አምልኮ እና ትውፊቶችን አጭር መግቢያ።',
+    category: 'Books',
+    language: 'English',
+  },
+  {
+    title: 'Orthodox Prayer Book',
+    titleAm: 'የኦርቶዶክስ ጸሎት መጽሐፍ',
+    description: 'Morning, evening, and occasional prayers drawn from the daily office of the Church.',
+    descriptionAm: 'ከቤተክርስቲያን የዕለት ተዕለት ሰዓታት የተወሰዱ የጧት፣ የማታ እና የልዩ ጊዜ ጸሎቶች።',
+    category: 'Prayers',
+    language: 'Both',
+  },
+  {
+    title: 'Zema: Hymns of the Church',
+    titleAm: 'ዜማ፡ የቤተክርስቲያን መዝሙራት',
+    description: 'An overview of the traditional Ge\u0027ez chant tradition and its three modes.',
+    descriptionAm: 'የባህላዊ የግዕዝ ዜማ ትውፊት እና ሦስቱ የዜማ ዘዴዎች አጠቃላይ እይታ።',
+    category: 'Hymns',
+    language: 'Amharic',
+  },
+  {
+    title: 'The Psalms of David',
+    titleAm: 'መዝሙረ ዳዊት',
+    description: 'The 151 psalms of the Ethiopian canon used in prayer and worship.',
+    descriptionAm: 'በጸሎት እና በአምልኮ የሚገለገሉት የኢትዮጵያ ቀኖና ፻፶፩ መዝሙራት።',
+    category: 'Scriptures',
+    language: 'English',
+  },
+  {
+    title: 'The Divine Liturgy Explained',
+    titleAm: 'ቅዳሴ በማብራሪያ',
+    description: 'A step-by-step guide to the order, prayers, and symbolism of the Divine Liturgy.',
+    descriptionAm: 'የቅዳሴን ሥርዓት፣ ጸሎቶች እና ምሳሌያዊ ትርጉም ደረጃ በደረጃ የሚያብራራ መመሪያ።',
+    category: 'Liturgy',
+    language: 'Both',
+  },
+  {
+    title: 'Hymns and Spiritual Songs: Audio Collection',
+    titleAm: 'መዝሙራት እና መንፈሳዊ ዜማዎች፡ የድምጽ ስብስብ',
+    description: 'Recorded hymns of the Church for listening, study, and worship at home.',
+    descriptionAm: 'ለማዳመጥ፣ ለጥናት እና ለቤት አምልኮ የተመዘገቡ የቤተክርስቲያን መዝሙራት።',
+    category: 'Music',
+    language: 'Amharic',
+  },
+  {
+    title: 'The History of the Ethiopian Orthodox Church',
+    titleAm: 'የኢትዮጵያ ኦርቶዶክስ ቤተክርስቲያን ታሪክ',
+    description: 'From the conversion of Aksum to the modern diaspora communities.',
+    descriptionAm: 'ከአክሱም ክርስትና መቀበል አንስቶ እስከ ዘመናዊ ዲያስፖራ ማህበረሰቦች ድረስ።',
+    category: 'Books',
+    language: 'English',
+  },
+  {
+    title: 'Fasting Calendar 2026',
+    titleAm: 'የጾም ካላንደር 2026',
+    description: 'A printable calendar of all fasting seasons and holy days.',
+    descriptionAm: 'የሁሉም የጾም ወቅቶች እና የበዓላት ቀናት ማተሚያ ካላንደር።',
+    category: 'Books',
+    language: 'English',
+  },
+  {
+    title: "Children's Faith Workbook",
+    titleAm: 'የልጆች የእምነት መልመጃ መጽሐፍ',
+    description: 'Stories, activities, and lessons for young disciples.',
+    descriptionAm: 'ለወጣት ደቀ መዛሙርት ታሪኮች፣ ተግባራት እና ትምህርቶች።',
+    category: 'Books',
+    language: 'English',
+  },
+  {
+    title: 'Morning and Evening Prayers',
+    titleAm: 'የጧትና የማታ ጸሎቶች',
+    description: 'The daily office prayers of the Church for personal devotion.',
+    descriptionAm: 'ለግል ምስጋና የሚያገለግሉ የቤተክርስቲያን ዕለታዊ የሰዓት ጸሎቶች።',
+    category: 'Prayers',
+    language: 'Both',
+  },
+  {
+    title: 'Prayers for the Sick and the Grieving',
+    titleAm: 'የታመሙት እና የሐዘንተኞች ጸሎት',
+    description: 'Prayers of comfort and healing for those in need.',
+    descriptionAm: 'ለተቸገሩ የማጽናኛ እና የመፈወሻ ጸሎቶች።',
+    category: 'Prayers',
+    language: 'Amharic',
+  },
+  {
+    title: 'Holy Week Services',
+    titleAm: 'የሕማማት ሥርዓት',
+    description: 'The order of services from Palm Sunday through the Passion and Resurrection.',
+    descriptionAm: 'ከሆሣዕና እስከ ሕማማት እና ትንሳኤ ድረስ ያለው የሥርዓት ቅደም ተከተል።',
+    category: 'Liturgy',
+    language: 'Both',
+  },
+  {
+    title: 'The Feasts of the Church',
+    titleAm: 'የቤተክርስቲያን በዓላት',
+    description: 'The major and minor feast days that shape the Ethiopian Church year.',
+    descriptionAm: 'የኢትዮጵያ ቤተክርስቲያን ዓመትን የሚቀርጹት ዋና እና ታናሽ የበዓላት ቀናት።',
+    category: 'Liturgy',
+    language: 'English',
+  },
+  {
+    title: 'Lenten Prayers',
+    titleAm: 'የጾም ጸሎቶች',
+    description: 'Prayers, hymns, and readings appointed for the season of Great Lent.',
+    descriptionAm: 'ለዐቢይ ጾም ወቅት የተወሰኑ ጸሎቶች፣ መዝሙራት እና ንባቦች።',
+    category: 'Liturgy',
+    language: 'Both',
+  },
+  {
+    title: 'Church Newsletter Archive',
+    titleAm: 'የቤተክርስቲያን ጋዜጣ ማህደር',
+    description: 'Past issues of our parish newsletter and announcements.',
+    descriptionAm: 'ያለፉ የቤተክርስቲያናችን ጋዜጣዎች እና ማስታወቂያዎች።',
+    category: 'Other',
+    language: 'English',
+  },
+];
+
+const seedResources = async () => {
+  let created = 0;
+  let skipped = 0;
+  for (const resource of RESOURCE_DEFAULTS) {
+    const existing = await Resource.findOne({ title: resource.title });
+    if (existing) {
+      skipped += 1;
+      continue;
+    }
+    await Resource.create({
+      ...resource,
+      file: { format: resource.category === 'Music' ? 'mp3' : 'pdf' },
+      isPublished: true,
+    });
+    created += 1;
+  }
+  console.log(`  + Resources: ${created} created, ${skipped} already exist`);
+  return { created, skipped };
+};
+
 const destroy = async () => {
   const results = await Promise.all([
     Admin.deleteMany({}),
@@ -247,6 +393,9 @@ const seed = async () => {
     await seedSettings();
     const contentResult = await seedContent();
     console.log(`  Content: ${contentResult.created} created, ${contentResult.skipped} already exist`);
+
+    const resourceResult = await seedResources();
+    console.log(`  Resources: ${resourceResult.created} created, ${resourceResult.skipped} already exist`);
 
     console.log('\nSeed completed successfully.');
     console.log('\nDefault accounts (email / password):');
