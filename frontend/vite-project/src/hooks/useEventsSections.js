@@ -20,11 +20,11 @@ export function useUpcomingEventsList() {
 }
 
 export function useFeaturedEvent() {
+  const { language } = useLanguage();
   const { data } = useFeaturedEvents();
   const items = data?.items || [];
   if (!items.length) return null;
   const event = items[0];
-  const { language } = useLanguage();
   const dateObj = new Date(event.date);
   const diff = Math.max(0, dateObj.getTime() - Date.now());
   const days = Math.floor(diff / 86400000);

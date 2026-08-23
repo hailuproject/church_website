@@ -25,11 +25,11 @@ export function useAlbums() {
 }
 
 export function useFeaturedAlbum() {
+  const { language } = useLanguage();
   const { data } = useGalleryAlbums({ limit: 1 });
   const items = data?.items || [];
   if (!items.length) return null;
   const album = items[0];
-  const { language } = useLanguage();
   const title = pickAm(album, 'albumName', language);
   return {
     title,

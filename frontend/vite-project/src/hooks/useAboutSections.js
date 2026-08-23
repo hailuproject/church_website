@@ -19,10 +19,10 @@ export function useAboutIntro() {
 }
 
 export function useHistoryBlocks() {
+  const { language } = useLanguage();
   const about = useAboutContent();
   const history = about.history || {};
   if (!history.title && !history.content) return [];
-  const { language } = useLanguage();
   const title = pickAm(history, 'title', language);
   const content = pickAm(history, 'content', language);
   return [
