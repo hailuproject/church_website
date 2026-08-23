@@ -339,7 +339,7 @@
       "makeDonation": "Make Your Donation",
       "formDescription": "Your generous giving supports the worship, ministries, and community outreach of our church. Every gift, regardless of size, makes a meaningful impact.",
       "thankYou": "Thank You for Your Gift!",
-      "thankYouDescription": "Your donation has been recorded. Our team will follow up with you to arrange payment and issue your receipt.",
+      "thankYouDescription": "Your donation has been received. A receipt will be sent to your email.",
       "donationType": "Donation Type",
       "donationTypeRequired": "Please select a donation type",
       "selectType": "Select type",
@@ -358,7 +358,10 @@
       "processing": "Processing...",
       "amountError": "Please enter a donation amount.",
       "submitError": "Unable to record your donation. Please try again.",
-      "scriptureLabel": "Stewardship scripture"
+      "scriptureLabel": "Stewardship scripture",
+      "payNow": "Pay Now",
+      "cardInformation": "Card Information",
+      "goBack": "Back"
     }
   },
   "forms": {
@@ -384,3 +387,6 @@
     "privacyText": "I agree to the church's privacy practices and consent to being contacted regarding my inquiry."
   }
 }
+
+
+
