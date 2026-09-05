@@ -1,6 +1,10 @@
 import { motion } from 'framer-motion';
+import { useLocale } from '../../lib/localize';
 
 export default function SacredMomentCard({ moment, index }) {
+  const { pick } = useLocale();
+  const title = pick(moment, 'title');
+  const description = pick(moment, 'description');
   return (
     <motion.div
       className="group relative overflow-hidden rounded-xs cursor-pointer"
@@ -18,7 +22,7 @@ export default function SacredMomentCard({ moment, index }) {
         {moment.image ? (
           <img
             src={moment.image}
-            alt={moment.title}
+            alt={title}
             className="w-full aspect-[3/4] object-cover group-hover:scale-110 transition-transform duration-700"
             loading="lazy"
           />
@@ -29,9 +33,9 @@ export default function SacredMomentCard({ moment, index }) {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-6">
-        <h3 className="text-lg font-bold text-white mb-2">{moment.title}</h3>
+        <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
         <p className="text-sm text-gray-200/80 leading-relaxed line-clamp-2">
-          {moment.description}
+          {description}
         </p>
       </div>
     </motion.div>

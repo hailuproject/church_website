@@ -18,8 +18,10 @@ export const resourceCategories = [
     id: 'bible',
     title: 'Holy Bible',
     titleAm: 'መጽሐፍ ቅዱስ',
+    titleTi: 'ቅዱስ መጽሓፍ',
     description: 'The Ethiopian Orthodox canon with study notes.',
     descriptionAm: 'የኢትዮጵያ ኦርቶዶክስ ካኖን ከጥናት ማስታወሻዎች ጋር።',
+    descriptionTi: 'ኢትዮጵያዊ ኦርቶዶክስ ካኖን ምስ መጽናዕታዊ መበገስታት።',
     count: 0,
     icon: 'bible',
   },
@@ -27,8 +29,10 @@ export const resourceCategories = [
     id: 'prayer',
     title: 'Prayer Guides',
     titleAm: 'የጸሎት መመሪያዎች',
+    titleTi: 'መምርሒታት ጸሎት',
     description: 'Prayer guides for daily spiritual practice.',
     descriptionAm: 'ለዕለታዊ መንፈሳዊ ልምምድ የጸሎት መመሪያዎች።',
+    descriptionTi: 'መምርሒታት ጸሎት ንመዓልታዊ መንፈሳዊ ልምምድ።',
     count: 0,
     icon: 'prayer',
   },
@@ -36,8 +40,10 @@ export const resourceCategories = [
     id: 'liturgy',
     title: 'Liturgical Texts',
     titleAm: 'የቅዳሴ ጽሑፎች',
+    titleTi: 'ስነ-ስርዓታዊ ጽሑፋት',
     description: 'Divine Liturgy, Ge\u0027ez hymns, and sacred service texts.',
     descriptionAm: 'ቅዳሴ፣ የግዕዝ መዝሙራት እና የቅዱስ አገልግሎት ጽሑፎች።',
+    descriptionTi: 'ቅዳሴ፡ ዝማሬ ግእዝን ቅዱሳት ጽሑፋት ኣገልግሎትን።',
     count: 0,
     icon: 'liturgy',
   },
@@ -45,8 +51,10 @@ export const resourceCategories = [
     id: 'theology',
     title: 'Theology',
     titleAm: 'የነገረ መለኮት',
+    titleTi: 'ነገረ መለኮት',
     description: 'Ethiopian Orthodox doctrine and patristic writings.',
     descriptionAm: 'የኢትዮጵያ ኦርቶዶክስ ትምህርት እና የአበው ጽሑፎች።',
+    descriptionTi: 'ትምህርቲ ኢትዮጵያዊት ኦርቶዶክስ ቤተ ክርስትያንን ጽሑፋት ኣበውን።',
     count: 0,
     icon: 'theology',
   },
@@ -54,8 +62,10 @@ export const resourceCategories = [
     id: 'study',
     title: 'Bible Study',
     titleAm: 'የመጽሐፍ ቅዱስ ጥናት',
+    titleTi: 'መጽናዕቲ መጽሓፍ ቅዱስ',
     description: 'Study guides, discussion questions, and reading plans.',
     descriptionAm: 'የጥናት መመሪያዎች፣ የውይይት ጥያቄዎች እና የንባብ መርሃ ግብሮች።',
+    descriptionTi: 'መምርሒታት መጽናዕቲ፡ ሕቶታት ዝርርብ እና መደባት ምንባብ።',
     count: 0,
     icon: 'study',
   },
@@ -63,8 +73,10 @@ export const resourceCategories = [
     id: 'fasting',
     title: 'Fasting Calendar',
     titleAm: 'የጾም ቀን መቁጠሪያ',
+    titleTi: 'ካሌንደር ጾም',
     description: 'Fasting calendars with guides for each season.',
     descriptionAm: 'ለእያንዳንዱ ወቅት ከመመሪያ ጋር የጾም ቀን መቁጠሪያዎች።',
+    descriptionTi: 'ካሌንደርታት ጾም ምስ መምርሒ ንነፍሲ ወከፍ ወቅቲ።',
     count: 0,
     icon: 'fasting',
   },
@@ -72,8 +84,10 @@ export const resourceCategories = [
     id: 'saints',
     title: 'Saints',
     titleAm: 'ቅዱሳን',
+    titleTi: 'ቅዱሳን',
     description: 'Biographies and hagiographies of Ethiopian Orthodox saints.',
     descriptionAm: 'የኢትዮጵያ ኦርቶዶክስ ቅዱሳን የሕይወት ታሪኮች እና ገድላት።',
+    descriptionTi: 'ታሪኽ ህይወትን ገዳማትን ቅዱሳን ኢትዮጵያዊት ኦርቶዶክስ ቤተ ክርስትያን።',
     count: 0,
     icon: 'saints',
   },
@@ -81,8 +95,10 @@ export const resourceCategories = [
     id: 'downloads',
     title: 'Downloads',
     titleAm: 'ውርዶች',
+    titleTi: 'መውረዲታት',
     description: 'Printable PDFs and educational materials.',
     descriptionAm: 'የሚታተሙ ፒዲኤፍዎች እና የትምህርት ቁሳቁሶች።',
+    descriptionTi: 'ዝሕተሙ PDF-ታትን ትምህርታዊ ግብዓትን።',
     count: 0,
     icon: 'downloads',
   },
@@ -91,16 +107,16 @@ export const resourceCategories = [
 export const resources = [];
 
 export const resourceFilters = [
-  { id: 'All', en: 'All', am: 'ሁሉም' },
-  { id: 'PDF', en: 'PDF', am: 'PDF' },
-  { id: 'Audio', en: 'Audio', am: 'ድምጽ' },
-  { id: 'Books', en: 'Books', am: 'መጻሕፍት' },
-  { id: 'Prayers', en: 'Prayers', am: 'ጸሎት' },
-  { id: 'Hymns', en: 'Hymns', am: 'ዜማ' },
-  { id: 'Scriptures', en: 'Scriptures', am: 'መጽሐፍ ቅዱስ' },
-  { id: 'Liturgy', en: 'Liturgy', am: 'ቅዳሴ' },
-  { id: 'Music', en: 'Music', am: 'ሙዚቃ' },
-  { id: 'Other', en: 'Other', am: 'ሌላ' },
+  { id: 'All', en: 'All', am: 'ሁሉም', ti: 'ኩሉ' },
+  { id: 'PDF', en: 'PDF', am: 'PDF', ti: 'PDF' },
+  { id: 'Audio', en: 'Audio', am: 'ድምጽ', ti: 'ድምጺ' },
+  { id: 'Books', en: 'Books', am: 'መጻሕፍት', ti: 'መጻሕፍቲ' },
+  { id: 'Prayers', en: 'Prayers', am: 'ጸሎት', ti: 'ጸሎት' },
+  { id: 'Hymns', en: 'Hymns', am: 'ዜማ', ti: 'ዝማሬ' },
+  { id: 'Scriptures', en: 'Scriptures', am: 'መጽሐፍ ቅዱስ', ti: 'መጽሓፍ ቅዱስ' },
+  { id: 'Liturgy', en: 'Liturgy', am: 'ቅዳሴ', ti: 'ቅዳሴ' },
+  { id: 'Music', en: 'Music', am: 'ሙዚቃ', ti: 'ሙዚቃ' },
+  { id: 'Other', en: 'Other', am: 'ሌላ', ti: 'ካልእ' },
 ];
 
 export const bibleStudyFeatures = [
@@ -453,41 +469,56 @@ export const faqs = [
   {
     question: 'Are all the resources free to use?',
     questionAm: 'ሁሉም ሀብቶች በነጻ ይገኛሉ?',
+    questionTi: 'ኩሎም ግብዓት ብነጻ ዝኾኑ ድዮም?',
     answer:
       'Yes. All resources on this page are offered freely by our parish to support the spiritual growth of the faithful.',
     answerAm:
       'አዎ። በዚህ ገጽ ላይ ያሉ ሀብቶች ሁሉ የምእመናንን መንፈሳዊ እድገት ለመደገፍ በቤተክርስቲያናችን በነጻ ይቀርባሉ።',
+    answerTi:
+      'እወ። ኩሎም ኣብዚ ገጽ ዝርከቡ ግብዓት ንመንፈሳዊ ዕቤት ምእመናን ብጽዕዋና ብነጻ ቀሪቦም እዮም።',
   },
   {
     question: 'Can I download resources in Amharic?',
     questionAm: 'ሀብቶችን በአማርኛ ማውረድ እችላለሁ?',
+    questionTi: 'ግብዓት ብኣማርኛ ክወርድ ይኽእል ድየ?',
     answer:
       'Yes. Many of our materials are available in English and Amharic, and the language is shown on each resource.',
     answerAm:
       'አዎ። አብዛኛዎቹ ጽሑፎቻችን በእንግሊዝኛ እና በአማርኛ ይገኛሉ፤ የቋንቋው መረጃ በእያንዳንዱ ሀብት ላይ ይታያል።',
+    answerTi:
+      'እወ። ብዙሓት ግብዓት ብእንግሊዝኛን ብኣማርኛን ይርከቡ፡ እቲ ቋንቋ ከኣ ኣብ ነፍሲ ወከፍ ግብዓት ተገሊጹ ኣሎ።',
   },
   {
     question: 'Which Bible translation do you use?',
     questionAm: 'የትኛውን የመጽሐፍ ቅዱስ ትርጉም ትጠቀማላችሁ?',
+    questionTi: 'እንታይ ትርጉም መጽሓፍ ቅዱስ ድዩ ትጥቀሙ?',
     answer:
       'We follow the Ethiopian Orthodox canon, which includes 81 books, and we recommend translations that preserve the fullness of that canon.',
     answerAm:
       'የኢትዮጵያ ኦርቶዶክስ ቀኖናን እንከተላለን፤ እርሱም ፹፩ መጻሕፍትን ያካትታል፤ የዚያን ቀኖና ሙሉነት የሚጠብቁ ትርጉሞችን እንመክራለን።',
+    answerTi:
+      'ካኖን ኢትዮጵያዊት ኦርቶዶክስ ቤተ ክርስትያን ኢና እንስዕብ፡ እቲ 81 መጻሕፍቲ ዝሓቝፍ፡ ንጻሕነቱ ዝጠብቑ ትርጉማት ከኣ ነወድስ።',
   },
   {
     question: 'May I share these materials with my community?',
     questionAm: 'እነዚህን ጽሑፎች ከማህበረሰቤ ጋር ማካፈል እችላለሁ?',
+    questionTi: 'ነዚ ግብዓት ምስ ማሕበረሰበይ ክካፈል ይኽእል ድየ?',
     answer:
       'Yes. You are welcome to print and share these resources freely for teaching and edification within the Church.',
     answerAm:
       'አዎ። እነዚህን ሀብቶች በቤተክርስቲያን ውስጥ ለትምህርት እና ለመንፈሳዊ ግንባታ በነጻ ማተም እና ማካፈል ትችላላችሁ።',
+    answerTi:
+      'እወ። ነዚ ግብዓት ኣብ ውሽጢ ቤተ ክርስትያን ንምምሃርን ንመንፈሳዊ ምስራሕን ብነጻ ክትሓትምን ክትካፈልን ትኽእል።',
   },
   {
     question: 'How often is the digital library updated?',
     questionAm: 'ዲጂታል ቤተ መጻሕፍት ምን ያህል ጊዜ ይዘመናል?',
+    questionTi: 'ዲጂታል ላይብረሪ ክንደይ ግዘ ይዕመት?',
     answer:
       'Our parish team adds new materials throughout the year, especially before fasting seasons and major feasts.',
     answerAm:
       'የቤተክርስቲያናችን ቡድን ዓመቱን ሙሉ፣ በተለይ ከጾም ወቅቶች እና ከዋና በዓላት በፊት አዳዲስ ጽሑፎችን ይጨምራል።',
+    answerTi:
+      'ጽዕዋ ቤተ ክርስትያን ኣብ ኩሉ ዓመት፡ ብፍሉይ ቅድሚ ወቅትታት ጾምን ዓበይቲ በዓላትን፡ ሓደስቲ ግብዓት ይውስኽ ኣሎ።',
   },
 ];
