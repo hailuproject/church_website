@@ -34,7 +34,7 @@ export const ResourcesPage = () => {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['resources'] });
-    queryClient.invalidateQueries({ queryKey: ['dashboard', 'full'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard', 'overview'] });
   };
 
   const createMutation = useMutation({
@@ -198,6 +198,8 @@ export const ResourcesPage = () => {
         columns={columns}
         data={list.items}
         loading={list.isLoading}
+        error={list.error}
+        onRetry={list.refetch}
         pagination={list.pagination}
         onPageChange={list.setPage}
         onLimitChange={list.setLimit}
@@ -231,8 +233,16 @@ export const ResourcesPage = () => {
               <FilterSelect
                 label="Status"
                 value={list.filters.isPublished}
-                onChange={(v) => list.setFilter('isPublished', v === 'true' ? 'true' : undefined)}
-                options={[{ value: 'true', label: 'Published' }]}
+                onChange={(v) =>
+                  list.setFilter(
+                    'isPublished',
+                    v === 'true' ? 'true' : v === 'false' ? 'false' : undefined
+                  )
+                }
+                options={[
+                  { value: 'true', label: 'Published' },
+                  { value: 'false', label: 'Draft' },
+                ]}
               />
             </FilterBar>
           </>

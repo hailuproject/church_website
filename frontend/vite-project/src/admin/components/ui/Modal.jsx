@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/helpers';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 const SIZES = {
   sm: 'max-w-md',
@@ -12,7 +13,14 @@ const SIZES = {
   full: 'max-w-full',
 };
 
-export const Modal = ({ open, onClose, title, subtitle, size = 'md', children, footer }) => {
+export const Modal = ({ open, onClose, title, subtitle, size = 'md', maxWidth, children, footer }) => {
+  const widthClass = maxWidth ? SIZES[maxWidth] || maxWidth : SIZES[size];
+  const panelRef = useRef(null);
+  const titleId = useId();
+  const subtitleId = useId();
+
+  useFocusTrap(panelRef, { active: open });
+
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e) => {
@@ -38,11 +46,14 @@ export const Modal = ({ open, onClose, title, subtitle, size = 'md', children, f
             onClick={onClose}
           />
           <motion.div
+            ref={panelRef}
             role="dialog"
             aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={subtitle ? subtitleId : undefined}
             className={cn(
               'relative z-10 my-8 w-full rounded-2xl bg-white shadow-xl dark:bg-gray-800',
-              SIZES[size]
+              widthClass
             )}
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -52,8 +63,8 @@ export const Modal = ({ open, onClose, title, subtitle, size = 'md', children, f
             {(title || onClose) && (
               <div className="flex items-start justify-between gap-4 border-b border-gray-200 px-6 py-4 dark:border-gray-700">
                 <div>
-                  {title && <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>}
-                  {subtitle && <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>}
+                  {title && <h2 id={titleId} className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>}
+                  {subtitle && <p id={subtitleId} className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>}
                 </div>
                 <button
                   type="button"

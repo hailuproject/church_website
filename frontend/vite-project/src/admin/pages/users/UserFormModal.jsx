@@ -28,7 +28,7 @@ const schema = z
     }
   });
 
-export const UserFormModal = ({ open, onClose, user, onSubmit, submitting }) => {
+export const UserFormModal = ({ open, onClose, user, onSubmit, submitting, canManageSecurity }) => {
   const isEdit = Boolean(user?._id);
 
   const {
@@ -58,14 +58,22 @@ export const UserFormModal = ({ open, onClose, user, onSubmit, submitting }) => 
   }, [open, user, isEdit, reset]);
 
   const onFormSubmit = (values) => {
-    onSubmit({
+    const payload = {
       name: values.name.trim(),
       email: values.email.trim(),
       phone: values.phone.trim() || undefined,
       role: values.role,
-      isActive: values.isActive,
-      ...(isEdit ? { password: values.password || undefined } : { password: values.password }),
-    });
+    };
+    if (isEdit) {
+      if (canManageSecurity) {
+        payload.isActive = values.isActive;
+        if (values.password) payload.password = values.password;
+      }
+    } else {
+      payload.isActive = values.isActive;
+      payload.password = values.password;
+    }
+    onSubmit(payload);
   };
 
   return (
@@ -100,14 +108,20 @@ export const UserFormModal = ({ open, onClose, user, onSubmit, submitting }) => 
           </Select>
         </div>
 
-        <Input
-          label={isEdit ? 'New password (optional)' : 'Password'}
-          type="password"
-          placeholder={isEdit ? 'Leave blank to keep current' : 'Min 8 characters'}
-          required={!isEdit}
-          error={errors.password?.message}
-          {...register('password')}
-        />
+        {(isEdit ? canManageSecurity : true) && (
+          <Input
+            label={isEdit ? 'New password (optional)' : 'Password'}
+            type="password"
+            placeholder={isEdit ? 'Leave blank to keep current' : 'Min 8 characters'}
+            required={!isEdit}
+            error={errors.password?.message}
+            {...register('password')}
+          />
+        )}
+
+        {isEdit && !canManageSecurity && (
+          <p className="text-xs text-gray-400">Only a Super Admin can reset passwords.</p>
+        )}
 
         {!isEdit && (
           <div className="flex items-start gap-3 rounded-xl bg-primary-50 p-3 text-xs text-primary-700 dark:bg-primary-500/10 dark:text-primary-300">
@@ -116,12 +130,14 @@ export const UserFormModal = ({ open, onClose, user, onSubmit, submitting }) => 
           </div>
         )}
 
-        <Switch
-          checked={watch('isActive')}
-          onChange={(val) => setValue('isActive', val)}
-          label="Account active"
-          description="Deactivated users cannot sign in"
-        />
+        {(isEdit ? canManageSecurity : true) && (
+          <Switch
+            checked={watch('isActive')}
+            onChange={(val) => setValue('isActive', val)}
+            label="Account active"
+            description="Deactivated users cannot sign in"
+          />
+        )}
       </form>
     </Modal>
   );

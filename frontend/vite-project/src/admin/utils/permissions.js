@@ -4,21 +4,30 @@ export const ROLE_PERMISSIONS = {
   [ROLES.SUPER_ADMIN]: ['*'],
   [ROLES.ADMIN]: ['*'],
   [ROLES.PRIEST]: [
+    'view:analytics',
     'manage:sermons',
     'manage:events',
+    'manage:content',
   ],
   [ROLES.SECRETARY]: [
+    'view:analytics',
     'manage:donations',
     'manage:contact',
+    'manage:content',
   ],
   [ROLES.DEACON]: [
+    'view:analytics',
     'manage:resources',
     'manage:events',
+    'manage:content',
+    'manage:gallery',
   ],
 };
 
 const ROUTE_PERMISSIONS = {
   '/dashboard': 'view:analytics',
+  '/pages': 'manage:content',
+  '/gallery': 'manage:gallery',
   '/sermons': 'manage:sermons',
   '/events': 'manage:events',
   '/resources': 'manage:resources',
@@ -46,6 +55,8 @@ export const hasPermission = (role, permission) => {
 
 const HOME_ROUTES = [
   '/dashboard',
+  '/pages',
+  '/gallery',
   '/events',
   '/sermons',
   '/resources',

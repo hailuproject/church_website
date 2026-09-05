@@ -7,6 +7,7 @@ import { DataTable, ActionMenu } from '../../components/ui/DataTable';
 import { SearchInput } from '../../components/ui/SearchInput';
 import Button from '../../components/ui/Button';
 import { StatusBadge } from '../../components/ui/Badge';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { FilterSelect, FilterBar } from '../../components/ui/FilterSelect';
 import { DonationReceiptModal } from './DonationReceiptModal';
 import { donationService } from '../../services/donation.service';
@@ -22,6 +23,8 @@ export const DonationsPage = () => {
   const queryClient = useQueryClient();
   const [viewing, setViewing] = useState(null);
   const [exporting, setExporting] = useState(false);
+  const [confirming, setConfirming] = useState(null);
+  const [statusChange, setStatusChange] = useState(null);
 
   const list = useListQuery({
     key: 'donations',
@@ -131,11 +134,11 @@ export const DonationsPage = () => {
               },
               ...(row.status === 'pending'
                 ? [
-                    {
-                      label: 'Confirm payment',
-                      icon: CheckCircle2,
-                      onClick: (r) => confirmMutation.mutate(r._id),
-                    },
+{
+                label: 'Confirm payment',
+                icon: CheckCircle2,
+                onClick: (r) => setConfirming(r),
+              },
                   ]
                 : []),
               ...(row.status === 'completed'
@@ -149,7 +152,7 @@ export const DonationsPage = () => {
                 : []),
               ...DONATION_STATUSES.filter((s) => s !== row.status).map((s) => ({
                 label: `Mark ${s}`,
-                onClick: (r) => statusMutation.mutate({ id: r._id, status: s }),
+                onClick: (r) => setStatusChange({ donation: r, status: s }),
               })),
             ]}
           />
@@ -177,6 +180,8 @@ export const DonationsPage = () => {
         columns={columns}
         data={list.items}
         loading={list.isLoading}
+        error={list.error}
+        onRetry={list.refetch}
         pagination={list.pagination}
         onPageChange={list.setPage}
         onLimitChange={list.setLimit}
@@ -210,6 +215,28 @@ export const DonationsPage = () => {
       />
 
       <DonationReceiptModal open={Boolean(viewing)} onClose={() => setViewing(null)} donation={viewing} />
+
+      <ConfirmDialog
+        open={Boolean(confirming)}
+        onClose={() => setConfirming(null)}
+        onConfirm={() => confirming && confirmMutation.mutate(confirming._id)}
+        title="Confirm payment"
+        description={`Mark the donation from "${confirming?.donorName || 'Anonymous'}" (${confirming ? formatCurrency(confirming.amount, confirming.currency) : ''}) as confirmed?`}
+        confirmLabel="Confirm"
+        loading={confirmMutation.isPending}
+      />
+
+      <ConfirmDialog
+        open={Boolean(statusChange)}
+        onClose={() => setStatusChange(null)}
+        onConfirm={() =>
+          statusChange && statusMutation.mutate({ id: statusChange.donation._id, status: statusChange.status })
+        }
+        title={`Mark donation as ${statusChange?.status}?`}
+        description={`This will change the status of the donation from "${statusChange?.donation?.status}" to "${statusChange?.status}".`}
+        confirmLabel="Update status"
+        loading={statusMutation.isPending}
+      />
     </div>
   );
 };

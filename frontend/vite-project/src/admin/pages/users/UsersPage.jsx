@@ -208,6 +208,8 @@ export const UsersPage = () => {
         columns={columns}
         data={list.items}
         loading={list.isLoading}
+        error={list.error}
+        onRetry={list.refetch}
         pagination={list.pagination}
         onPageChange={list.setPage}
         onLimitChange={list.setLimit}
@@ -238,6 +240,7 @@ export const UsersPage = () => {
         open={formOpen}
         onClose={() => setFormOpen(false)}
         user={editing}
+        canManageSecurity={isSuperAdmin}
         submitting={createMutation.isPending || updateMutation.isPending}
         onSubmit={(payload) => {
           if (editing?._id) updateMutation.mutate({ id: editing._id, payload });

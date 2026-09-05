@@ -13,7 +13,10 @@ export const MessageDetailModal = ({ open, onClose, message }) => {
   const queryClient = useQueryClient();
   const [reply, setReply] = useState('');
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['contact-messages'] });
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ['contact-messages'] });
+    queryClient.invalidateQueries({ queryKey: ['inbox', 'unread'] });
+  };
 
   const markReadMutation = useMutation({
     mutationFn: (id) => contactService.markRead(id),

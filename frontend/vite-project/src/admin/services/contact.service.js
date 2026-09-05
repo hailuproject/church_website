@@ -18,7 +18,7 @@ export const contactService = {
   },
 
   markAllRead: async () => {
-    const response = await client.get('/contact/inbox/read-all');
+    const response = await client.patch('/contact/inbox/read-all');
     return unwrapData(response);
   },
 

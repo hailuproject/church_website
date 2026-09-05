@@ -45,8 +45,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentUser));
         return currentUser;
       }
-    } catch {
-      handleSessionEnd();
+    } catch (error) {
+      if (error?.response?.status === 401) {
+        handleSessionEnd();
+      }
     }
     return null;
   }, [handleSessionEnd]);

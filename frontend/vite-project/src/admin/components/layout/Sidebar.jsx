@@ -117,7 +117,7 @@ export const MobileDrawer = ({ open, onClose }) => (
           >
             <X className="h-5 w-5" />
           </button>
-          <SidebarContent collapsed={collapsed} />
+<SidebarContent collapsed={false} />
         </motion.div>
       </div>
     )}

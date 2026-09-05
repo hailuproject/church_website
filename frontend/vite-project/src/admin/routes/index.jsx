@@ -12,6 +12,8 @@ const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage')
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const ProfilePage = lazy(() => import('../pages/auth/ProfilePage'));
 const DashboardPage = lazy(() => import('../pages/dashboard/DashboardPage'));
+const PagesPage = lazy(() => import('../pages/content/PagesPage'));
+const GalleryPage = lazy(() => import('../pages/gallery/GalleryPage'));
 const SermonsPage = lazy(() => import('../pages/sermons/SermonsPage'));
 const EventsPage = lazy(() => import('../pages/events/EventsPage'));
 const ResourcesPage = lazy(() => import('../pages/resources/ResourcesPage'));
@@ -41,6 +43,8 @@ export const AppRoutes = () => (
       <Route element={<AdminLayout />}>
         <Route index element={<DefaultRoute />} />
         <Route path="dashboard" element={withSuspense(<DashboardPage />)} />
+        <Route path="pages" element={withSuspense(<PagesPage />)} />
+        <Route path="gallery" element={withSuspense(<GalleryPage />)} />
         <Route path="sermons" element={withSuspense(<SermonsPage />)} />
         <Route path="events" element={withSuspense(<EventsPage />)} />
         <Route path="resources" element={withSuspense(<ResourcesPage />)} />

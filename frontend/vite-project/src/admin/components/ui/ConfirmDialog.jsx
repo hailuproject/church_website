@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, TriangleAlert } from 'lucide-react';
 import Button from './Button';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export const ConfirmDialog = ({
   open,
@@ -16,10 +17,25 @@ export const ConfirmDialog = ({
   loading = false,
 }) => {
   const [confirming, setConfirming] = useState(false);
+  const panelRef = useRef(null);
+  const cancelRef = useRef(null);
+  const titleId = useId();
+  const descriptionId = useId();
+
+  useFocusTrap(panelRef, { active: open, initialFocusRef: cancelRef });
 
   useEffect(() => {
     if (open) setConfirming(false);
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, onClose]);
 
   const handleConfirm = async () => {
     setConfirming(true);
@@ -43,8 +59,11 @@ export const ConfirmDialog = ({
             onClick={onClose}
           />
           <motion.div
+            ref={panelRef}
             role="alertdialog"
             aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={description ? descriptionId : undefined}
             className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-800"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -55,14 +74,14 @@ export const ConfirmDialog = ({
                 <TriangleAlert className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+                <h3 id={titleId} className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
                 {description && (
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
+                  <p id={descriptionId} className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
                 )}
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-3">
-              <Button variant="secondary" onClick={onClose} disabled={confirming || loading}>
+              <Button ref={cancelRef} variant="secondary" onClick={onClose} disabled={confirming || loading}>
                 {cancelLabel}
               </Button>
               <Button

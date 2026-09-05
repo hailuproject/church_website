@@ -9,6 +9,8 @@ import {
   ShieldCheck,
   ScrollText,
   LogOut,
+  FileText,
+  Images,
 } from 'lucide-react';
 import { ROLES } from './options';
 
@@ -28,6 +30,12 @@ export const NAV_SECTIONS = [
     label: 'Content',
     items: [
       {
+        label: 'Pages',
+        path: '/admin/pages',
+        icon: FileText,
+        roles: [...Object.values(ROLES)],
+      },
+      {
         label: 'Sermons',
         path: '/admin/sermons',
         icon: Mic,
@@ -43,6 +51,12 @@ export const NAV_SECTIONS = [
         label: 'Resources',
         path: '/admin/resources',
         icon: BookOpen,
+        roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DEACON],
+      },
+      {
+        label: 'Gallery',
+        path: '/admin/gallery',
+        icon: Images,
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DEACON],
       },
     ],
@@ -104,6 +118,8 @@ export const getNavItemsForRole = (role) => {
 
 export const PAGE_TITLES = {
   '/admin/dashboard': 'Dashboard',
+  '/admin/pages': 'Pages',
+  '/admin/gallery': 'Gallery',
   '/admin/sermons': 'Sermons',
   '/admin/events': 'Events',
   '/admin/resources': 'Resources',

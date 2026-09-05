@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Inbox } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Inbox, AlertTriangle, RefreshCw } from 'lucide-react';
 import { cn } from '../../utils/helpers';
 import { Pagination } from './Pagination';
 import { SkeletonTable } from './Skeleton';
 import { EmptyState } from './EmptyState';
 import { Dropdown, DropdownItem, DropdownDivider } from './Dropdown';
+import Button from './Button';
 
 export const DataTable = ({
   columns,
   data = [],
   keyField = '_id',
   loading = false,
+  error = null,
+  onRetry,
   pagination,
   onPageChange,
   onLimitChange,
@@ -25,6 +28,8 @@ export const DataTable = ({
   emptyTitle = 'No data found',
   emptyDescription,
   emptyAction,
+  emptyIcon,
+  errorTitle = 'Failed to load data',
   className,
 }) => {
   const [internalSort, setInternalSort] = useState(null);
@@ -174,14 +179,31 @@ export const DataTable = ({
                   <SkeletonTable rows={5} cols={columns.length} />
                 </td>
               </tr>
-            ) : visibleRows.length === 0 ? (
+            ) : !error && visibleRows.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + (selectable ? 1 : 0)}>
                   <EmptyState
-                    icon={Inbox}
+                    icon={emptyIcon || Inbox}
                     title={emptyTitle}
                     description={emptyDescription}
                     action={emptyAction}
+                  />
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan={columns.length + (selectable ? 1 : 0)}>
+                  <EmptyState
+                    icon={AlertTriangle}
+                    title={errorTitle}
+                    description={error?.message || 'There was a problem fetching this data. Please try again.'}
+                    action={
+                      onRetry ? (
+                        <Button variant="secondary" onClick={onRetry}>
+                          <RefreshCw className="h-4 w-4" /> Retry
+                        </Button>
+                      ) : null
+                    }
                   />
                 </td>
               </tr>

@@ -154,6 +154,8 @@ export const AuditLogsPage = () => {
         columns={columns}
         data={list.items}
         loading={list.isLoading}
+        error={list.error}
+        onRetry={list.refetch}
         pagination={list.pagination}
         onPageChange={list.setPage}
         onLimitChange={list.setLimit}

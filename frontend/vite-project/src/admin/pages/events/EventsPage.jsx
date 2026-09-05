@@ -32,7 +32,7 @@ export const EventsPage = () => {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['events'] });
-    queryClient.invalidateQueries({ queryKey: ['dashboard', 'full'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard', 'overview'] });
   };
 
   const createMutation = useMutation({
@@ -197,6 +197,8 @@ export const EventsPage = () => {
         columns={columns}
         data={list.items}
         loading={list.isLoading}
+        error={list.error}
+        onRetry={list.refetch}
         pagination={list.pagination}
         onPageChange={list.setPage}
         onLimitChange={list.setLimit}

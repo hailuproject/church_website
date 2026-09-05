@@ -29,7 +29,10 @@ export const ContactInboxPage = () => {
     initialLimit: 10,
   });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['contact-messages'] });
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ['contact-messages'] });
+    queryClient.invalidateQueries({ queryKey: ['inbox', 'unread'] });
+  };
 
   const readMutation = useMutation({
     mutationFn: (id) => contactService.markRead(id),
@@ -164,6 +167,8 @@ export const ContactInboxPage = () => {
         columns={columns}
         data={messages.items}
         loading={messages.isLoading}
+        error={messages.error}
+        onRetry={messages.refetch}
         pagination={messages.pagination}
         onPageChange={messages.setPage}
         onLimitChange={messages.setLimit}
