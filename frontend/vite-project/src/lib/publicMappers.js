@@ -29,18 +29,25 @@ export const mapHero = (hero = {}, language = 'en') => {
   return {
     heading: hero.heading || '',
     headingAm: hero.headingAm || '',
-    tagline: language === 'am' && hero.taglineAm ? hero.taglineAm : hero.tagline || '',
+    headingTi: hero.headingTi || '',
+    tagline: pickHeroTagline(hero, language),
     image: mediaUrl(hero.image),
     primaryCta: mapCta(hero.primaryCta, language),
     secondaryCta: mapCta(hero.secondaryCta, language),
   };
 };
 
+const pickHeroTagline = (hero, language) =>
+  (language === 'am' && hero.taglineAm) ? hero.taglineAm :
+  (language === 'ti' && (hero.taglineTi || hero.taglineAm)) ? (hero.taglineTi || hero.taglineAm) : hero.tagline || '';
+
 export const mapCta = (cta = null, language = 'en') => {
   if (!cta) return null;
   return {
     ...cta,
-    label: language === 'am' && cta.labelAm ? cta.labelAm : cta.label || '',
+    label:
+      (language === 'am' && cta.labelAm) ? cta.labelAm :
+      (language === 'ti' && (cta.labelTi || cta.labelAm)) ? (cta.labelTi || cta.labelAm) : cta.label || '',
   };
 };
 
@@ -57,9 +64,21 @@ export const mapHomeCta = (cta = {}, language = 'en') => {
   return {
     title: pickAm(cta, 'title', language) || '',
     content: pickAm(cta, 'content', language) || '',
-    buttonLabel: pickAm(cta, 'buttonLabel', language) || (language === 'am' ? 'ያግኙን' : 'Contact Us'),
+    buttonLabel: pickAm(cta, 'buttonLabel', language) || (language === 'am' ? 'ያግኙን' : language === 'ti' ? 'ተዓዘዙና' : 'Contact Us'),
     buttonHref: cta.buttonHref || '/contact',
   };
+};
+
+export const mapServiceTimes = (data = {}, language = 'en') => {
+  const raw = Array.isArray(data?.serviceTimes) ? data.serviceTimes : data?.services;
+  if (!Array.isArray(raw) || !raw.length) return [];
+  return raw
+    .map((s) => ({
+      label: pickAm(s, 'label', language) || '',
+      day: pickAm(s, 'day', language) || pickAm(s, 'days', language) || '',
+      time: pickAm(s, 'time', language) || pickAm(s, 'startTime', language) || '',
+    }))
+    .filter((s) => s.day && s.time);
 };
 
 export const mapFeaturedEvents = (events = [], limit = 3, language = 'en') => {
@@ -83,9 +102,11 @@ export const mapFeaturedSermons = (sermons = [], limit = 3, language = 'en') => 
     id: sermon._id || sermon.id || index,
     thumbnail: mediaUrl(sermon.thumbnail),
     title: pickAm(sermon, 'title', language),
-    priest: pickAm(sermon, 'speaker', language) || 'Clergy',
+    priest: pickAm(sermon, 'speaker', language) || (language === 'ti' ? 'ቀሳውስት' : 'Clergy'),
     date: formatDate(sermon.publishedAt || sermon.date, { locale: localeTag(language) }),
-    duration: sermon.duration ? `${sermon.duration} ${language === 'am' ? 'ደቂቃ' : 'min'}` : '',
+    duration: sermon.duration
+      ? `${sermon.duration} ${language === 'am' ? 'ደቂቃ' : language === 'ti' ? 'ደቒቕ' : 'min'}`
+      : '',
     category: sermon.category || 'Sermon',
     hasAudio: Boolean(mediaUrl(sermon.audioUrl)),
     hasVideo: Boolean(mediaUrl(sermon.videoUrl)),
@@ -126,22 +147,40 @@ export const formatAddress = (address) => {
 
 export const mapChurch = (church = {}, language = 'en') => {
   const addressAm = church.addressAm || {};
+  const addressTi = church.addressTi || {};
   const name = pickAm(church, 'churchName', language) || pickAm(church, 'name', language) || '';
   return {
     name,
     nameAm: church.nameAm || church.churchNameAm || '',
-    tagline: language === 'am' && church.taglineAm ? church.taglineAm : church.tagline || '',
+    nameTi: church.nameTi || church.churchNameTi || '',
+    tagline: pickChurchText(church, 'tagline', language),
     taglineAm: church.taglineAm || '',
-    address: language === 'am' ? formatAddress(addressAm) || formatAddress(church.address) : formatAddress(church.address),
+    taglineTi: church.taglineTi || '',
+    address: pickChurchAddress(church, addressAm, addressTi, language),
     addressAm: formatAddress(addressAm),
+    addressTi: formatAddress(addressTi),
     phone: church.phone || '',
     email: church.email || '',
-    footerText: language === 'am' && church.footerTextAm ? church.footerTextAm : church.footerText || '',
+    footerText: pickChurchText(church, 'footerText', language),
     footerTextAm: church.footerTextAm || '',
+    footerTextTi: church.footerTextTi || '',
     logo: mediaUrl(church.logo),
     liveStreamURL: church.liveStreamURL || '',
     socialLinks: church.socialLinks || {},
   };
+};
+
+const pickChurchText = (church, field, language) =>
+  (language === 'am' && church[`${field}Am`]) ? church[`${field}Am`] :
+  (language === 'ti' && (church[`${field}Ti`] || church[`${field}Am`])) ? (church[`${field}Ti`] || church[`${field}Am`]) : church[field] || '';
+
+const pickChurchAddress = (church, addressAm, addressTi, language) => {
+  if (language === 'am' && Object.keys(addressAm).length) return formatAddress(addressAm);
+  if (language === 'ti') {
+    if (Object.keys(addressTi).length) return formatAddress(addressTi);
+    if (Object.keys(addressAm).length) return formatAddress(addressAm);
+  }
+  return formatAddress(church.address);
 };
 
 export const mapSocialLinks = (social = {}) => [

@@ -25,9 +25,14 @@ const iconMap = {
 export default function ResourceCategoryCard({ category, index }) {
   const IconComponent = iconMap[category.icon] || FiBook;
   const { t, language } = useLanguage();
-  const am = language === 'am';
-  const title = am && category.titleAm ? category.titleAm : category.title;
-  const description = am && category.descriptionAm ? category.descriptionAm : category.description;
+  const title =
+    (language === 'am' && category.titleAm) ||
+    (language === 'ti' && (category.titleTi || category.titleAm)) ||
+    category.title;
+  const description =
+    (language === 'am' && category.descriptionAm) ||
+    (language === 'ti' && (category.descriptionTi || category.descriptionAm)) ||
+    category.description;
 
   return (
     <motion.div

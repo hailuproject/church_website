@@ -20,7 +20,10 @@ const iconMap = {
 const CategoryCard = memo(function CategoryCard({ category, delay = 0 }) {
   const Icon = iconMap[category.icon] || FiCalendar;
   const { language } = useLanguage();
-  const title = language === 'am' && category.titleAm ? category.titleAm : category.title;
+  const title =
+    (language === 'am' && category.titleAm) ||
+    (language === 'ti' && (category.titleTi || category.titleAm)) ||
+    category.title;
 
   return (
     <motion.div

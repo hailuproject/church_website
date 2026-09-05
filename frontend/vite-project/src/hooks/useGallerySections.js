@@ -53,7 +53,7 @@ export function useMasonryImages() {
     (album.images || []).map((image, i) => ({
       id: `${album._id}-${i}`,
       src: mediaUrl(image),
-      alt: pickAm(album, 'albumName', language) || 'Gallery image',
+      alt: pickAm(album, 'albumName', language) || (language === 'ti' ? 'ምስሊ ጋለሪ' : 'Gallery image'),
       height: masonryHeights[(i + (albums.indexOf(album) || 0)) % masonryHeights.length],
       category: album.category || 'Gallery',
     }))
@@ -69,7 +69,7 @@ export function useVideoItems() {
     (album.videos || []).map((video, i) => ({
       id: `${album._id}-v${i}`,
       thumbnail: mediaUrl(album.coverImage),
-      title: pickAm(album, 'albumName', language) || 'Video',
+      title: pickAm(album, 'albumName', language) || (language === 'ti' ? 'ቪድዮ' : 'Video'),
       event: album.category || 'Gallery',
       date: formatDate(album.createdAt, { locale: localeTag(language) }),
       duration: 'Video',

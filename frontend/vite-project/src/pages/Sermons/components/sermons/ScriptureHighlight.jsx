@@ -1,20 +1,20 @@
 import { motion } from 'framer-motion';
 import { scriptureHighlight } from '../../../../data/sermonsData';
 import { useLanguage } from '../../../../i18n/LanguageContext';
+import { withFallback } from '../../../../lib/images';
 
 export default function ScriptureHighlight() {
   const { t, language } = useLanguage();
-  const am = language === 'am';
   const { verse, reference, explanation } = scriptureHighlight;
-  const verseText = am ? scriptureHighlight.verseAm : verse;
-  const referenceText = am ? scriptureHighlight.referenceAm : reference;
-  const explanationText = am ? scriptureHighlight.explanationAm : explanation;
+  const verseText = language === 'am' ? scriptureHighlight.verseAm : language === 'ti' ? (scriptureHighlight.verseTi || scriptureHighlight.verseAm) : verse;
+  const referenceText = language === 'am' ? scriptureHighlight.referenceAm : language === 'ti' ? (scriptureHighlight.referenceTi || scriptureHighlight.referenceAm) : reference;
+  const explanationText = language === 'am' ? scriptureHighlight.explanationAm : language === 'ti' ? (scriptureHighlight.explanationTi || scriptureHighlight.explanationAm) : explanation;
 
   return (
     <section className="relative py-28 md:py-36 overflow-hidden" aria-label={t('pages.sermons.scriptureHighlight')}>
       <div className="absolute inset-0">
         <img
-          src={scriptureHighlight.image}
+          src={withFallback(scriptureHighlight.image)}
           alt={t('pages.sermons.openBible')}
           className="w-full h-full object-cover"
           loading="lazy"
