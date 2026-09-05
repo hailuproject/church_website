@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { Building2, Share2, Video, Save } from 'lucide-react';
+import { Building2, Share2, Video, Save, AlertTriangle, RefreshCw } from 'lucide-react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import { Tabs } from '../../components/ui/Tabs';
@@ -23,6 +25,46 @@ const SaveBar = ({ onSave, loading }) => (
   </div>
 );
 
+const optional = () => z.string().optional().or(z.literal(''));
+
+const addressShape = {
+  street: optional('street'),
+  city: optional('city'),
+  region: optional('region'),
+  country: optional('country'),
+  postalCode: optional('postalCode'),
+};
+
+const generalSchema = z.object({
+  churchName: z.string().min(2, 'Church name is required').max(200, 'Church name too long'),
+  churchNameAm: optional('churchNameAm'),
+  churchNameTi: optional('churchNameTi'),
+  tagline: optional('tagline'),
+  taglineAm: optional('taglineAm'),
+  taglineTi: optional('taglineTi'),
+  phone: optional('phone'),
+  email: optional('email').refine((v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), {
+    message: 'Enter a valid email address',
+  }),
+  address: z.object(addressShape),
+  addressAm: z.object(addressShape),
+  addressTi: z.object(addressShape),
+  logo: z.any().nullable().optional(),
+  favicon: z.any().nullable().optional(),
+});
+
+const socialSchema = z.object({
+  facebook: optional('facebook').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  twitter: optional('twitter').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  instagram: optional('instagram').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  youtube: optional('youtube').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  telegram: optional('telegram').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  tiktok: optional('tiktok').refine((v) => !v || /^https?:\/\/.+/.test(v), { message: 'Must be a valid http(s) URL' }),
+  footerText: optional('footerText'),
+  footerTextAm: optional('footerTextAm'),
+  footerTextTi: optional('footerTextTi'),
+});
+
 const GeneralForm = ({ settings }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -34,19 +76,29 @@ const GeneralForm = ({ settings }) => {
     onError: (error) => toast.error(getErrorMessage(error)),
   });
 
-  const { register, handleSubmit, reset, watch, setValue } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(generalSchema) });
 
   useEffect(() => {
     if (settings) {
       reset({
         churchName: settings.churchName || '',
         churchNameAm: settings.churchNameAm || '',
+        churchNameTi: settings.churchNameTi || '',
         tagline: settings.tagline || '',
         taglineAm: settings.taglineAm || '',
+        taglineTi: settings.taglineTi || '',
         phone: settings.phone || '',
         email: settings.email || '',
         address: settings.address || {},
         addressAm: settings.addressAm || {},
+        addressTi: settings.addressTi || {},
       });
       setValue('logo', null);
       setValue('favicon', null);
@@ -67,17 +119,19 @@ const GeneralForm = ({ settings }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <FormSection title="Church identity" description="Name, tagline and contact details shown across the site">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Church name (English)" {...register('churchName')} />
-          <Input label="Church name (አማርኛ)" {...register('churchNameAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Input label="Church name (English)" error={errors.churchName?.message} {...register('churchName')} />
+          <Input label="Church name (አማርኛ)" error={errors.churchNameAm?.message} {...register('churchNameAm')} />
+          <Input label="Church name (ትግርኛ)" error={errors.churchNameTi?.message} {...register('churchNameTi')} />
           <Input label="Tagline (English)" {...register('tagline')} />
           <Input label="Tagline (አማርኛ)" {...register('taglineAm')} />
+          <Input label="Tagline (ትግርኛ)" {...register('taglineTi')} />
           <Input label="Phone" {...register('phone')} />
-          <Input label="Email" type="email" {...register('email')} />
+          <Input label="Email" type="email" error={errors.email?.message} {...register('email')} />
         </div>
       </FormSection>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <FormSection title="Address" description="Postal address (English)">
           <div className="space-y-4">
             <Input label="Street" {...register('address.street')} />
@@ -102,6 +156,20 @@ const GeneralForm = ({ settings }) => {
             <div className="grid grid-cols-2 gap-4">
               <Input label="ሀገር" {...register('addressAm.country')} />
               <Input label="ፖስታ ኮድ" {...register('addressAm.postalCode')} />
+            </div>
+          </div>
+        </FormSection>
+
+        <FormSection title="Address (ትግርኛ)" description="Postal address in Tigrigna">
+          <div className="space-y-4">
+            <Input label="ጎደና" {...register('addressTi.street')} />
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="ከተማ" {...register('addressTi.city')} />
+              <Input label="ክልል" {...register('addressTi.region')} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="ሃገር" {...register('addressTi.country')} />
+              <Input label="ፖስታ ኮድ" {...register('addressTi.postalCode')} />
             </div>
           </div>
         </FormSection>
@@ -133,12 +201,23 @@ const LiveStreamForm = ({ settings }) => {
   });
 
   const [liveStreamURL, setLiveStreamURL] = useState('');
+  const [urlError, setUrlError] = useState('');
 
   useEffect(() => {
     if (settings) setLiveStreamURL(settings.liveStreamURL || '');
   }, [settings]);
 
   if (!settings) return <div className="flex justify-center py-16"><Spinner /></div>;
+
+  const handleSave = () => {
+    const url = liveStreamURL.trim();
+    if (url && !/^https?:\/\/[^\s]+$/.test(url)) {
+      setUrlError('Enter a valid http(s) URL (e.g. your YouTube live link)');
+      return;
+    }
+    setUrlError('');
+    mutation.mutate({ liveStreamURL: url || undefined });
+  };
 
   return (
     <div>
@@ -147,11 +226,15 @@ const LiveStreamForm = ({ settings }) => {
           label="Live stream URL"
           placeholder="https://www.youtube.com/watch?v=…"
           value={liveStreamURL}
-          onChange={(e) => setLiveStreamURL(e.target.value)}
+          onChange={(e) => {
+            setLiveStreamURL(e.target.value);
+            if (urlError) setUrlError('');
+          }}
+          error={urlError}
         />
       </FormSection>
 
-      <SaveBar onSave={() => mutation.mutate({ liveStreamURL })} loading={mutation.isPending} />
+      <SaveBar onSave={handleSave} loading={mutation.isPending} />
     </div>
   );
 };
@@ -175,7 +258,12 @@ const SocialForm = ({ settings }) => {
     onError: (error) => toast.error(getErrorMessage(error)),
   });
 
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(socialSchema) });
 
   useEffect(() => {
     if (settings) {
@@ -183,6 +271,7 @@ const SocialForm = ({ settings }) => {
         ...settings.socialLinks,
         footerText: settings.footerText || '',
         footerTextAm: settings.footerTextAm || '',
+        footerTextTi: settings.footerTextTi || '',
       });
     }
   }, [settings, reset]);
@@ -190,9 +279,13 @@ const SocialForm = ({ settings }) => {
   if (!settings) return <div className="flex justify-center py-16"><Spinner /></div>;
 
   const onSubmit = (values) => {
-    const { footerText, footerTextAm, ...links } = values;
+    const { footerText, footerTextAm, footerTextTi, ...links } = values;
     socialMutation.mutate(links);
-    footerMutation.mutate({ footerText: footerText || undefined, footerTextAm: footerTextAm || undefined });
+    footerMutation.mutate({
+      footerText: footerText || undefined,
+      footerTextAm: footerTextAm || undefined,
+      footerTextTi: footerTextTi || undefined,
+    });
   };
 
   const fields = ['facebook', 'twitter', 'instagram', 'youtube', 'telegram', 'tiktok'];
@@ -202,16 +295,17 @@ const SocialForm = ({ settings }) => {
       <FormSection title="Social links" description="Profiles linked in the site footer and contact page">
         <div className="grid gap-4 sm:grid-cols-2">
           {fields.map((field) => (
-            <Input key={field} label={field.charAt(0).toUpperCase() + field.slice(1)} placeholder={`https://${field}.com/…`} {...register(field)} />
+            <Input key={field} label={field.charAt(0).toUpperCase() + field.slice(1)} placeholder={`https://${field}.com/…`} error={errors[field]?.message} {...register(field)} />
           ))}
         </div>
       </FormSection>
 
       <div className="mt-4">
         <FormSection title="Footer" description="Footer text shown at the bottom of every page">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-3">
             <Textarea label="Footer text (English)" rows={3} {...register('footerText')} />
             <Textarea label="Footer text (አማርኛ)" rows={3} {...register('footerTextAm')} />
+            <Textarea label="Footer text (ትግርኛ)" rows={3} {...register('footerTextTi')} />
           </div>
         </FormSection>
       </div>
@@ -231,7 +325,7 @@ export const SettingsPage = () => {
   usePageMeta('Settings');
   const [tab, setTab] = useState('general');
 
-  const { data: settings, isLoading } = useQuery({
+  const { data: settings, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['settings'],
     queryFn: () => settingService.getAdmin(),
   });
@@ -248,10 +342,24 @@ export const SettingsPage = () => {
         <Tabs tabs={TABS.map(({ key, label }) => ({ key, label }))} onChange={setTab} />
       </div>
 
-      {isLoading ? <div className="flex justify-center py-16"><Spinner /></div> : null}
-      {!isLoading && tab === 'general' && <GeneralForm settings={settings} />}
-      {!isLoading && tab === 'live' && <LiveStreamForm settings={settings} />}
-      {!isLoading && tab === 'social' && <SocialForm settings={settings} />}
+      {isLoading && <div className="flex justify-center py-16"><Spinner /></div>}
+
+      {isError && !isLoading && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-12 text-center dark:border-red-500/30 dark:bg-red-500/5">
+          <AlertTriangle className="mx-auto h-10 w-10 text-red-400" />
+          <p className="mt-3 text-sm font-medium text-red-700 dark:text-red-300">Failed to load settings</p>
+          <p className="text-xs text-red-500 dark:text-red-400">{error?.message || 'There was a problem fetching settings. Please try again.'}</p>
+          <div className="mt-4">
+            <Button variant="secondary" onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4" /> Retry
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {!isLoading && !isError && tab === 'general' && <GeneralForm settings={settings} />}
+      {!isLoading && !isError && tab === 'live' && <LiveStreamForm settings={settings} />}
+      {!isLoading && !isError && tab === 'social' && <SocialForm settings={settings} />}
     </div>
   );
 };

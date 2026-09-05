@@ -7,10 +7,13 @@ const settingSchema = new Schema(
   {
     churchName: { type: String, default: 'Ethiopian Orthodox Tewahedo Church', trim: true },
     churchNameAm: { type: String, default: 'የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን', trim: true },
+    churchNameTi: { type: String, default: 'ኢትዮጵያዊት ኦርቶዶክስ ተዋሕዶ ቤተ ክርስትያን', trim: true },
     tagline: { type: String, default: '' },
     taglineAm: { type: String, default: '' },
+    taglineTi: { type: String, default: '' },
     address: { type: addressSchema, default: () => ({}) },
     addressAm: { type: addressSchema, default: () => ({}) },
+    addressTi: { type: addressSchema, default: () => ({}) },
     phone: { type: String, default: '' },
     email: { type: String, default: '' },
     socialLinks: { type: socialLinksSchema, default: () => ({}) },
@@ -20,9 +23,14 @@ const settingSchema = new Schema(
     favicon: { type: mediaObjectSchema, default: () => ({}) },
     footerText: { type: String, default: '' },
     footerTextAm: { type: String, default: '' },
+    footerTextTi: { type: String, default: '' },
     languageSettings: {
-      defaultLanguage: { type: String, enum: ['english', 'amharic'], default: 'english' },
-      supportedLanguages: { type: [String], enum: ['english', 'amharic'], default: ['english', 'amharic'] },
+      defaultLanguage: { type: String, enum: ['english', 'amharic', 'tigrigna'], default: 'english' },
+      supportedLanguages: {
+        type: [String],
+        enum: ['english', 'amharic', 'tigrigna'],
+        default: ['english', 'amharic', 'tigrigna'],
+      },
       allowLanguageSwitch: { type: Boolean, default: true },
     },
     theme: {

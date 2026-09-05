@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,8 +15,10 @@ import { useAuth } from '../../context/AuthContext';
 const sermonSchema = z.object({
   title: z.string().min(3, 'Title is required (min 3 characters)').max(250, 'Title too long'),
   titleAm: z.string().optional().or(z.literal('')),
+  titleTi: z.string().optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
   descriptionAm: z.string().optional().or(z.literal('')),
+  descriptionTi: z.string().optional().or(z.literal('')),
   speaker: z.string().optional().or(z.literal('')),
   scripture: z.string().optional().or(z.literal('')),
   category: z.enum(SERMON_CATEGORIES),
@@ -29,6 +31,9 @@ const sermonSchema = z.object({
 export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting }) => {
   const { user } = useAuth();
   const isEdit = Boolean(sermon?._id);
+  const [activeLang, setActiveLang] = useState('English');
+
+  const langDim = (lang) => (activeLang === lang ? '' : 'opacity-40');
 
   const {
     register,
@@ -42,8 +47,10 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
     defaultValues: {
       title: '',
       titleAm: '',
+      titleTi: '',
       description: '',
       descriptionAm: '',
+      descriptionTi: '',
       speaker: '',
       scripture: '',
       category: 'Sunday Sermon',
@@ -60,8 +67,10 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
         reset({
           title: sermon.title || '',
           titleAm: sermon.titleAm || '',
+          titleTi: sermon.titleTi || '',
           description: sermon.description || '',
           descriptionAm: sermon.descriptionAm || '',
+          descriptionTi: sermon.descriptionTi || '',
           speaker: sermon.speaker || '',
           scripture: sermon.scripture || '',
           category: sermon.category || 'Sunday Sermon',
@@ -74,8 +83,10 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
         reset({
           title: '',
           titleAm: '',
+      titleTi: '',
           description: '',
           descriptionAm: '',
+      descriptionTi: '',
           speaker: '',
           scripture: '',
           category: 'Sunday Sermon',
@@ -96,8 +107,10 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
       ...values,
       title: values.title.trim(),
       titleAm: values.titleAm.trim() || undefined,
+      titleTi: values.titleTi.trim() || undefined,
       description: values.description || undefined,
       descriptionAm: values.descriptionAm || undefined,
+      descriptionTi: values.descriptionTi || undefined,
       speaker: values.speaker.trim() || undefined,
       scripture: values.scripture.trim() || undefined,
       duration: values.duration === '' ? undefined : Number(values.duration),
@@ -130,12 +143,19 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
             <Mic2 className="h-4 w-4" />
             <span className="text-xs font-medium">Content languages</span>
           </div>
-          <LanguageToggle activeLang="English" onToggle={() => {}} />
+          <LanguageToggle activeLang={activeLang} onToggle={setActiveLang} />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Title (English)" placeholder="The mystery of the Holy Trinity" required error={errors.title?.message} {...register('title')} />
-          <Input label="Title (አማርኛ)" placeholder="የቅድስት ሥላሴ ምስጢር" error={errors.titleAm?.message} {...register('titleAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Input label="Title (English)" placeholder="The mystery of the Holy Trinity" required error={errors.title?.message} {...register('title')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Input label="Title (አማርኛ)" placeholder="የቅድስት ሥላሴ ምስጢር" error={errors.titleAm?.message} {...register('titleAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Input label="Title (ትግርኛ)" placeholder="መግለጺ ቅድስት ሥላሴ" error={errors.titleTi?.message} {...register('titleTi')} />
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -157,9 +177,16 @@ export const SermonFormModal = ({ open, onClose, sermon, onSubmit, submitting })
           <Input label="Duration (minutes)" type="number" min="0" placeholder="45" error={errors.duration?.message} {...register('duration')} />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Textarea label="Description (English)" placeholder="Summary of the sermon…" error={errors.description?.message} {...register('description')} />
-          <Textarea label="Description (አማርኛ)" placeholder="የስብከቱ ማጠቃለያ…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Textarea label="Description (English)" placeholder="Summary of the sermon…" error={errors.description?.message} {...register('description')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Textarea label="Description (አማርኛ)" placeholder="የስብከቱ ማጠቃለያ…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Textarea label="Description (ትግርኛ)" placeholder="ኣጠቓላሊት ስብከት…" error={errors.descriptionTi?.message} {...register('descriptionTi')} />
+          </div>
         </div>
 
         <FileUpload type="image" label="Thumbnail" value={thumbnail} onChange={(file) => setValue('thumbnail', file)} hint="Cover image shown on the website" />

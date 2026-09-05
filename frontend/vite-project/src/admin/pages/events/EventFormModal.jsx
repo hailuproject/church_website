@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,8 +15,10 @@ import { useAuth } from '../../context/AuthContext';
 const eventSchema = z.object({
   title: z.string().min(3, 'Title is required (min 3 characters)').max(250, 'Title too long'),
   titleAm: z.string().optional().or(z.literal('')),
+  titleTi: z.string().optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
   descriptionAm: z.string().optional().or(z.literal('')),
+  descriptionTi: z.string().optional().or(z.literal('')),
   date: z.string().min(1, 'Event date is required'),
   startTime: z.string().optional().or(z.literal('')),
   endTime: z.string().optional().or(z.literal('')),
@@ -30,6 +32,9 @@ const eventSchema = z.object({
 export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) => {
   const { user } = useAuth();
   const isEdit = Boolean(event?._id);
+  const [activeLang, setActiveLang] = useState('English');
+
+  const langDim = (lang) => (activeLang === lang ? '' : 'opacity-40');
 
   const {
     register,
@@ -43,8 +48,10 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
     defaultValues: {
       title: '',
       titleAm: '',
+      titleTi: '',
       description: '',
       descriptionAm: '',
+      descriptionTi: '',
       date: '',
       startTime: '',
       endTime: '',
@@ -62,8 +69,10 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
         reset({
           title: event.title || '',
           titleAm: event.titleAm || '',
+          titleTi: event.titleTi || '',
           description: event.description || '',
           descriptionAm: event.descriptionAm || '',
+          descriptionTi: event.descriptionTi || '',
           date: event.date ? event.date.slice(0, 10) : '',
           startTime: event.startTime || '',
           endTime: event.endTime || '',
@@ -77,8 +86,10 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
         reset({
           title: '',
           titleAm: '',
+          titleTi: '',
           description: '',
           descriptionAm: '',
+          descriptionTi: '',
           date: '',
           startTime: '',
           endTime: '',
@@ -100,8 +111,10 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
       ...values,
       title: values.title.trim(),
       titleAm: values.titleAm.trim() || undefined,
+      titleTi: values.titleTi.trim() || undefined,
       description: values.description || undefined,
       descriptionAm: values.descriptionAm || undefined,
+      descriptionTi: values.descriptionTi || undefined,
       startTime: values.startTime || undefined,
       endTime: values.endTime || undefined,
       location: values.location.trim() || undefined,
@@ -135,12 +148,19 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
             <CalendarDays className="h-4 w-4" />
             <span className="text-xs font-medium">Content languages</span>
           </div>
-          <LanguageToggle activeLang="English" onToggle={() => {}} />
+          <LanguageToggle activeLang={activeLang} onToggle={setActiveLang} />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Title (English)" placeholder="Holy Feast of Timket" required error={errors.title?.message} {...register('title')} />
-          <Input label="Title (አማርኛ)" placeholder="የጥምቀት በዓል" error={errors.titleAm?.message} {...register('titleAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Input label="Title (English)" placeholder="Holy Feast of Timket" required error={errors.title?.message} {...register('title')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Input label="Title (አማርኛ)" placeholder="የጥምቀት በዓል" error={errors.titleAm?.message} {...register('titleAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Input label="Title (ትግርኛ)" placeholder="በዓል ጥምቀት" error={errors.titleTi?.message} {...register('titleTi')} />
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -165,9 +185,16 @@ export const EventFormModal = ({ open, onClose, event, onSubmit, submitting }) =
 
         <Input label="Location" placeholder="Church main hall, Bole" error={errors.location?.message} {...register('location')} />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Textarea label="Description (English)" placeholder="Event details…" error={errors.description?.message} {...register('description')} />
-          <Textarea label="Description (አማርኛ)" placeholder="የዝግጅት ዝርዝር…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Textarea label="Description (English)" placeholder="Event details…" error={errors.description?.message} {...register('description')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Textarea label="Description (አማርኛ)" placeholder="የዝግጅት ዝርዝር…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Textarea label="Description (ትግርኛ)" placeholder="ዝርዝር ፍጻመ…" error={errors.descriptionTi?.message} {...register('descriptionTi')} />
+          </div>
         </div>
 
         <FileUpload type="image" label="Cover image" value={coverImage} onChange={(file) => setValue('coverImage', file)} hint="Optional event banner" />

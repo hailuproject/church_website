@@ -1,12 +1,22 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { withFallback } from '../../lib/images';
 
 const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
   const { language } = useLanguage();
-  const am = language === 'am';
-  const month = am && feast.monthAm ? feast.monthAm : feast.month;
-  const description = am && feast.descriptionAm ? feast.descriptionAm : feast.description;
+  const month =
+    (language === 'am' && feast.monthAm) ||
+    (language === 'ti' && (feast.monthTi || feast.monthAm)) ||
+    feast.month;
+  const description =
+    (language === 'am' && feast.descriptionAm) ||
+    (language === 'ti' && (feast.descriptionTi || feast.descriptionAm)) ||
+    feast.description;
+  const feastName =
+    (language === 'am' && feast.amharic) ||
+    (language === 'ti' && (feast.tigrigna || feast.amharic)) ||
+    feast.name;
 
   return (
     <motion.article
@@ -19,7 +29,7 @@ const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
     >
       <div className="relative overflow-hidden aspect-[3/2]">
         <img
-          src={feast.image}
+          src={withFallback(feast.image)}
           alt={`${feast.name} celebration`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"
@@ -32,10 +42,10 @@ const FeastCard = memo(function FeastCard({ feast, delay = 0 }) {
 
         <div className="absolute bottom-0 left-0 right-0 p-5">
           <h3 className="text-lg font-bold text-white mb-0.5">
-            {feast.name}
+            {feastName}
           </h3>
           <span className="text-secondary-light text-sm font-medium">
-            {feast.amharic}
+            {language === 'ti' ? feast.tigrigna || feast.amharic : feast.amharic}
           </span>
         </div>
       </div>

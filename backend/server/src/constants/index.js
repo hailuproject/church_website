@@ -52,7 +52,7 @@ export const MEDIA_TYPES = {
 };
 
 export const FILE_MIME_TYPES = {
-  [MEDIA_TYPES.IMAGE]: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/bmp'],
+  [MEDIA_TYPES.IMAGE]: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'],
   [MEDIA_TYPES.VIDEO]: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
   [MEDIA_TYPES.AUDIO]: ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/m4a', 'audio/ogg', 'audio/webm'],
   [MEDIA_TYPES.PDF]: ['application/pdf'],
@@ -80,7 +80,7 @@ export const CONTENT_KEYS = ['home', 'about', 'contact', 'donate', 'footer'];
 export const EVENT_CATEGORIES = ['Liturgy', 'Fasting', 'Feast', 'Wedding', 'Baptism', 'Seminar', 'Conference', 'Youth', 'Charity', 'Other'];
 export const EVENT_STATUSES = ['upcoming', 'ongoing', 'completed', 'cancelled'];
 export const SERMON_CATEGORIES = ['Sunday Sermon', 'Bible Study', 'Homily', 'Lent', 'Feast', 'Teaching', 'Other'];
-export const SERMON_LANGUAGES = ['English', 'Amharic', 'Both', 'Other'];
+export const SERMON_LANGUAGES = ['English', 'Amharic', 'Tigrigna', 'Both', 'Other'];
 export const RESOURCE_CATEGORIES = ['Books', 'Prayers', 'Hymns', 'Scriptures', 'Liturgy', 'Music', 'Other'];
 export const RESOURCE_LANGUAGES = SERMON_LANGUAGES;
 export const GALLERY_CATEGORIES = ['Liturgy', 'Festival', 'Ordination', 'Baptism', 'Community', 'Conference', 'Other'];

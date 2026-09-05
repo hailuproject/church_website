@@ -5,7 +5,7 @@ import { cn } from '../../utils/helpers';
 export const LanguageToggle = ({ activeLang, onToggle }) => (
   <div className="inline-flex items-center gap-1 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-700">
     <Languages className="ml-1.5 h-3.5 w-3.5 text-gray-400" />
-    {['English', 'Amharic'].map((lang) => (
+    {['English', 'Amharic', 'Tigrigna'].map((lang) => (
       <button
         key={lang}
         type="button"

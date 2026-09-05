@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,8 +15,10 @@ import { useAuth } from '../../context/AuthContext';
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title is required (min 3 characters)').max(250, 'Title too long'),
   titleAm: z.string().optional().or(z.literal('')),
+  titleTi: z.string().optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
   descriptionAm: z.string().optional().or(z.literal('')),
+  descriptionTi: z.string().optional().or(z.literal('')),
   category: z.enum(RESOURCE_CATEGORIES),
   language: z.enum(RESOURCE_LANGUAGES),
   isPublished: z.boolean(),
@@ -25,6 +27,9 @@ const resourceSchema = z.object({
 export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submitting }) => {
   const { user } = useAuth();
   const isEdit = Boolean(resource?._id);
+  const [activeLang, setActiveLang] = useState('English');
+
+  const langDim = (lang) => (activeLang === lang ? '' : 'opacity-40');
 
   const {
     register,
@@ -38,8 +43,10 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
     defaultValues: {
       title: '',
       titleAm: '',
+      titleTi: '',
       description: '',
       descriptionAm: '',
+      descriptionTi: '',
       category: 'Books',
       language: 'English',
       isPublished: true,
@@ -52,8 +59,10 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
         reset({
           title: resource.title || '',
           titleAm: resource.titleAm || '',
+          titleTi: resource.titleTi || '',
           description: resource.description || '',
           descriptionAm: resource.descriptionAm || '',
+          descriptionTi: resource.descriptionTi || '',
           category: resource.category || 'Books',
           language: resource.language || 'English',
           isPublished: Boolean(resource.isPublished),
@@ -62,8 +71,10 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
         reset({
           title: '',
           titleAm: '',
+      titleTi: '',
           description: '',
           descriptionAm: '',
+      descriptionTi: '',
           category: 'Books',
           language: 'English',
           isPublished: true,
@@ -80,8 +91,10 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
       ...values,
       title: values.title.trim(),
       titleAm: values.titleAm.trim() || undefined,
+      titleTi: values.titleTi.trim() || undefined,
       description: values.description || undefined,
       descriptionAm: values.descriptionAm || undefined,
+      descriptionTi: values.descriptionTi || undefined,
       createdBy: user?._id,
       thumbnail: thumbnail instanceof File || thumbnail instanceof Blob ? thumbnail : undefined,
     });
@@ -111,12 +124,19 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
             <BookOpen className="h-4 w-4" />
             <span className="text-xs font-medium">Content languages</span>
           </div>
-          <LanguageToggle activeLang="English" onToggle={() => {}} />
+          <LanguageToggle activeLang={activeLang} onToggle={setActiveLang} />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Title (English)" placeholder="The Book of Psalms" required error={errors.title?.message} {...register('title')} />
-          <Input label="Title (አማርኛ)" placeholder="መዝሙረ ዳዊት" error={errors.titleAm?.message} {...register('titleAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Input label="Title (English)" placeholder="The Book of Psalms" required error={errors.title?.message} {...register('title')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Input label="Title (አማርኛ)" placeholder="መዝሙረ ዳዊት" error={errors.titleAm?.message} {...register('titleAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Input label="Title (ትግርኛ)" placeholder="መዝሙር ዳዊት" error={errors.titleTi?.message} {...register('titleTi')} />
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -132,9 +152,16 @@ export const ResourceFormModal = ({ open, onClose, resource, onSubmit, submittin
           </Select>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Textarea label="Description (English)" placeholder="About this resource…" error={errors.description?.message} {...register('description')} />
-          <Textarea label="Description (አማርኛ)" placeholder="ስለ ግብዓቱ…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className={langDim('English')}>
+            <Textarea label="Description (English)" placeholder="About this resource…" error={errors.description?.message} {...register('description')} />
+          </div>
+          <div className={langDim('Amharic')}>
+            <Textarea label="Description (አማርኛ)" placeholder="ስለ ግብዓቱ…" error={errors.descriptionAm?.message} {...register('descriptionAm')} />
+          </div>
+          <div className={langDim('Tigrigna')}>
+            <Textarea label="Description (ትግርኛ)" placeholder="ብዛዕባ ሓገዝቲ…" error={errors.descriptionTi?.message} {...register('descriptionTi')} />
+          </div>
         </div>
 
         <FileUpload type="image" label="Thumbnail" value={thumbnail} onChange={(file) => setValue('thumbnail', file)} hint="Optional cover image" />
