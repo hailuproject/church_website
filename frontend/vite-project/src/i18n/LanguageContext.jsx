@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import enCommon from "./locales/en/common.json";
 import amCommon from "./locales/am/common.json";
+import tiCommon from "./locales/ti/common.json";
 
 const LanguageContext = createContext();
 
 const translations = {
   en: enCommon,
   am: amCommon,
+  ti: tiCommon,
 };
 
 export function LanguageProvider({ children }) {
@@ -24,31 +26,41 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("language", language);
     document.documentElement.lang = language;
-    document.documentElement.dir = language === "am" ? "ltr" : "ltr";
+    document.documentElement.dir = "ltr";
   }, [language]);
 
   const value = {
     language,
     setLanguage,
     t: (key, params) => {
-      const keys = key.split(".");
-      let value = translations[language];
-
-      for (const k of keys) {
-        if (value && typeof value === "object") {
-          value = value[k];
-        } else {
-          return key; // Return key if translation not found
+      const lookup = (dict) => {
+        let current = dict;
+        for (const k of key.split(".")) {
+          if (current && typeof current === "object") {
+            current = current[k];
+          } else {
+            return undefined;
+          }
         }
+        return typeof current === "string" ? current : undefined;
+      };
+
+      let value = lookup(translations[language]);
+      if (value === undefined) {
+        // Fall back to English before giving up on the key.
+        value = lookup(enCommon);
+      }
+      if (value === undefined) {
+        return key;
       }
 
-      if (typeof value === "string" && params) {
+      if (params) {
         return value.replace(/\{(\w+)\}/g, (match, name) =>
-          name in params ? params[name] : match
+          name in params ? params[name] : match,
         );
       }
 
-      return value || key;
+      return value;
     },
     availableLanguages: Object.keys(translations),
   };

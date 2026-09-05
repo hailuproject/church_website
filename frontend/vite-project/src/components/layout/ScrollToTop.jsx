@@ -28,7 +28,7 @@ export default function ScrollToTop() {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          aria-label={language === 'am' ? 'ወደ ላይ ይውጡ' : 'Scroll to top'}
+          aria-label={language === 'am' ? 'ወደ ላይ ይውጡ' : language === 'ti' ? 'ናብ ላዕሊ' : 'Scroll to top'}
         >
           <FiArrowUp className="text-lg" />
         </motion.button>

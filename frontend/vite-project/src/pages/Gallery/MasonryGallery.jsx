@@ -67,7 +67,7 @@ export default function MasonryGallery() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
-              {language === 'am' ? filter.am : filter.en}
+              {language === 'am' ? filter.am : language === 'ti' ? filter.ti : filter.en}
             </motion.button>
           ))}
         </div>

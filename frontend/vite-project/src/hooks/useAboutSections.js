@@ -30,7 +30,7 @@ export function useHistoryBlocks() {
       title: title || 'Our History',
       paragraphs: content ? content.split(/\n+/).filter(Boolean) : [],
       image: '',
-      imageAlt: language === 'am' ? 'የቤተክርስቲያን ታሪክ' : 'Church history',
+      imageAlt: language === 'am' ? 'የቤተክርስቲያን ታሪክ' : language === 'ti' ? 'ታሪኽ ቤተ ክርስትያን' : 'Church history',
       imageLabel: '',
     },
   ];

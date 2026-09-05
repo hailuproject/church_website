@@ -9,6 +9,7 @@ import ResourceCategoryCard from './ResourceCategoryCard';
 import ResourceCard from './ResourceCard';
 import DownloadCard from './DownloadCard';
 import CTASection from './CTASection';
+import { CardSkeleton, EmptyState, ErrorState } from '../../components/common/SectionStates';
 import { resourceFilters, faqs } from '../../data/resourcesData';
 import {
   useResourceCategoriesList,
@@ -21,7 +22,8 @@ import { pickAm } from '../../lib/localize';
 
 function ResourceCategories() {
   const { t } = useTranslation();
-  const resourceCategories = useResourceCategoriesList();
+  const categoriesState = useResourceCategoriesList();
+  const resourceCategories = categoriesState.items;
   return (
     <Section id="categories" className="bg-white">
       <Container>
@@ -30,11 +32,22 @@ function ResourceCategories() {
           title={t('pages.resources.resourceCategories')}
           description={t('pages.resources.categoriesDescription')}
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {resourceCategories.map((category, i) => (
-            <ResourceCategoryCard key={category.id} category={category} index={i} />
-          ))}
-        </div>
+        {categoriesState.isLoading && !resourceCategories.length ? (
+          <CardSkeleton count={4} gridClassName="sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6" />
+        ) : categoriesState.isError ? (
+          <ErrorState onRetry={categoriesState.refetch} />
+        ) : resourceCategories.length ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {resourceCategories.map((category, i) => (
+              <ResourceCategoryCard key={category.id} category={category} index={i} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title={t('pages.resources.resourceCategories')}
+            description={t('common.noContent')}
+          />
+        )}
       </Container>
     </Section>
   );
@@ -43,8 +56,22 @@ function ResourceCategories() {
 function DigitalLibrary() {
   const { t, language } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('All');
-  const resources = useResourcesList();
-  if (!resources.length) return null;
+  const libraryState = useResourcesList();
+  const resources = libraryState.items;
+  if (libraryState.isLoading && !resources.length) {
+    return (
+      <Section id="library" className="bg-surface">
+        <Container>
+          <SectionHeader
+            subtitle={t('pages.resources.digitalCollection')}
+            title={t('pages.resources.digitalLibrary')}
+            description={t('pages.resources.libraryDescription')}
+          />
+          <CardSkeleton count={8} gridClassName="sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6" />
+        </Container>
+      </Section>
+    );
+  }
 
   const filteredResources =
     activeFilter === 'All'
@@ -65,29 +92,47 @@ function DigitalLibrary() {
           description={t('pages.resources.libraryDescription')}
         />
 
-        <div className="flex items-center gap-2 mb-10 md:mb-12 overflow-x-auto pb-2 -mx-1 px-1 md:flex-wrap md:justify-center md:overflow-visible md:mx-0 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {resourceFilters.map((filter) => (
-            <motion.button
-              key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
-              className={`px-3.5 sm:px-5 py-2 rounded-xs text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
-                activeFilter === filter.id
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-white text-muted border border-border hover:border-primary/30 hover:text-primary'
-              }`}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {language === 'am' ? filter.am : filter.en}
-            </motion.button>
-          ))}
-        </div>
+        {libraryState.isError ? (
+          <ErrorState onRetry={libraryState.refetch} />
+        ) : !resources.length ? (
+          <EmptyState
+            title={t('pages.resources.digitalLibrary')}
+            description={t('common.noContent')}
+          />
+        ) : (
+          <>
+            <div className="flex items-center gap-2 mb-10 md:mb-12 overflow-x-auto pb-2 -mx-1 px-1 md:flex-wrap md:justify-center md:overflow-visible md:mx-0 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {resourceFilters.map((filter) => (
+                <motion.button
+                  key={filter.id}
+                  onClick={() => setActiveFilter(filter.id)}
+                  className={`px-3.5 sm:px-5 py-2 rounded-xs text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
+                    activeFilter === filter.id
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-white text-muted border border-border hover:border-primary/30 hover:text-primary'
+                  }`}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {language === 'am' ? filter.am : language === 'ti' ? filter.ti : filter.en}
+                </motion.button>
+              ))}
+            </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {filteredResources.map((resource, i) => (
-            <ResourceCard key={resource.id} resource={resource} index={i} />
-          ))}
-        </div>
+            {filteredResources.length ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+                {filteredResources.map((resource, i) => (
+                  <ResourceCard key={resource.id} resource={resource} index={i} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                title={t('pages.resources.digitalLibrary')}
+                description={t('common.noContent')}
+              />
+            )}
+          </>
+        )}
       </Container>
     </Section>
   );
@@ -95,8 +140,24 @@ function DigitalLibrary() {
 
 function Downloads() {
   const { t } = useTranslation();
-  const downloads = useDownloads();
-  if (!downloads.length) return null;
+  const downloadsState = useDownloads();
+  const downloads = downloadsState.items;
+  if (downloadsState.isLoading && !downloads.length) {
+    return (
+      <Section id="downloads" className="bg-white">
+        <Container>
+          <SectionHeader
+            subtitle={t('pages.resources.freeMaterials')}
+            title={t('pages.resources.downloadsTitle')}
+            description={t('pages.resources.downloadsDescription')}
+          />
+          <CardSkeleton count={4} gridClassName="sm:grid-cols-2 gap-4" />
+        </Container>
+      </Section>
+    );
+  }
+  if (!downloadsState.isLoading && downloadsState.isError) return null;
+  if (!downloadsState.isLoading && !downloads.length) return null;
   return (
     <Section id="downloads" className="bg-white">
       <Container>

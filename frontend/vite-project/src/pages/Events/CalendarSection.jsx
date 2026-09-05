@@ -10,10 +10,12 @@ import Section from '../../components/Section';
 import { useCalendarEvents } from '../../hooks/useEventsSections';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { amLocale } from '../../lib/amLocale';
+import { tiLocale } from '../../lib/tiLocale';
 
 const locales = {
   'en-US': enUS,
   am: amLocale,
+  ti: tiLocale,
 };
 
 const localizer = dateFnsLocalizer({
@@ -26,12 +28,12 @@ const localizer = dateFnsLocalizer({
 
 export default function CalendarSection() {
   const { t, language } = useLanguage();
-  const calendarEvents = useCalendarEvents();
+  const { items: calendarEvents } = useCalendarEvents();
   const [currentView, setCurrentView] = useState(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const dateLocale = language === 'am' ? amLocale : enUS;
+  const dateLocale = language === 'am' ? amLocale : language === 'ti' ? tiLocale : enUS;
 
   const handleSelectEvent = useCallback((event) => {
     setSelectedEvent(event);
@@ -81,7 +83,7 @@ export default function CalendarSection() {
           <div className="calendar-container p-4 sm:p-6">
             <Calendar
               localizer={localizer}
-              culture={language === 'am' ? 'am' : 'en-US'}
+              culture={language === 'am' ? 'am' : language === 'ti' ? 'ti' : 'en-US'}
               events={calendarEvents}
               startAccessor="start"
               endAccessor="end"
