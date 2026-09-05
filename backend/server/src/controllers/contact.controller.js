@@ -2,11 +2,8 @@ import contactService from '../services/contact.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess, sendPagination } from '../utils/response.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 export const listMessages = asyncHandler(async (req, res) => {
   const { data, pagination } = await contactService.listMessages(req.query);

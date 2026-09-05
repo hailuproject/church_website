@@ -8,7 +8,19 @@ import { createAuditLog } from '../helpers/auditLogger.js';
 import { toCSV } from '../utils/csv.js';
 import { DONATION_STATUSES, DONATION_PAYMENT_METHODS, DONATION_CURRENCIES } from '../constants/index.js';
 import { createPaymentIntent } from './stripe.service.js';
+import { pickFields } from '../utils/pickFields.js';
 import config from '../config/index.js';
+
+const DONATION_FIELDS = [
+  'donorName',
+  'email',
+  'phone',
+  'amount',
+  'currency',
+  'campaign',
+  'paymentMethod',
+  'status',
+];
 
 class DonationService {
   async list(queryString) {
@@ -34,7 +46,7 @@ class DonationService {
     const status = data.paymentMethod === 'cash' ? 'completed' : 'pending';
 
     const donation = await Donation.create({
-      ...data,
+      ...pickFields(data, DONATION_FIELDS),
       receiptNumber,
       status,
     });
@@ -101,6 +113,19 @@ class DonationService {
       await this.completeStripeDonation(event.data.object);
     } else if (event.type === 'payment_intent.payment_failed') {
       await Donation.findOneAndUpdate({ transactionId: event.data.object.id }, { status: 'failed' });
+    } else if (event.type === 'payment_intent.canceled') {
+      await Donation.findOneAndUpdate(
+        { transactionId: event.data.object.id, status: 'pending' },
+        { status: 'failed' }
+      );
+    } else if (event.type === 'charge.refunded') {
+      const charge = event.data.object;
+      if (charge.payment_intent) {
+        await Donation.findOneAndUpdate(
+          { transactionId: charge.payment_intent, status: 'completed' },
+          { status: 'refunded' }
+        );
+      }
     }
     return true;
   }
@@ -110,15 +135,28 @@ class DonationService {
     let donation = await Donation.findOne({ transactionId });
 
     if (!donation && paymentIntent.metadata?.donationId) {
-      await Donation.findByIdAndUpdate(paymentIntent.metadata.donationId, {
-        transactionId,
-        status: 'completed',
-      });
       donation = await Donation.findById(paymentIntent.metadata.donationId);
     }
 
     if (!donation) return null;
-    if (donation.status === 'completed') return donation;
+    if (donation.status === 'completed' || donation.status === 'refunded') return donation;
+
+    const expectedMinor = Math.round(donation.amount * 100);
+    const receivedMinor = Number(paymentIntent.amount_received ?? paymentIntent.amount);
+    const receivedCurrency = (paymentIntent.currency || '').toUpperCase();
+
+    const amountMismatch =
+      Number.isFinite(receivedMinor) && receivedMinor !== expectedMinor;
+    const currencyMismatch = Boolean(receivedCurrency) && receivedCurrency !== donation.currency;
+
+    if (amountMismatch || currencyMismatch) {
+      // Permanent mismatch: the payment cannot be reconciled. Mark the
+      // donation failed and return normally so the webhook acknowledges the
+      // event (2xx) instead of throwing, which would make Stripe retry it
+      // forever.
+      await Donation.findByIdAndUpdate(donation._id, { status: 'failed' });
+      return donation;
+    }
 
     donation = await Donation.findByIdAndUpdate(donation._id, { status: 'completed' }, { returnDocument: 'after' });
     await this.sendReceipt(donation);
@@ -129,7 +167,7 @@ class DonationService {
     const existing = await Donation.findById(id);
     if (!existing) throw new AppError('Donation not found', 404);
 
-    const updated = await Donation.findByIdAndUpdate(id, data, {
+    const updated = await Donation.findByIdAndUpdate(id, pickFields(data, DONATION_FIELDS), {
       returnDocument: 'after',
       runValidators: true,
     });
@@ -226,7 +264,11 @@ class DonationService {
   async paymentHistory(email, queryString) {
     const { page, limit, skip } = parsePagination(queryString);
     const filter = { email: email.toLowerCase() };
-    const data = await Donation.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const data = await Donation.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .select('donorName amount currency campaign paymentMethod status receiptNumber createdAt isAnonymous');
     const total = await Donation.countDocuments(filter);
     return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
@@ -251,19 +293,33 @@ class DonationService {
   }
 
   async exportCSV(queryString) {
-    const { data } = await this.list({ ...queryString, limit: 1000 });
-    const rows = data.map((d) => ({
-      receiptNumber: d.receiptNumber,
-      donorName: d.donorName,
-      email: d.email,
-      phone: d.phone,
-      amount: d.amount,
-      currency: d.currency,
-      campaign: d.campaign,
-      paymentMethod: d.paymentMethod,
-      status: d.status,
-      createdAt: d.createdAt?.toISOString(),
-    }));
+    const filter = {};
+    if (queryString.status && DONATION_STATUSES.includes(queryString.status)) filter.status = queryString.status;
+    if (queryString.paymentMethod && DONATION_PAYMENT_METHODS.includes(queryString.paymentMethod)) {
+      filter.paymentMethod = queryString.paymentMethod;
+    }
+    if (queryString.campaign) filter.campaign = queryString.campaign;
+
+    const search = typeof queryString.search === 'string' && queryString.search.trim()
+      ? new RegExp(queryString.search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
+      : null;
+
+    const all = await Donation.find(filter).sort({ createdAt: -1 }).limit(10000);
+
+    const rows = all
+      .filter((d) => !search || [d.donorName, d.email, d.phone, d.campaign, d.transactionId, d.receiptNumber].some((v) => v && search.test(v)))
+      .map((d) => ({
+        receiptNumber: d.receiptNumber,
+        donorName: d.donorName,
+        email: d.email,
+        phone: d.phone,
+        amount: d.amount,
+        currency: d.currency,
+        campaign: d.campaign,
+        paymentMethod: d.paymentMethod,
+        status: d.status,
+        createdAt: d.createdAt?.toISOString(),
+      }));
     return toCSV(rows);
   }
 }

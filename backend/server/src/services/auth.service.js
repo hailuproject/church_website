@@ -6,7 +6,7 @@ import { generateTokenPair, verifyRefreshToken } from '../utils/jwt.js';
 import { generateRandomToken, hashToken } from '../utils/tokens.js';
 import { sendEmail } from '../utils/email.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
-import { CLOUDINARY_FOLDERS } from '../constants/index.js';
+import { CLOUDINARY_FOLDERS, ROLES } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
 
 const ACCESS_TOKEN_LIFETIME = config.jwt.accessExpire;
@@ -54,6 +54,11 @@ const revokeAllForAdmin = (adminId) =>
 
 class AuthService {
   async register({ name, email, phone, password, role }, creator, reqMeta) {
+    const requestedRole = role || 'Admin';
+    if (requestedRole === ROLES.SUPER_ADMIN && creator?.role !== ROLES.SUPER_ADMIN) {
+      throw new AppError('Only a Super Admin can create another Super Admin', 403);
+    }
+
     const existing = await findByEmail(email);
     if (existing) throw new AppError('An account with this email already exists', 409);
 
@@ -62,7 +67,7 @@ class AuthService {
       email,
       phone,
       password,
-      role,
+      role: requestedRole,
       createdBy: creator?._id || null,
       isVerified: true,
     });

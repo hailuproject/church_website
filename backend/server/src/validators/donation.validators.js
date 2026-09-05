@@ -9,7 +9,6 @@ import {
   numberValidator,
   booleanValidator,
   paginationValidators,
-  emailValidator,
 } from './common.validators.js';
 
 export const createDonationValidation = [
@@ -35,7 +34,7 @@ export const updateDonationValidation = [
 ];
 
 export const paymentHistoryValidation = [
-  emailValidator('email'),
+  query('email').isEmail().withMessage('email must be a valid email').normalizeEmail(),
   ...paginationValidators,
 ];
 

@@ -3,6 +3,19 @@ import AppError from '../utils/AppError.js';
 import { paginateModel } from '../utils/paginateModel.js';
 import { sendEmail } from '../utils/email.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
+import { pickFields } from '../utils/pickFields.js';
+
+const CONTACT_FIELDS = ['name', 'email', 'phone', 'subject', 'message', 'category'];
+
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const escapeAndBreak = (value) => escapeHtml(value).replace(/\n/g, '<br/>');
 
 class ContactService {
   async listMessages(queryString) {
@@ -20,14 +33,16 @@ class ContactService {
   }
 
   async submitContact(data, reqMeta) {
-    const message = await ContactMessage.create(data);
+    const message = await ContactMessage.create(pickFields(data, CONTACT_FIELDS));
 
-    await sendEmail({
-      to: data.email,
-      subject: 'We received your message',
-      template: 'contactAutoReply',
-      data: { name: data.name, subject: data.subject },
-    });
+    if (data.email) {
+      await sendEmail({
+        to: data.email,
+        subject: 'We received your message',
+        template: 'contactAutoReply',
+        data: { name: data.name, subject: data.subject },
+      });
+    }
 
     await createAuditLog({
       admin: null,
@@ -75,17 +90,23 @@ class ContactService {
     if (!message) throw new AppError('Message not found', 404);
     if (!message.email) throw new AppError('This message has no reply email', 400);
 
-    await sendEmail({
-      to: message.email,
-      subject: `Re: ${message.subject || 'Your message to the church'}`,
-      html: `<div style="font-family:Arial, sans-serif; line-height:1.6;">
-        <p>Dear <strong>${message.name}</strong>,</p>
-        <div style="border-left: 4px solid #8B6F47; padding-left: 16px; margin: 16px 0; color:#555;">
-          ${data.reply.replace(/\n/g, '<br/>')}
-        </div>
-        <p>May God bless you. እግዚአብሔር ይባርክህ።</p>
-      </div>`,
-    });
+const replyData = {
+  name: escapeHtml(message.name),
+  subject: escapeHtml(message.subject),
+  reply: escapeAndBreak(data.reply),
+};
+
+await sendEmail({
+  to: message.email,
+  subject: `Re: ${message.subject || 'Your message to the church'}`,
+  html: `<div style="font-family:Arial, sans-serif; line-height:1.6;">
+    <p>Dear <strong>${replyData.name}</strong>,</p>
+    <div style="border-left: 4px solid #8B6F47; padding-left: 16px; margin: 16px 0; color:#555;">
+      ${replyData.reply}
+    </div>
+    <p>May God bless you. እግዚአብሔር ይባርክህ።</p>
+  </div>`,
+});
 
     const updated = await ContactMessage.findByIdAndUpdate(
       id,

@@ -13,10 +13,10 @@ import {
   updateProfile,
   uploadAvatar,
 } from '../controllers/auth.controller.js';
-import { authenticate } from '../middlewares/auth.js';
+import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
 import { upload } from '../middlewares/upload.js';
-import { MEDIA_TYPES } from '../constants/index.js';
+import { MEDIA_TYPES, ROLES, PERMISSIONS } from '../constants/index.js';
 import {
   registerValidation,
   loginValidation,
@@ -30,7 +30,15 @@ import { authLimiter } from '../middlewares/rateLimiter.js';
 
 const router = Router();
 
-router.post('/register', authLimiter, authenticate, validate(registerValidation), register);
+router.post(
+  '/register',
+  authLimiter,
+  authenticate,
+  authorize(ROLES.SUPER_ADMIN),
+  hasPermission(PERMISSIONS.MANAGE_USERS),
+  validate(registerValidation),
+  register
+);
 router.post('/login', authLimiter, validate(loginValidation), login);
 router.post('/refresh', refresh);
 router.post('/logout', logout);

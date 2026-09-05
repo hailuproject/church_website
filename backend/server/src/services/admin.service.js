@@ -74,17 +74,26 @@ class AdminService {
     if (data.role === ROLES.SUPER_ADMIN && actor.role !== ROLES.SUPER_ADMIN) {
       throw new AppError('Only a Super Admin can assign the Super Admin role', 403);
     }
-    if (target.role === ROLES.SUPER_ADMIN && data.isActive === false && actor._id.toString() !== target._id.toString()) {
-      const superAdmins = await Admin.countDocuments({ role: ROLES.SUPER_ADMIN, isActive: true });
-      if (superAdmins <= 1) throw new AppError('Cannot deactivate the last active Super Admin', 400);
+    if (data.isActive !== undefined && actor.role !== ROLES.SUPER_ADMIN) {
+      throw new AppError('Only a Super Admin can activate or deactivate an account', 403);
+    }
+    if (data.password !== undefined && actor.role !== ROLES.SUPER_ADMIN) {
+      throw new AppError('Only a Super Admin can reset another user\'s password', 403);
     }
 
     const update = {};
-    if (data.name) update.name = data.name;
+    if (data.name !== undefined) update.name = data.name;
     if (data.phone !== undefined) update.phone = data.phone;
     if (data.role) update.role = data.role;
-    if (typeof data.isActive === 'boolean') update.isActive = data.isActive;
-    if (typeof data.isVerified === 'boolean') update.isVerified = data.isVerified;
+
+    if (typeof data.isActive === 'boolean') {
+      if (target.role === ROLES.SUPER_ADMIN && data.isActive === false) {
+        const superAdmins = await Admin.countDocuments({ role: ROLES.SUPER_ADMIN, isActive: true });
+        if (superAdmins <= 1) throw new AppError('Cannot deactivate the last active Super Admin', 400);
+      }
+      update.isActive = data.isActive;
+    }
+
     if (data.password) {
       if (data.password.length < 8) throw new AppError('Password must be at least 8 characters', 400);
       const salt = await bcrypt.genSalt(10);
@@ -107,7 +116,7 @@ class AdminService {
       ...reqMeta,
     });
 
-    if (typeof data.isActive === 'boolean' && data.isActive === false) {
+    if (update.isActive === false) {
       await RefreshToken.updateMany(
         { admin: id, revokedAt: null },
         { revokedAt: new Date() }

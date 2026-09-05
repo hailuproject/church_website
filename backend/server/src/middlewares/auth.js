@@ -35,6 +35,19 @@ export const authenticate = async (req, res, next) => {
   }
 };
 
+export const optionalAuthenticate = async (req, res, next) => {
+  const token = extractToken(req);
+  if (!token) return next();
+  try {
+    const decoded = verifyAccessToken(token);
+    const admin = await Admin.findById(decoded.id);
+    if (admin && admin.isActive && admin.isVerified) req.admin = admin;
+  } catch {
+    // Ignore invalid/expired tokens for optional auth — treat request as anonymous.
+  }
+  next();
+};
+
 export const authorize = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.admin) return next(new AppError('Unauthorized.', 401));
@@ -54,4 +67,4 @@ export const hasPermission = (permission) => {
   };
 };
 
-export default { authenticate, authorize, hasPermission };
+export default { authenticate, optionalAuthenticate, authorize, hasPermission };

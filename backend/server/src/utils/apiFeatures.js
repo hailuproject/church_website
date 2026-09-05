@@ -38,6 +38,10 @@ class APIFeatures {
         filter[key] = { $in: value };
       } else if (typeof value === 'string' && (value.startsWith('[') || value.startsWith('{') || value.includes(','))) {
         filter[key] = { $in: value.split(',').map((v) => v.trim()).filter(Boolean) };
+      } else if (value === 'true') {
+        filter[key] = true;
+      } else if (value === 'false') {
+        filter[key] = false;
       } else {
         filter[key] = value;
       }

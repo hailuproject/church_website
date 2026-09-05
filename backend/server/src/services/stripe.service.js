@@ -33,16 +33,6 @@ export const createPaymentIntent = async ({ amount, currency = 'usd', receiptEma
   }
 };
 
-export const retrievePaymentIntent = async (paymentIntentId) => {
-  const stripe = getStripe();
-  try {
-    return await stripe.paymentIntents.retrieve(paymentIntentId);
-  } catch (error) {
-    logger.error(`Stripe payment intent retrieval failed: ${error.message}`);
-    return null;
-  }
-};
-
 export const constructWebhookEvent = (payload, signature) => {
   const stripe = getStripe();
   if (!config.stripe.webhookSecret) {
@@ -60,6 +50,5 @@ export const constructWebhookEvent = (payload, signature) => {
 export default {
   getStripe,
   createPaymentIntent,
-  retrievePaymentIntent,
   constructWebhookEvent,
 };

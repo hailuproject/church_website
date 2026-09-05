@@ -16,7 +16,7 @@ import {
   getRecentSermons,
   getSermonCategories,
 } from '../controllers/sermon.controller.js';
-import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
+import { authenticate, authorize, hasPermission, optionalAuthenticate } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
 import { upload } from '../middlewares/upload.js';
 import { MEDIA_TYPES, ROLES, PERMISSIONS } from '../constants/index.js';
@@ -26,17 +26,17 @@ import {
   listSermonsValidation,
 } from '../validators/sermon.validators.js';
 import { objectIdValidator } from '../validators/common.validators.js';
-import { uploadLimiter } from '../middlewares/rateLimiter.js';
+import { uploadLimiter, downloadLimiter } from '../middlewares/rateLimiter.js';
 
 const router = Router();
 
-router.get('/', validate(listSermonsValidation), listSermons);
+router.get('/', optionalAuthenticate, validate(listSermonsValidation), listSermons);
 router.get('/public', validate(listSermonsValidation), listPublishedSermons);
 router.get('/featured', getFeaturedSermons);
 router.get('/recent', getRecentSermons);
 router.get('/categories', getSermonCategories);
-router.get('/:id', validate([objectIdValidator('id')]), getSermon);
-router.post('/:id/download', incrementSermonDownload);
+router.get('/:id', optionalAuthenticate, validate([objectIdValidator('id')]), getSermon);
+router.post('/:id/download', downloadLimiter, validate([objectIdValidator('id')]), incrementSermonDownload);
 
 router.use(authenticate);
 

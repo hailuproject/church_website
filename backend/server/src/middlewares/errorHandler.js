@@ -27,11 +27,6 @@ export const globalErrorHandler = (err, req, res, next) => {
     error = new AppError(`${field} already exists`, 409);
   }
 
-  if (err.name === 'MongoServerError' && err.code === 11000) {
-    const field = Object.keys(err.keyValue || {})[0] || 'field';
-    error = new AppError(`${field} already exists`, 409);
-  }
-
   if (err.type === 'entity.parse.failed') {
     error = new AppError('Invalid JSON payload', 400);
   }

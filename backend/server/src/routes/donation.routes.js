@@ -25,14 +25,21 @@ import {
   exportDonationsValidation,
 } from '../validators/donation.validators.js';
 import { objectIdValidator } from '../validators/common.validators.js';
+import { donationLimiter } from '../middlewares/rateLimiter.js';
 
 const router = Router();
 
-router.post('/', validate(createDonationValidation), createDonation);
-router.post('/payment-intent', validate(createDonationValidation), createStripePaymentIntent);
-router.get('/history', validate(paymentHistoryValidation), getPaymentHistory);
+router.post('/', donationLimiter, validate(createDonationValidation), createDonation);
+router.post('/payment-intent', donationLimiter, validate(createDonationValidation), createStripePaymentIntent);
 
 router.use(authenticate);
+
+router.get(
+  '/history',
+  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY),
+  validate(paymentHistoryValidation),
+  getPaymentHistory
+);
 
 router.get(
   '/',

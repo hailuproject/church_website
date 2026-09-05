@@ -3,6 +3,7 @@ import config from '../config/index.js';
 import AppError from '../utils/AppError.js';
 import { FILE_MIME_TYPES, MEDIA_TYPES } from '../constants/index.js';
 import { parseBracketedFields } from './parseBody.js';
+import { sanitizeBody } from '../helpers/sanitize.js';
 
 const memoryStorage = multer.memoryStorage();
 
@@ -47,6 +48,7 @@ const runMulter = (req, res, next, middleware) => {
   middleware(req, res, (err) => {
     if (err) return next(err);
     req.body = parseBracketedFields(req.body);
+    req.body = sanitizeBody(req.body);
     next();
   });
 };
@@ -60,6 +62,15 @@ export const upload = (allowedMediaTypes, { fieldName = 'file', maxCount = 10 } 
   return (req, res, next) => runMulter(req, res, next, middleware);
 };
 
+export const uploadMany = (allowedMediaTypes, { fieldName = 'file', maxCount = 10 } = {}) => {
+  const middleware = multer({
+    storage: memoryStorage,
+    limits: { fileSize: getMaxSize(allowedMediaTypes), files: maxCount },
+    fileFilter: buildFileFilter(allowedMediaTypes),
+  }).array(fieldName, maxCount);
+  return (req, res, next) => runMulter(req, res, next, middleware);
+};
+
 export const uploadMixed = (fields, allowedMediaTypes) => {
   const allowedMimes = allowedMediaTypes.flatMap((type) => FILE_MIME_TYPES[type] || []);
   const middleware = multer({
@@ -70,7 +81,20 @@ export const uploadMixed = (fields, allowedMediaTypes) => {
       else cb(new AppError(`Invalid file type "${file.mimetype}".`, 400), false);
     },
   }).fields(fields.map((field) => ({ name: field, maxCount: 1 })));
-  return (req, res, next) => runMulter(req, res, next, middleware);
+  return (req, res, next) =>
+    runMulter(req, res, next, (req2, res2, done) =>
+      middleware(req2, res2, (err) => {
+        if (err) return done(err);
+        if (req2.files) {
+          for (const key of Object.keys(req2.files)) {
+            if (Array.isArray(req2.files[key]) && req2.files[key].length === 1) {
+              req2.files[key] = req2.files[key][0];
+            }
+          }
+        }
+        done();
+      })
+    );
 };
 
-export default { upload, uploadMixed };
+export default { upload, uploadMany, uploadMixed };

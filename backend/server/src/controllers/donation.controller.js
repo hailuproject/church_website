@@ -2,12 +2,8 @@ import donationService from '../services/donation.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess, sendPagination } from '../utils/response.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-  actorId: req.admin?._id || null,
-});
 
 export const listDonations = asyncHandler(async (req, res) => {
   const { data, pagination } = await donationService.list(req.query);

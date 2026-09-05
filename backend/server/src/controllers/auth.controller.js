@@ -3,11 +3,8 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess } from '../utils/response.js';
 import { setAuthCookies, clearAuthCookies } from '../utils/cookies.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 const getRefreshTokenFromRequest = (req) => req.cookies?.church_refresh_token || null;
 

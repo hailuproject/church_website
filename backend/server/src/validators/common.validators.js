@@ -83,6 +83,14 @@ export const numberValidator = (field, { min = 0, max = null } = {}) =>
     .custom((value) => (max === null ? true : value <= max))
     .withMessage(`${field} must be at most ${max}`);
 
+// Blocks CR/LF characters that could be used for HTTP email header
+// injection when the value is interpolated into Subject/to headers.
+export const noCrLfValidator = (field) =>
+  body(field)
+    .optional({ nullable: true, checkFalsy: true })
+    .matches(/^[^\r\n]*$/)
+    .withMessage(`${field} must not contain line breaks`);
+
 export const paginationValidators = [
   query('page').optional().isInt({ min: 1 }).withMessage('page must be a positive integer'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('limit must be between 1 and 100'),
@@ -106,5 +114,6 @@ export default {
   enumValidator,
   booleanValidator,
   numberValidator,
+  noCrLfValidator,
   paginationValidators,
 };

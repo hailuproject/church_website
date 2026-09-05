@@ -1,11 +1,8 @@
 import settingService from '../services/setting.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess } from '../utils/response.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 export const getPublicSettings = asyncHandler(async (req, res) => {
   const data = await settingService.getPublic();

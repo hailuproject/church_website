@@ -2,11 +2,8 @@ import eventService from '../services/event.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess, sendPagination } from '../utils/response.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 export const listEvents = asyncHandler(async (req, res) => {
   const { data, pagination } = await eventService.list(req.query);
@@ -19,12 +16,12 @@ export const getEvent = asyncHandler(async (req, res) => {
 });
 
 export const createEvent = asyncHandler(async (req, res) => {
-  const event = await eventService.create(req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const event = await eventService.create(req.body, req.file ? { coverImage: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { statusCode: 201, message: 'Event created', data: event });
 });
 
 export const updateEvent = asyncHandler(async (req, res) => {
-  const event = await eventService.update(req.params.id, req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const event = await eventService.update(req.params.id, req.body, req.file ? { coverImage: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: 'Event updated', data: event });
 });
 

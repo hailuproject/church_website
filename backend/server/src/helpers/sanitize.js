@@ -22,6 +22,10 @@ export const sanitizeBody = (body) => {
   if (Array.isArray(body)) return body.map((item) => sanitizeBody(item));
   const sanitized = {};
   for (const [key, value] of Object.entries(body)) {
+    // Reject MongoDB operator keys ($inc, $set, $where…) and dotted-path
+    // keys ("profile.role") that could bypass field allowlists during
+    // findByIdAndUpdate-style writes.
+    if (key.startsWith('$') || key.includes('.')) continue;
     sanitized[key] = sanitizeBody(value);
   }
   return sanitized;

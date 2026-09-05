@@ -2,11 +2,8 @@ import sermonService from '../services/sermon.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess, sendPagination } from '../utils/response.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 export const listSermons = asyncHandler(async (req, res) => {
   const { data, pagination } = await sermonService.list(req.query);
@@ -24,12 +21,12 @@ export const getSermon = asyncHandler(async (req, res) => {
 });
 
 export const createSermon = asyncHandler(async (req, res) => {
-  const sermon = await sermonService.create(req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const sermon = await sermonService.create(req.body, req.file ? { thumbnail: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { statusCode: 201, message: 'Sermon created', data: sermon });
 });
 
 export const updateSermon = asyncHandler(async (req, res) => {
-  const sermon = await sermonService.update(req.params.id, req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const sermon = await sermonService.update(req.params.id, req.body, req.file ? { thumbnail: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: 'Sermon updated', data: sermon });
 });
 

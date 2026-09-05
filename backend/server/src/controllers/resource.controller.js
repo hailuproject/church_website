@@ -2,11 +2,8 @@ import resourceService from '../services/resource.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendSuccess, sendPagination } from '../utils/response.js';
 import AppError from '../utils/AppError.js';
+import { getRequestMeta } from '../utils/requestMeta.js';
 
-const getRequestMeta = (req) => ({
-  ipAddress: req.ip,
-  userAgent: req.get('user-agent') || '',
-});
 
 export const listResources = asyncHandler(async (req, res) => {
   const { data, pagination } = await resourceService.list(req.query);
@@ -19,12 +16,12 @@ export const getResource = asyncHandler(async (req, res) => {
 });
 
 export const createResource = asyncHandler(async (req, res) => {
-  const resource = await resourceService.create(req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const resource = await resourceService.create(req.body, req.file ? { thumbnail: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { statusCode: 201, message: 'Resource created', data: resource });
 });
 
 export const updateResource = asyncHandler(async (req, res) => {
-  const resource = await resourceService.update(req.params.id, req.body, req.files || {}, req.admin, getRequestMeta(req));
+  const resource = await resourceService.update(req.params.id, req.body, req.file ? { thumbnail: req.file } : {}, req.admin, getRequestMeta(req));
   sendSuccess(res, { message: 'Resource updated', data: resource });
 });
 

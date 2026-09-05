@@ -14,7 +14,6 @@ export const validate = (validations) => {
     const details = errors.array().map((error) => ({
       field: error.path || error.param,
       message: error.msg,
-      value: error.value,
     }));
 
     return next(new AppError('Validation failed', 400, details));

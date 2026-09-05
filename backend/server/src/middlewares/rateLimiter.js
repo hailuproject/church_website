@@ -24,4 +24,28 @@ export const uploadLimiter = rateLimit({
   message: { success: false, message: 'Upload limit reached. Try again later.', statusCode: 429 },
 });
 
-export default { authLimiter, apiLimiter, uploadLimiter };
+export const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many submissions. Please try again in 15 minutes.', statusCode: 429 },
+});
+
+export const donationLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many donation attempts. Please try again in 15 minutes.', statusCode: 429 },
+});
+
+export const downloadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many download requests. Try again later.', statusCode: 429 },
+});
+
+export default { authLimiter, apiLimiter, uploadLimiter, contactLimiter, donationLimiter, downloadLimiter };

@@ -1,5 +1,13 @@
 import config from '../config/index.js';
 
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+
 const baseLayout = (title, content) => `
   <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #ffffff; color: #1a1a1a; border: 1px solid #eee; border-radius: 8px;">
     <div style="text-align: center; padding-bottom: 16px; border-bottom: 2px solid #8B6F47;">
@@ -23,23 +31,23 @@ const button = (url, label) => `
 
 export const templates = {
   verification: ({ name, token }) => {
-    const url = `${config.clientUrl}/verify-email?token=${token}`;
+    const url = `${config.clientUrl}/verify-email?token=${encodeURIComponent(token)}`;
     return baseLayout(
       'Verify your email address',
-      `<p>Dear <strong>${name}</strong>,</p>
+      `<p>Dear <strong>${escapeHtml(name)}</strong>,</p>
        <p>Welcome to the Ethiopian Orthodox Tewahedo Church admin portal. Please verify your email address to activate your account.</p>
-       ${button(url, 'Verify Email')}
+       ${button(escapeHtml(url), 'Verify Email')}
        <p>This link is valid for 24 hours.</p>`
     );
   },
 
   forgotPassword: ({ name, token }) => {
-    const url = `${config.clientUrl}/reset-password?token=${token}`;
+    const url = `${config.clientUrl}/reset-password?token=${encodeURIComponent(token)}`;
     return baseLayout(
       'Reset your password',
-      `<p>Dear <strong>${name}</strong>,</p>
+      `<p>Dear <strong>${escapeHtml(name)}</strong>,</p>
        <p>We received a request to reset your password. If you did not make this request, you can safely ignore this email.</p>
-       ${button(url, 'Reset Password')}
+       ${button(escapeHtml(url), 'Reset Password')}
        <p>This link is valid for 1 hour.</p>`
     );
   },
@@ -47,12 +55,12 @@ export const templates = {
   donationReceipt: ({ name, amount, currency, reference, date }) => {
     return baseLayout(
       'Donation receipt',
-      `<p>Dear <strong>${name}</strong>,</p>
+      `<p>Dear <strong>${escapeHtml(name)}</strong>,</p>
        <p>Thank you for your generous donation to the Ethiopian Orthodox Tewahedo Church.</p>
        <table style="width:100%; border-collapse: collapse; margin: 16px 0;">
-         <tr><td style="padding:8px; border:1px solid #eee;">Amount</td><td style="padding:8px; border:1px solid #eee; font-weight:bold;">${currency} ${amount}</td></tr>
-         <tr><td style="padding:8px; border:1px solid #eee;">Reference</td><td style="padding:8px; border:1px solid #eee;">${reference}</td></tr>
-         <tr><td style="padding:8px; border:1px solid #eee;">Date</td><td style="padding:8px; border:1px solid #eee;">${date}</td></tr>
+         <tr><td style="padding:8px; border:1px solid #eee;">Amount</td><td style="padding:8px; border:1px solid #eee; font-weight:bold;">${escapeHtml(currency)} ${escapeHtml(amount)}</td></tr>
+         <tr><td style="padding:8px; border:1px solid #eee;">Reference</td><td style="padding:8px; border:1px solid #eee;">${escapeHtml(reference)}</td></tr>
+         <tr><td style="padding:8px; border:1px solid #eee;">Date</td><td style="padding:8px; border:1px solid #eee;">${escapeHtml(date)}</td></tr>
        </table>
        <p>May God bless you abundantly. እግዚአብሔር ይባርክህ።</p>`
     );
@@ -61,8 +69,8 @@ export const templates = {
   contactAutoReply: ({ name, subject }) => {
     return baseLayout(
       'We received your message',
-      `<p>Dear <strong>${name}</strong>,</p>
-       <p>Thank you for contacting the Ethiopian Orthodox Tewahedo Church regarding <strong>${subject}</strong>.</p>
+      `<p>Dear <strong>${escapeHtml(name)}</strong>,</p>
+       <p>Thank you for contacting the Ethiopian Orthodox Tewahedo Church regarding <strong>${escapeHtml(subject)}</strong>.</p>
        <p>We have received your message and our team will respond as soon as possible.</p>
        <p>May God bless you. እግዚአብሔር ይባርክህ።</p>`
     );
@@ -71,8 +79,8 @@ export const templates = {
   welcome: ({ name, email }) => {
     return baseLayout(
       'Account created',
-      `<p>Dear <strong>${name}</strong>,</p>
-       <p>An account has been created for you on the church admin portal with email <strong>${email}</strong>.</p>
+      `<p>Dear <strong>${escapeHtml(name)}</strong>,</p>
+       <p>An account has been created for you on the church admin portal with email <strong>${escapeHtml(email)}</strong>.</p>
        <p>Please use the "Forgot password" option to set your password and log in.</p>`
     );
   },

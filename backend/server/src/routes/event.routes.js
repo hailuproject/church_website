@@ -13,7 +13,7 @@ import {
   toggleEventFeatured,
   changeEventStatus,
 } from '../controllers/event.controller.js';
-import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
+import { authenticate, authorize, hasPermission, optionalAuthenticate } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
 import { upload } from '../middlewares/upload.js';
 import { MEDIA_TYPES, ROLES, PERMISSIONS } from '../constants/index.js';
@@ -27,13 +27,13 @@ import { objectIdValidator } from '../validators/common.validators.js';
 
 const router = Router();
 
-router.get('/', validate(listEventsValidation), listEvents);
+router.get('/', optionalAuthenticate, validate(listEventsValidation), listEvents);
 router.get('/upcoming', getUpcomingEvents);
 router.get('/past', getPastEvents);
 router.get('/featured', getFeaturedEvents);
 router.get('/calendar', getEventCalendar);
 router.get('/liturgical-calendar', getLiturgicalCalendar);
-router.get('/:id', validate([objectIdValidator('id')]), getEvent);
+router.get('/:id', optionalAuthenticate, validate([objectIdValidator('id')]), getEvent);
 
 router.use(authenticate);
 

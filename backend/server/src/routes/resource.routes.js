@@ -10,7 +10,7 @@ import {
   uploadResourcePdf,
   uploadResourceThumbnail,
 } from '../controllers/resource.controller.js';
-import { authenticate, authorize, hasPermission } from '../middlewares/auth.js';
+import { authenticate, authorize, hasPermission, optionalAuthenticate } from '../middlewares/auth.js';
 import validate from '../middlewares/validate.js';
 import { upload } from '../middlewares/upload.js';
 import { MEDIA_TYPES, ROLES, PERMISSIONS } from '../constants/index.js';
@@ -20,14 +20,14 @@ import {
   listResourcesValidation,
 } from '../validators/resource.validators.js';
 import { objectIdValidator } from '../validators/common.validators.js';
-import { uploadLimiter } from '../middlewares/rateLimiter.js';
+import { uploadLimiter, downloadLimiter } from '../middlewares/rateLimiter.js';
 
 const router = Router();
 
-router.get('/', validate(listResourcesValidation), listResources);
+router.get('/', optionalAuthenticate, validate(listResourcesValidation), listResources);
 router.get('/categories', getResourceCategories);
-router.get('/:id', validate([objectIdValidator('id')]), getResource);
-router.post('/:id/download', incrementResourceDownload);
+router.get('/:id', optionalAuthenticate, validate([objectIdValidator('id')]), getResource);
+router.post('/:id/download', downloadLimiter, validate([objectIdValidator('id')]), incrementResourceDownload);
 
 router.use(authenticate);
 

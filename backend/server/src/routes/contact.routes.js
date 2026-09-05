@@ -17,10 +17,11 @@ import {
   listMessagesValidation,
 } from '../validators/contact.validators.js';
 import { objectIdValidator } from '../validators/common.validators.js';
+import { contactLimiter } from '../middlewares/rateLimiter.js';
 
 const router = Router();
 
-router.post('/', validate(submitContactValidation), submitContactForm);
+router.post('/', contactLimiter, validate(submitContactValidation), submitContactForm);
 
 router.use(authenticate);
 
@@ -32,7 +33,7 @@ router.get(
   listMessages
 );
 
-router.get(
+router.patch(
   '/inbox/read-all',
   authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SECRETARY),
   hasPermission(PERMISSIONS.MANAGE_CONTACT),
