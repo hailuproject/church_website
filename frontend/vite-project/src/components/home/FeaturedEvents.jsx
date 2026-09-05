@@ -5,7 +5,8 @@ import Container from '../Container';
 import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
-import { useFeaturedEvents } from '../../hooks/useHomeSections';
+import { CardSkeleton, EmptyState, ErrorState } from '../common/SectionStates';
+import { useFeaturedEventsState } from '../../hooks/useHomeSections';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 const EventCard = memo(function EventCard({ event, index }) {
@@ -65,8 +66,8 @@ const EventCard = memo(function EventCard({ event, index }) {
 
 export default function FeaturedEvents() {
   const { t } = useTranslation();
-  const featuredEvents = useFeaturedEvents();
-  if (!featuredEvents?.length) return null;
+  const { items: featuredEvents, isLoading, isError, isEmpty, refetch } = useFeaturedEventsState();
+
   return (
     <Section id="events" className="bg-white">
       <Container>
@@ -75,16 +76,29 @@ export default function FeaturedEvents() {
           title={t('pages.home.upcomingEvents')}
           description={t('pages.home.eventsDescription')}
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredEvents.map((event, i) => (
-            <EventCard key={event.id} event={event} index={i} />
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Button href="/events" variant="outline-dark">
-            {t('common.viewFullCalendar')}
-          </Button>
-        </div>
+        {isLoading && !featuredEvents.length ? (
+          <CardSkeleton count={3} />
+        ) : isError ? (
+          <ErrorState onRetry={refetch} />
+        ) : isEmpty || !featuredEvents.length ? (
+          <EmptyState
+            title={t('pages.home.upcomingEvents')}
+            description={t('common.noContent')}
+          />
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredEvents.map((event, i) => (
+                <EventCard key={event.id} event={event} index={i} />
+              ))}
+            </div>
+            <div className="text-center mt-12">
+              <Button href="/events" variant="outline-dark">
+                {t('common.viewFullCalendar')}
+              </Button>
+            </div>
+          </>
+        )}
       </Container>
     </Section>
   );

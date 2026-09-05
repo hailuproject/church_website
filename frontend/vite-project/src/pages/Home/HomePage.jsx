@@ -1,7 +1,9 @@
 import HeroSlider from '../../components/home/HeroSlider';
+import WelcomeIntro from '../../components/home/WelcomeIntro';
 import FeaturedEvents from '../../components/home/FeaturedEvents';
 import FeaturedSermons from '../../components/home/FeaturedSermons';
 import GalleryPreview from '../../components/home/GalleryPreview';
+import PrayerRequestSection from '../../components/home/PrayerRequestSection';
 import ChurchInformation from '../../components/home/ChurchInformation';
 import CTASection from '../../components/home/CTASection';
 import { useHomeFlags } from '../../hooks/useHomeSections';
@@ -17,9 +19,11 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <HeroSlider />
-      {showUpcomingEvents && <FeaturedEvents />}
+      <WelcomeIntro />
       {showLatestSermons && <FeaturedSermons />}
+      {showUpcomingEvents && <FeaturedEvents />}
       {showGalleryPreview && <GalleryPreview />}
+      <PrayerRequestSection />
       <ChurchInformation />
       <CTASection />
     </main>

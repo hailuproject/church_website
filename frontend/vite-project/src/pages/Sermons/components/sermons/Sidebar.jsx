@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
   FiCalendar,
   FiClock,
@@ -9,6 +10,8 @@ import {
 } from 'react-icons/fi';
 import { sidebarContent } from '../../../../data/sermonsData';
 import { useTranslation } from '../../../../i18n/LanguageContext';
+
+const MotionLink = motion(Link);
 
 function SectionHeading({ icon: Icon, title }) {
   return (
@@ -49,13 +52,13 @@ function UpcomingServices() {
           </div>
         ))}
       </div>
-      <a
-        href="/contact#schedule"
+      <Link
+        to="/contact#schedule"
         className="flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:text-primary-dark mt-4 pt-3 border-t border-border transition-colors"
       >
         {t('pages.sermons.fullSchedule')}
         <FiArrowRight />
-      </a>
+      </Link>
     </div>
   );
 }
@@ -94,15 +97,15 @@ function PopularSermons() {
 function PrayerRequestButton() {
   const { t } = useTranslation();
   return (
-    <motion.a
-      href="/contact#form"
+    <MotionLink
+      to="/contact#form"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className="flex items-center justify-center gap-2.5 bg-primary/5 border border-primary/20 text-primary font-semibold text-sm px-6 py-4 rounded-xs hover:bg-primary hover:text-white transition-all duration-300"
     >
       <FiHeart className="text-lg" />
       {t('pages.sermons.prayerRequest')}
-    </motion.a>
+    </MotionLink>
   );
 }
 

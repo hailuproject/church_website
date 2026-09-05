@@ -1,13 +1,23 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
+const MotionLink = motion(Link);
+
+const hoverProps = { whileHover: { scale: 1.03 }, whileTap: { scale: 0.97 } };
 
 export default function Button({
   children,
   href,
   variant = 'primary',
   size = 'md',
+  type = 'button',
+  disabled = false,
   onClick,
   className = '',
   ariaLabel,
+  target,
+  rel,
+  ...rest
 }) {
   const base =
     'inline-flex items-center justify-center gap-2.5 rounded-xs font-medium transition-all duration-300 cursor-pointer';
@@ -25,17 +35,36 @@ export default function Button({
     lg: 'px-9 py-4 text-lg',
   };
 
-  const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+  const classes =
+    `${base} ${variants[variant]} ${sizes[size]} ${className}` +
+    (disabled ? ' opacity-50 pointer-events-none cursor-not-allowed' : '');
+
+  const isInternal = Boolean(href && href.startsWith('/') && !href.startsWith('//') && !href.startsWith('#'));
+
+  const commonProps = {
+    onClick,
+    'aria-label': ariaLabel,
+    ...rest,
+  };
+
+  if (href && isInternal) {
+    return (
+      <MotionLink to={href} className={classes} aria-disabled={disabled} {...commonProps} {...hoverProps}>
+        {children}
+      </MotionLink>
+    );
+  }
 
   if (href) {
     return (
       <motion.a
         href={href}
-        onClick={onClick}
         className={classes}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        aria-label={ariaLabel}
+        target={target}
+        rel={rel}
+        aria-disabled={disabled}
+        {...commonProps}
+        {...hoverProps}
       >
         {children}
       </motion.a>
@@ -44,11 +73,11 @@ export default function Button({
 
   return (
     <motion.button
-      onClick={onClick}
+      type={type}
+      disabled={disabled}
       className={classes}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
-      aria-label={ariaLabel}
+      {...commonProps}
+      {...hoverProps}
     >
       {children}
     </motion.button>

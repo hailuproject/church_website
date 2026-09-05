@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fi';
 import { donationTypes, frequencyOptions, trustFeatures } from '../../data/donationData';
 import { publicService } from '../../services/publicService';
+import { getErrorMessage } from '../../lib/apiHelpers';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 const trustIcons = {
@@ -113,8 +114,8 @@ export default function DonationForm() {
     try {
       const intent = await publicService.createDonationPaymentIntent({
         donorName: data.donorName,
-        email: data.email,
-        phone: data.phone || undefined,
+        email: data.donorEmail,
+        phone: data.donorPhone || undefined,
         amount: Number(customAmount),
         currency: 'USD',
         campaign:
@@ -126,11 +127,11 @@ export default function DonationForm() {
       setPayment(intent);
       setDonorData({
         donorName: data.donorName,
-        donorEmail: data.email,
-        donorPhone: data.phone,
+        donorEmail: data.donorEmail,
+        donorPhone: data.donorPhone,
       });
     } catch (error) {
-      setSubmitError(error?.message || t('pages.donate.submitError'));
+      setSubmitError(getErrorMessage(error, t('pages.donate.submitError')));
     }
   };
 

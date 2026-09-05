@@ -21,6 +21,7 @@ const iconMap = {
 
 export default function ServiceTimeline() {
   const { t } = useTranslation();
+  if (!weeklyServices.length) return null;
   return (
     <Section id="schedule" className="bg-surface">
       <Container>

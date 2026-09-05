@@ -47,10 +47,16 @@ const mapResource = (resource, language) => {
 };
 
 function useMappedResources(params) {
-  const { data } = useResources(params);
-  const items = data?.items || [];
+  const query = useResources(params);
+  const items = query.data?.items || [];
   const { language } = useLanguage();
-  return items.map((resource) => mapResource(resource, language));
+  return {
+    items: items.map((resource) => mapResource(resource, language)),
+    isLoading: query.isLoading || query.isFetching,
+    isError: query.isError,
+    isEmpty: query.isSuccess && !(query.data?.items || []).length,
+    refetch: query.refetch,
+  };
 }
 
 export function useResourcesList() {
@@ -58,48 +64,89 @@ export function useResourcesList() {
 }
 
 export function useDownloads() {
-  return useMappedResources({ limit: 20 }).filter((r) =>
-    DOWNLOAD_CATEGORIES.includes(r.category)
-  );
+  const { items, ...rest } = useMappedResources({ limit: 20 });
+  return {
+    items: items.filter((r) => DOWNLOAD_CATEGORIES.includes(r.category)),
+    ...rest,
+  };
 }
 
 export function useLiturgicalResources() {
-  return useMappedResources({ limit: 20 }).filter((r) =>
-    LITURGICAL_CATEGORIES.includes(r.category)
-  );
+  const { items, ...rest } = useMappedResources({ limit: 20 });
+  return {
+    items: items.filter((r) => LITURGICAL_CATEGORIES.includes(r.category)),
+    ...rest,
+  };
 }
 
 export function useFeaturedResource() {
   const { language } = useLanguage();
-  const { data } = useResources({ limit: 1 });
-  const items = data?.items || [];
-  if (!items.length) return null;
+  const query = useResources({ limit: 1 });
+  const items = query.data?.items || [];
+  if (!items.length) {
+    return {
+      resource: null,
+      isLoading: query.isLoading,
+      isError: query.isError,
+      isEmpty: query.isSuccess && !items.length,
+      refetch: query.refetch,
+    };
+  }
   const resource = items[0];
   const title = pickAm(resource, 'title', language);
   return {
-    id: resource._id,
-    title,
-    description: pickAm(resource, 'description', language),
-    image: mediaUrl(resource.thumbnail) || '',
-    imageAlt: title,
-    category: resource.category || 'Resource',
-    language: resource.language || 'English',
-    downloads: resource.downloads || 0,
-    pages: 0,
-    author: '',
-    updatedDate: resource.updatedAt || resource.createdAt || '',
-    fileUrl: mediaUrl(resource.file),
+    resource: {
+      id: resource._id,
+      title,
+      description: pickAm(resource, 'description', language),
+      image: mediaUrl(resource.thumbnail) || '',
+      imageAlt: title,
+      category: resource.category || 'Resource',
+      language: resource.language || 'English',
+      downloads: resource.downloads || 0,
+      pages: 0,
+      author: '',
+      updatedDate: resource.updatedAt || resource.createdAt || '',
+      fileUrl: mediaUrl(resource.file),
+    },
+    isLoading: query.isLoading,
+    isError: query.isError,
+    isEmpty: false,
+    refetch: query.refetch,
   };
 }
 
+const RESOURCE_CATEGORY_ICONS = {
+  Books: 'bible',
+  Prayer: 'prayer',
+  Prayers: 'prayer',
+  Liturgy: 'liturgy',
+  Hymns: 'liturgy',
+  Music: 'liturgy',
+  Scripture: 'bible',
+  Scriptures: 'bible',
+  Theology: 'theology',
+  'Bible Study': 'study',
+  Study: 'study',
+  Fasting: 'fasting',
+  Saints: 'saints',
+  Downloads: 'downloads',
+};
+
 export function useResourceCategoriesList() {
-  const { data } = useResourceCategories();
-  if (!Array.isArray(data) || !data.length) return [];
-  return data.map((cat) => ({
-    id: cat._id,
-    icon: 'book',
-    title: cat._id,
-    description: '',
-    count: cat.count || 0,
-  }));
+  const query = useResourceCategories();
+  const data = query.data;
+  return {
+    items: (Array.isArray(data) ? data : []).map((cat) => ({
+      id: cat._id,
+      icon: RESOURCE_CATEGORY_ICONS[cat._id] || 'bible',
+      title: cat._id,
+      description: '',
+      count: cat.count || 0,
+    })),
+    isLoading: query.isLoading || query.isFetching,
+    isError: query.isError,
+    isEmpty: query.isSuccess && !(Array.isArray(data) && data.length),
+    refetch: query.refetch,
+  };
 }

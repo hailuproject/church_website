@@ -8,6 +8,7 @@
   "nav": {
     "home": "ቤት",
     "about": "ስለ እኛ",
+    "visit": "ጉብኝትዎን ያቅዱ",
     "sermons": "ስብከቶች",
     "events": "ዝግጅቶች",
     "resources": "ሀብቶች",
@@ -17,7 +18,8 @@
     "adminLogin": "የአስተዳዳሪ መግቢያ",
     "mainNav": "ዋና አሰሳ",
     "mobileNav": "የሞባይል አሰሳ",
-    "openMenu": "ምናሌ ክፈት"
+    "openMenu": "ምናሌ ክፈት",
+    "give": "ለግሱ"
   },
   "footer": {
     "quickLinks": "ፈጣን አገናኞች",
@@ -72,7 +74,8 @@
     "today": "ዛሬ",
     "visit": "ይጎብኙ",
     "getDirections": "አቅጣጫ ያግኙ",
-    "openInGoogleMaps": "በጉግል ካርታ ይክፈቱ"
+    "openInGoogleMaps": "በጉግል ካርታ ይክፈቱ",
+    "noContent": "እስካሁን ይዘት የለም።"
   },
   "pages": {
     "home": {
@@ -89,7 +92,21 @@
       "galleryDescription": "የአምልኮታችን፣ የማህበረሰባችን እና የቅዱስ ትውፊታችን ውበት ቅጽበተ ምስል።",
       "churchInformation": "የቤተክርስቲያን መረጃ",
       "churchInformationDescription": "ያግኙን እና ከማህበረሰባችን ጋር ይገናኙ።",
-      "serviceTimes": "የአገልግሎት ሰዓቶች"
+      "serviceTimes": "የአገልግሎት ሰዓቶች",
+      "planVisitHint": "በየቀኑ ለጸሎት፣ ለአምልኮ እና ለኅብረት ክፍት ነን — ሁሉም እንኳን ደህና መጡ።",
+      "prayerEyebrow": "ከእኛ ጋር ይጸልዩ",
+      "prayerTitle": "የጸሎት ጥያቄ ያጋሩ",
+      "prayerDescription": "ካህናቱ እና የጸሎት አጋሮቻችን ከእርስዎ ጋር ለመጸለይ የተከበሩ ናቸው። ጥያቄዎን ያጋሩ፤ በጸሎት እንይዝዎታለን።",
+      "prayerVerse": "«የምትለምኑትንም ሁሉ እንደ ተቀበላችሁ እመኑ፥ ይሆንላችሁም።»",
+      "prayerVerseCitation": "ማርቆስ 11፡24",
+      "prayerName": "ስምዎ",
+      "prayerEmail": "ኢሜይል (አማራጭ)",
+      "prayerRequest": "የጸሎት ጥያቄ",
+      "prayerRequestPlaceholder": "የጸሎት ጥያቄዎን ይጻፉ…",
+      "prayerSubmit": "የጸሎት ጥያቄ ይላኩ",
+      "prayerSentTitle": "የጸሎት ጥያቄ ተቀብለናል",
+      "prayerSentDescription": "ስለመጋራትዎ እናመሰግናለን። ማህበረሰባችን በጸሎት ይይዝዎታል። እግዚአብሔር ይባርክዎ።",
+      "prayerError": "ጥያቄዎን መላክ አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
     },
     "about": {
       "title": "ስለ ቤተክርስቲያናችን",
@@ -188,6 +205,10 @@
       "minutes": "ደቂቃ",
       "registerNow": "አሁን ይመዝገቡ",
       "viewDetails": "ዝርዝር ይመልከቱ",
+      "ctaEyebrow": "ከእኛ ጋር ይመልኩ",
+      "ctaTitle": "በመጪው ስብሰባችን ይቀላቀሉን",
+      "ctaDescription": "እያንዳንዱ ጉብኝት በረከት ነው። ለአምልኮ፣ ለኅብረት እና ለማህበረሰብ ሊቀበሉዎት እንጓጓለን።",
+      "visitUs": "ቤተክርስቲያንን ይጎብኙ",
       "view": {
         "month": "ወር",
         "week": "ሳምንት",
@@ -362,6 +383,33 @@
       "payNow": "አሁን ይክፈሉ",
       "cardInformation": "የካርድ መረጃ",
       "goBack": "ተመለስ"
+    },
+    "visit": {
+      "title": "ጉብኝትዎን ያቅዱ",
+      "subtitle": "ወደ ኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያናችን ልንቀበልዎ እንደተመኘን እንኳን ደህና መጡ! ከመምጣትዎ በፊት ማወቅ የሚገባዎትን ሁሉ እዚህ ያገኛሉ።",
+      "whatToExpectEyebrow": "የመጀመሪያ ጉብኝትዎ",
+      "whatToExpectTitle": "ምን ይጠብቃሉ",
+      "locationTitle": "እኛን ያግኙ",
+      "locationEyebrow": "ቦታችን",
+      "mapTitle": "የቤተ ክርስቲያን ቦታ ካርታ",
+      "durationTitle": "የአገልግሎት ጊዜ",
+      "durationDescription": "የእሁድ ቅዳሴ ብዙውን ጊዜ ከ2–3 ሰዓት ይቆያል፣ ዝማሬ፣ ንባብ እና ቅርባንን ጨምሮ።",
+      "worshipTitle": "ቅዱስ አምልኮ",
+      "worshipDescription": "አምልኮአችን በኢትዮጵያ ኦርቶዶክስ ትውፊት በዕጣን፣ በዝማሬ እና በቅዱስ መዝሙር የተሞላ ነው።",
+      "communityTitle": "እንኳን ደህና መጡ",
+      "communityDescription": "ማህበረሰባችን የተለያየ ነው። አቀባበል የሚያደርጉ ሰዎች ቦታዎን እንዲያገኙ ለመርዳት ዝግጁ ናቸው።",
+      "greetingTitle": "መድረስና አቀባበል",
+      "greetingDescription": "ሲደርሱ በሞቅ ያለ አቀባበል ይቀበሉዎታል። በፈለጉት ቦታ ተቀመጡ።",
+      "languageTitle": "ቋንቋ",
+      "languageDescription": "አገልግሎቱ በአማርኛ እና በግዕዝ ይካሄዳል፣ በእንግሊዝኛ ትርጉምም እንዲሁ ይገኛል።",
+      "welcomeTitle": "ሁሉም እንኳን ደህና መጡ",
+      "welcomeDescription": "ማንኛውም ሰው በእምነቱም ሆነ በጀቦቱ አይለይም፣ ከእኛ ጋር ለማምለክ እንኳን ደህና መጡ!",
+      "contactChurch": "ቤተክርስቲያንን ያነጋግሩ",
+      "ctaEyebrow": "ልንገናኝዎ እንጓጓለን",
+      "ctaTitle": "በአምልኮ ይቀላቀሉ",
+      "ctaDescription": "በአንድ ጊዜ ለመጠየቅም ሆነ መንፈሳዊ መኖሪያ ለማግኘት፣ ከማህበረሰባችን ጋር ለማምለክ ተጋብዘዋል።",
+      "ctaContact": "ያነጋግሩን",
+      "ctaCall": "ይደውሉልን"
     }
   },
   "forms": {

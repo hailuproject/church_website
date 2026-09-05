@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { FiMapPin, FiPhone, FiMail, FiArrowRight } from 'react-icons/fi';
 import { FiFacebook, FiYoutube, FiSend, FiInstagram, FiTwitter } from 'react-icons/fi';
 import { footerQuickLinks, footerServices } from '../../data/navigation';
@@ -16,9 +17,18 @@ const socialIcons = {
   tiktok: null,
 };
 
+const socialNames = {
+  facebook: 'Facebook',
+  twitter: 'Twitter',
+  youtube: 'YouTube',
+  telegram: 'Telegram',
+  instagram: 'Instagram',
+};
+
 const quickLinkKeys = {
   Home: 'nav.home',
   About: 'nav.about',
+  Visit: 'nav.visit',
   Events: 'nav.events',
   Sermons: 'nav.sermons',
   Resources: 'nav.resources',
@@ -126,7 +136,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 flex items-center justify-center rounded-xs bg-white/5 hover:bg-primary/20 text-gray-400 hover:text-primary transition-all duration-300"
-                    aria-label={link.key}
+                    aria-label={`${t('footer.followUs')} ${socialNames[link.key] || link.key}`}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -145,13 +155,13 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerQuickLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-sm text-gray-400 hover:text-secondary transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-2 h-px bg-secondary transition-all duration-200" />
                     {t(quickLinkKeys[link.label] || link.label)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -165,13 +175,13 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerServices.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-sm text-gray-400 hover:text-secondary transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-0 group-hover:w-2 h-px bg-secondary transition-all duration-200" />
                     {t(serviceKeys[link.label] || link.label)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -276,9 +286,9 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-5">
             <span className="text-gray-600" aria-hidden="true">|</span>
-            <a href="/admin/login" className="text-sm text-gray-500 hover:text-secondary transition-colors duration-200">
+            <Link to="/admin/login" className="text-sm text-gray-500 hover:text-secondary transition-colors duration-200">
               {t('nav.adminLogin')}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { FiCalendar, FiImage } from 'react-icons/fi';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function AlbumCard({ album, index }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       className="group bg-white rounded-xs overflow-hidden border border-border hover:border-primary/20 transition-all duration-500 hover:shadow-lg"
@@ -28,7 +30,7 @@ export default function AlbumCard({ album, index }) {
         </div>
         <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-xs flex items-center gap-1.5">
           <FiImage className="w-3.5 h-3.5" />
-          {album.photoCount} photos
+          {album.photoCount} {t('pages.gallery.photos')}
         </div>
       </div>
 

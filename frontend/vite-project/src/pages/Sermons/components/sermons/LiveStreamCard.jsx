@@ -1,10 +1,11 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, Suspense, lazy } from "react";
 import { motion } from "framer-motion";
 import { FiPlay, FiCalendar, FiClock } from "react-icons/fi";
-import ReactPlayer from "react-player";
 import Button from "../../../../components/Button";
 import { useLiveStream } from "../../../../hooks/useSermonsSections";
 import { useTranslation } from "../../../../i18n/LanguageContext";
+
+const ReactPlayer = lazy(() => import("react-player"));
 
 function CountdownTimer({ targetDate }) {
   const { t } = useTranslation();
@@ -80,14 +81,22 @@ const LiveStreamCard = memo(function LiveStreamCard() {
         >
           <div className="relative bg-stone-900 aspect-video lg:aspect-auto">
             {stream.isLive && isPlaying ? (
-              <ReactPlayer
-                url={stream.videoUrl}
-                width="100%"
-                height="100%"
-                playing
-                controls
-                style={{ position: "absolute", top: 0, left: 0 }}
-              />
+              <Suspense
+                fallback={
+                  <div className="w-full h-full min-h-[280px] flex items-center justify-center bg-stone-900">
+                    <FiPlay className="text-2xl text-white/50 animate-pulse" />
+                  </div>
+                }
+              >
+                <ReactPlayer
+                  url={stream.videoUrl}
+                  width="100%"
+                  height="100%"
+                  playing
+                  controls
+                  style={{ position: "absolute", top: 0, left: 0 }}
+                />
+              </Suspense>
             ) : (
               <div className="w-full h-full min-h-[280px] flex items-center justify-center relative">
                 <div className="absolute inset-0 bg-linear-to-br from-stone-900 via-primary-dark to-stone-900" />

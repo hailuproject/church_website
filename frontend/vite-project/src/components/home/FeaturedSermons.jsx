@@ -5,7 +5,8 @@ import Container from '../Container';
 import Section from '../Section';
 import SectionHeader from '../SectionHeader';
 import Button from '../Button';
-import { useFeaturedSermons } from '../../hooks/useHomeSections';
+import { CardSkeleton, EmptyState, ErrorState } from '../common/SectionStates';
+import { useFeaturedSermonsState } from '../../hooks/useHomeSections';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 const SermonCard = memo(function SermonCard({ sermon, index }) {
@@ -64,8 +65,8 @@ const SermonCard = memo(function SermonCard({ sermon, index }) {
 
 export default function FeaturedSermons() {
   const { t } = useTranslation();
-  const featuredSermons = useFeaturedSermons();
-  if (!featuredSermons?.length) return null;
+  const { items: featuredSermons, isLoading, isError, isEmpty, refetch } = useFeaturedSermonsState();
+
   return (
     <Section id="sermons" className="bg-surface">
       <Container>
@@ -74,16 +75,29 @@ export default function FeaturedSermons() {
           title={t('pages.home.featuredSermons')}
           description={t('pages.home.featuredSermonsDescription')}
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredSermons.map((sermon, i) => (
-            <SermonCard key={sermon.id} sermon={sermon} index={i} />
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Button href="/sermons" variant="outline-dark">
-            {t('common.viewAllSermons')}
-          </Button>
-        </div>
+        {isLoading && !featuredSermons.length ? (
+          <CardSkeleton count={3} />
+        ) : isError ? (
+          <ErrorState onRetry={refetch} />
+        ) : isEmpty || !featuredSermons.length ? (
+          <EmptyState
+            title={t('pages.home.featuredSermons')}
+            description={t('common.noContent')}
+          />
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredSermons.map((sermon, i) => (
+                <SermonCard key={sermon.id} sermon={sermon} index={i} />
+              ))}
+            </div>
+            <div className="text-center mt-12">
+              <Button href="/sermons" variant="outline-dark">
+                {t('common.viewAllSermons')}
+              </Button>
+            </div>
+          </>
+        )}
       </Container>
     </Section>
   );

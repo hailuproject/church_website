@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FiClock, FiMapPin } from 'react-icons/fi';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { localeTag } from '../../lib/localize';
+import { withFallback } from '../../lib/images';
 
 const EventCard = memo(function EventCard({ event, delay = 0 }) {
   const { language } = useLanguage();
@@ -21,7 +22,7 @@ const EventCard = memo(function EventCard({ event, delay = 0 }) {
     >
       <div className="relative overflow-hidden aspect-[3/2]">
         <img
-          src={event.image}
+          src={withFallback(event.image)}
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"

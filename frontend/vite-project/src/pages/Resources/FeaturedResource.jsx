@@ -10,8 +10,10 @@ import { useTranslation } from '../../i18n/LanguageContext';
 export default function FeaturedResource() {
   const { t } = useTranslation();
   const incrementDownload = useResourceDownload();
-  const featuredResource = useFeaturedResource();
-  if (!featuredResource) return null;
+  const { resource: featuredResource, isLoading, isError, isEmpty } = useFeaturedResource();
+  if (isLoading && !featuredResource) return null;
+  if (isError) return null;
+  if (isEmpty || !featuredResource) return null;
   return (
     <Section id="featured" className="bg-surface">
       <Container>

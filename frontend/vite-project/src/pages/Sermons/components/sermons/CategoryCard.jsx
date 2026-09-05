@@ -23,7 +23,7 @@ const CategoryCard = memo(function CategoryCard({ category, delay = 0 }) {
 
   return (
     <motion.a
-      href={`#${category.id}`}
+      href="#sermons"
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}

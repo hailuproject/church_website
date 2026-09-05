@@ -10,6 +10,7 @@ import ServiceTimeline from './ServiceTimeline';
 import MinistryCard from './MinistryCard';
 import CategoryCard from './CategoryCard';
 import CTASection from './CTASection';
+import { CardSkeleton, EmptyState, ErrorState } from '../../components/common/SectionStates';
 import { feastDays, ministries, categories } from '../../data/eventsData';
 import { useUpcomingEventsList } from '../../hooks/useEventsSections';
 import { useSeo } from '../../hooks/useSeo';
@@ -17,7 +18,8 @@ import { useTranslation } from '../../i18n/LanguageContext';
 
 function UpcomingEvents() {
   const { t } = useTranslation();
-  const events = useUpcomingEventsList();
+  const eventsState = useUpcomingEventsList();
+  const events = eventsState.items;
   return (
     <Section id="upcoming" className="bg-surface">
       <Container>
@@ -26,11 +28,22 @@ function UpcomingEvents() {
           title={t('pages.events.eventsAndGatherings')}
           description={t('pages.events.eventsDescription')}
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event, i) => (
-            <EventCard key={event.id} event={event} delay={i * 0.1} />
-          ))}
-        </div>
+        {eventsState.isLoading && !events.length ? (
+          <CardSkeleton count={6} />
+        ) : eventsState.isError ? (
+          <ErrorState onRetry={eventsState.refetch} />
+        ) : events.length ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {events.map((event, i) => (
+              <EventCard key={event.id} event={event} delay={i * 0.1} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title={t('pages.events.eventsAndGatherings')}
+            description={t('common.noContent')}
+          />
+        )}
       </Container>
     </Section>
   );
@@ -79,8 +92,9 @@ function ChurchMinistries() {
 
 function EventCategories() {
   const { t } = useTranslation();
-  const events = useUpcomingEventsList();
-  if (!events.length) return null;
+  const eventsState = useUpcomingEventsList();
+  if (eventsState.isLoading && !eventsState.items.length) return null;
+  if (eventsState.isError || eventsState.isEmpty || !eventsState.items.length) return null;
   return (
     <Section id="categories" className="bg-white">
       <Container>

@@ -5,6 +5,7 @@ import { useTranslation } from '../../i18n/LanguageContext';
 const linkKeys = {
   Home: 'nav.home',
   About: 'nav.about',
+  Visit: 'nav.visit',
   Sermons: 'nav.sermons',
   Events: 'nav.events',
   Resources: 'nav.resources',

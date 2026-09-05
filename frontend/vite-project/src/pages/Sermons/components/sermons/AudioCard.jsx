@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   FiHeadphones,
@@ -11,7 +11,24 @@ import { useTranslation } from '../../../../i18n/LanguageContext';
 
 const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
   const { t } = useTranslation();
+  const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const togglePlayback = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (el.paused) {
+      el.play();
+    } else {
+      el.pause();
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    const el = audioRef.current;
+    if (el && el.duration) setProgress((el.currentTime / el.duration) * 100);
+  };
 
   return (
     <motion.div
@@ -21,9 +38,22 @@ const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       className="group bg-white rounded-xs border border-border p-5 hover:shadow-md hover:shadow-black/5 transition-all duration-500"
     >
+      <audio
+        ref={audioRef}
+        src={audio.audioUrl}
+        preload="none"
+        className="hidden"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
+        onTimeUpdate={handleTimeUpdate}
+        aria-label={t('pages.sermons.listenTo', { title: audio.title })}
+      />
+
       <div className="flex items-start gap-4">
         <button
-          onClick={() => setIsPlaying(!isPlaying)}
+          type="button"
+          onClick={togglePlayback}
           className="shrink-0 w-11 h-11 bg-primary/10 rounded-xs flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300"
           aria-label={isPlaying ? t('pages.sermons.pauseAudio', { title: audio.title }) : t('pages.sermons.playAudio', { title: audio.title })}
         >
@@ -54,23 +84,29 @@ const AudioCard = memo(function AudioCard({ audio, delay = 0 }) {
               className="mt-3"
             >
               <div className="w-full h-1 bg-border rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-primary rounded-full"
-                  animate={{ width: ['0%', '100%'] }}
-                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                <div
+                  className="h-full bg-primary rounded-full transition-[width] duration-300"
+                  style={{ width: `${progress}%` }}
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(progress)}
+                  aria-label={t('pages.sermons.listenTo', { title: audio.title })}
                 />
               </div>
             </motion.div>
           )}
 
           <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border">
-            <button
+            <a
+              href={audio.audioUrl}
+              download
               className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-text transition-colors"
               aria-label={t('pages.resources.downloadItem', { title: audio.title })}
             >
               <FiDownload className="text-xs" />
               {t('pages.resources.download')}
-            </button>
+            </a>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiMenu, FiLock } from 'react-icons/fi';
+import { FiMenu, FiHeart } from 'react-icons/fi';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -53,9 +53,9 @@ export default function Navbar() {
             {/* Right - Desktop actions */}
             <div className="hidden lg:flex items-center gap-2">
               <LanguageSwitcher />
-              <Button href="/admin/login" variant="outline-dark" size="sm">
-                <FiLock className="text-sm" />
-                {t('nav.adminLogin')}
+              <Button href="/donate" variant="secondary" size="sm">
+                <FiHeart className="text-sm" />
+                {t('nav.give')}
               </Button>
             </div>
 
@@ -65,6 +65,8 @@ export default function Navbar() {
               onClick={() => setMobileOpen(true)}
               aria-label={t('nav.openMenu')}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
+              aria-haspopup="dialog"
             >
               <FiMenu className="text-lg" />
             </button>

@@ -8,6 +8,7 @@
   "nav": {
     "home": "Home",
     "about": "About",
+    "visit": "Plan Your Visit",
     "sermons": "Sermons",
     "events": "Events",
     "resources": "Resources",
@@ -17,7 +18,8 @@
     "adminLogin": "Admin Login",
     "mainNav": "Main navigation",
     "mobileNav": "Mobile navigation",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "give": "Give"
   },
   "footer": {
     "quickLinks": "Quick Links",
@@ -72,7 +74,8 @@
     "today": "Today",
     "visit": "Visit",
     "getDirections": "Get Directions",
-    "openInGoogleMaps": "Open in Google Maps"
+    "openInGoogleMaps": "Open in Google Maps",
+    "noContent": "No content available yet."
   },
   "pages": {
     "home": {
@@ -89,7 +92,21 @@
       "galleryDescription": "A glimpse into the beauty of our worship, community, and sacred traditions.",
       "churchInformation": "Church Information",
       "churchInformationDescription": "Find us and connect with our community.",
-      "serviceTimes": "Service Times"
+      "serviceTimes": "Service Times",
+      "planVisitHint": "Open daily for prayer, worship, and fellowship — everyone is welcome.",
+      "prayerEyebrow": "Pray With Us",
+      "prayerTitle": "Share a Prayer Request",
+      "prayerDescription": "Our clergy and prayer partners are honored to pray with you. Share your request and we will hold you up in prayer.",
+      "prayerVerse": "“Whatever you ask in prayer, believe that you have received it, and you will have it.”",
+      "prayerVerseCitation": "Mark 11:24",
+      "prayerName": "Your name",
+      "prayerEmail": "Email (optional)",
+      "prayerRequest": "Prayer request",
+      "prayerRequestPlaceholder": "Write your prayer request…",
+      "prayerSubmit": "Send Prayer Request",
+      "prayerSentTitle": "Prayer Request Received",
+      "prayerSentDescription": "Thank you for sharing. Our community will keep you in our prayers. May God bless you.",
+      "prayerError": "We could not send your request. Please try again."
     },
     "about": {
       "title": "About Our Church",
@@ -188,6 +205,10 @@
       "minutes": "min",
       "registerNow": "Register Now",
       "viewDetails": "View Details",
+      "ctaEyebrow": "Worship With Us",
+      "ctaTitle": "Join Us at Our Next Gathering",
+      "ctaDescription": "Every visit is a blessing. We look forward to welcoming you to worship, fellowship, and community.",
+      "visitUs": "Visit Church",
       "view": {
         "month": "Month",
         "week": "Week",
@@ -362,6 +383,33 @@
       "payNow": "Pay Now",
       "cardInformation": "Card Information",
       "goBack": "Back"
+    },
+    "visit": {
+      "title": "Plan Your Visit",
+      "subtitle": "We would be honored to welcome you to our Ethiopian Orthodox Tewahedo Church. Here’s everything you need to know before you arrive.",
+      "whatToExpectEyebrow": "Your First Visit",
+      "whatToExpectTitle": "What to Expect",
+      "locationTitle": "Find Us",
+      "locationEyebrow": "Our Location",
+      "mapTitle": "Church location map",
+      "durationTitle": "Service Duration",
+      "durationDescription": "Our Sunday Divine Liturgy typically lasts 2–3 hours, including hymns, readings, and communion.",
+      "worshipTitle": "Reverent Worship",
+      "worshipDescription": "Our liturgy follows the ancient Ethiopian Orthodox tradition with incense, chanting, and sacred hymns.",
+      "communityTitle": "Welcoming Community",
+      "communityDescription": "Our congregation is diverse and welcoming. Greeters are ready to help you find your place.",
+      "greetingTitle": "Arrival & Greeting",
+      "greetingDescription": "When you arrive, you’ll be greeted warmly. Feel free to sit anywhere and follow along.",
+      "languageTitle": "Language",
+      "languageDescription": "Services are conducted primarily in Amharic and Ge’ez, with English translations available where possible.",
+      "welcomeTitle": "All Are Welcome",
+      "welcomeDescription": "Everyone is welcome to worship with us — no matter your background or where you are on your spiritual journey.",
+      "contactChurch": "Contact Church",
+      "ctaEyebrow": "We Can’t Wait to Meet You",
+      "ctaTitle": "Join Us in Worship",
+      "ctaDescription": "Whether you’re visiting once or searching for a spiritual home, you’re invited to worship with our community.",
+      "ctaContact": "Get In Touch",
+      "ctaCall": "Call Us"
     }
   },
   "forms": {
@@ -387,6 +435,3 @@
     "privacyText": "I agree to the church's privacy practices and consent to being contacted regarding my inquiry."
   }
 }
-
-
-

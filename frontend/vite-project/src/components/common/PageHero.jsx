@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import Button from '../Button';
 import { useChurch } from '../../hooks/useHomeSections';
 import { HERO_IMAGE, HERO_IMAGE_FALLBACK } from '../../lib/images';
@@ -17,6 +18,12 @@ const CrossOrnament = ({ className = '' }) => (
 
 const TEXTURE = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='%23ffffff'%3E%3Cpath d='M20 4h8v16h16v8H28v16h-8V28H4v-8h16z'/%3E%3C/svg%3E")`;
 
+const sizes = {
+  full: 'min-h-[85vh] md:min-h-screen',
+  page: 'min-h-[70vh] md:min-h-[80vh]',
+  compact: 'min-h-[60vh] md:min-h-[68vh]',
+};
+
 const PageHero = ({
   eyebrow,
   title,
@@ -26,7 +33,10 @@ const PageHero = ({
   image,
   align = 'left',
   size = 'page',
+  ariaLabel = 'Page hero',
+  bottomFadeColor = 'from-surface',
   scrollHint = false,
+  className = '',
   children,
 }) => {
   const church = useChurch();
@@ -35,10 +45,8 @@ const PageHero = ({
 
   return (
     <section
-      className={`relative flex items-center overflow-hidden ${
-        size === 'full' ? 'min-h-[92vh] md:min-h-screen' : 'min-h-[62vh] md:min-h-[68vh]'
-      }`}
-      aria-label="Page hero"
+      className={`relative flex items-center overflow-hidden ${sizes[size] || sizes.page} ${className}`}
+      aria-label={ariaLabel}
     >
       {/* Background image */}
       <picture className="absolute inset-0">
@@ -48,6 +56,8 @@ const PageHero = ({
           alt=""
           className="h-full w-full object-cover"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
       </picture>
 
@@ -79,18 +89,27 @@ const PageHero = ({
         {breadcrumb.length > 0 && !centered && (
           <motion.nav
             aria-label="Breadcrumb"
-            className="mb-8"
+            className="mb-8 overflow-x-auto pb-1"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <ol className="flex flex-wrap items-center gap-2 text-sm text-white/60">
+            <ol className="flex flex-wrap items-center gap-2 text-sm text-white/60 whitespace-nowrap">
               {breadcrumb.map((crumb, i) => (
                 <li key={crumb.href || crumb.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true" className="text-white/30">/</span>}
-                  <a href={crumb.href} className="transition-colors duration-300 hover:text-secondary">
-                    {crumb.label}
-                  </a>
+                  {crumb.href?.startsWith('/') ? (
+                    <Link
+                      to={crumb.href}
+                      className="transition-colors duration-300 hover:text-secondary"
+                    >
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <a href={crumb.href} className="transition-colors duration-300 hover:text-secondary">
+                      {crumb.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ol>
@@ -114,7 +133,7 @@ const PageHero = ({
           </motion.span>
 
           <motion.h1
-            className="text-4xl font-bold leading-[1.08] text-white sm:text-5xl md:text-6xl lg:text-7xl"
+            className="text-4xl font-bold leading-[1.08] text-white sm:text-5xl md:text-6xl lg:text-7xl text-balance"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.35, ease }}
@@ -147,7 +166,8 @@ const PageHero = ({
                   key={cta.href || cta.label || i}
                   href={cta.href}
                   variant={cta.variant || (i === 0 ? 'primary' : 'outline')}
-                  size="lg"
+                  size={cta.size || 'lg'}
+                  className={cta.className}
                 >
                   {cta.icon}
                   {cta.label}
@@ -175,7 +195,7 @@ const PageHero = ({
       )}
 
       {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-surface to-transparent" />
+      <div className={`absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t ${bottomFadeColor} to-transparent`} />
     </section>
   );
 };

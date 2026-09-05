@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiCalendar, FiClock, FiMapPin, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import Container from '../../components/Container';
@@ -5,11 +6,32 @@ import Section from '../../components/Section';
 import Button from '../../components/Button';
 import { useFeaturedEvent } from '../../hooks/useEventsSections';
 import { useTranslation } from '../../i18n/LanguageContext';
+import { withFallback } from '../../lib/images';
+
+const getCountdown = (target, now) => {
+  const diff = Math.max(0, new Date(target).getTime() - now);
+  return {
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff % 86400000) / 3600000),
+    minutes: Math.floor((diff % 3600000) / 60000),
+  };
+};
 
 export default function FeaturedEvent() {
   const { t } = useTranslation();
-  const featuredEvent = useFeaturedEvent();
+  const { event: featuredEvent } = useFeaturedEvent();
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const target = featuredEvent?.targetDate;
+    if (!target) return undefined;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [featuredEvent?.targetDate]);
+
   if (!featuredEvent) return null;
+
+  const countdown = getCountdown(featuredEvent.targetDate, now);
   return (
     <Section id="featured" className="bg-surface">
       <Container>
@@ -37,7 +59,7 @@ export default function FeaturedEvent() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <img
-              src={featuredEvent.image}
+              src={withFallback(featuredEvent.image)}
               alt={featuredEvent.imageAlt}
               className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700"
               loading="lazy"
@@ -55,13 +77,13 @@ export default function FeaturedEvent() {
                 {t('pages.events.countdown')}
               </span>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-2xl font-bold">{featuredEvent.countdown.days}</span>
+                <span className="text-2xl font-bold">{countdown.days}</span>
                 <span className="text-xs text-gray-300">{t('pages.events.days')}</span>
                 <span className="text-lg font-semibold mx-1">:</span>
-                <span className="text-lg font-semibold">{featuredEvent.countdown.hours}</span>
+                <span className="text-lg font-semibold">{countdown.hours}</span>
                 <span className="text-xs text-gray-300">{t('pages.events.hours')}</span>
                 <span className="text-lg font-semibold mx-1">:</span>
-                <span className="text-lg font-semibold">{featuredEvent.countdown.minutes}</span>
+                <span className="text-lg font-semibold">{countdown.minutes}</span>
                 <span className="text-xs text-gray-300">{t('pages.events.minutes')}</span>
               </div>
             </motion.div>

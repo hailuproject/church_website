@@ -1,5 +1,5 @@
 import { useContent, useGalleryAlbums, useRecentSermons, useSettings, useUpcomingEvents } from './usePublicData';
-import { mapChurch, mapFeaturedEvents, mapFeaturedSermons, mapGalleryPreview, mapHero, mapHomeCta } from '../lib/publicMappers';
+import { mapChurch, mapFeaturedEvents, mapFeaturedSermons, mapGalleryPreview, mapHero, mapHomeCta, mapServiceTimes } from '../lib/publicMappers';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export function useChurch() {
@@ -39,6 +39,47 @@ export function useGalleryPreview() {
   const { data } = useGalleryAlbums({ limit: 6 });
   const { language } = useLanguage();
   return mapGalleryPreview(data?.items || [], 6, language) || [];
+}
+
+export function useFeaturedEventsState() {
+  const query = useUpcomingEvents({ limit: 3 });
+  const { language } = useLanguage();
+  return {
+    items: mapFeaturedEvents(query.data?.items || [], 3, language) || [],
+    isLoading: query.isLoading || query.isFetching,
+    isError: query.isError,
+    isEmpty: query.isSuccess && !(query.data?.items || []).length,
+    refetch: query.refetch,
+  };
+}
+
+export function useFeaturedSermonsState() {
+  const query = useRecentSermons({ limit: 3 });
+  const { language } = useLanguage();
+  return {
+    items: mapFeaturedSermons(query.data?.items || [], 3, language) || [],
+    isLoading: query.isLoading || query.isFetching,
+    isError: query.isError,
+    isEmpty: query.isSuccess && !(query.data?.items || []).length,
+    refetch: query.refetch,
+  };
+}
+
+export function useGalleryPreviewState() {
+  const query = useGalleryAlbums({ limit: 6 });
+  const { language } = useLanguage();
+  return {
+    items: mapGalleryPreview(query.data?.items || [], 6, language) || [],
+    isLoading: query.isLoading || query.isFetching,
+    isError: query.isError,
+    isEmpty: query.isSuccess && !(query.data?.items || []).length,
+    refetch: query.refetch,
+  };
+}
+
+export function useServiceTimes() {
+  const { language } = useLanguage();
+  return mapServiceTimes(useHomeContent(), language);
 }
 
 export function useHomeFlags() {
