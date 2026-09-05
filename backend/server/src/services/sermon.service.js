@@ -5,13 +5,31 @@ import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
+import { pickFields } from '../utils/pickFields.js';
+
+const SERMON_FIELDS = [
+  'title',
+  'titleAm',
+  'titleTi',
+  'description',
+  'descriptionAm',
+  'descriptionTi',
+  'speaker',
+  'scripture',
+  'category',
+  'language',
+  'duration',
+  'publishedAt',
+  'isPublished',
+  'isFeatured',
+];
 
 const isAudio = (file) => (file?.mimetype || '').startsWith('audio/');
 
 class SermonService {
   async list(queryString) {
     return paginateModel(Sermon, queryString, {
-      searchableFields: ['title', 'titleAm', 'description', 'descriptionAm', 'speaker'],
+      searchableFields: ['title', 'titleAm', 'titleTi', 'description', 'descriptionAm', 'descriptionTi', 'speaker'],
       filterWhitelist: ['category', 'language', 'isPublished', 'isFeatured', 'speaker'],
       defaultSort: { publishedAt: -1 },
     });
@@ -35,7 +53,7 @@ class SermonService {
   }
 
   async create(data, files = {}, actor, reqMeta) {
-    const payload = { ...data, createdBy: actor._id };
+    const payload = { ...pickFields(data, SERMON_FIELDS), createdBy: actor._id };
 
     if (files.thumbnail) {
       payload.thumbnail = await uploadMedia(files.thumbnail, {
@@ -75,7 +93,7 @@ class SermonService {
     const existing = await Sermon.findById(id);
     if (!existing) throw new AppError('Sermon not found', 404);
 
-    const payload = { ...data };
+    const payload = pickFields(data, SERMON_FIELDS);
 
     if (files.thumbnail) {
       const uploaded = await uploadMedia(files.thumbnail, { folder: CLOUDINARY_FOLDERS.SERMON_THUMBNAILS });
@@ -156,8 +174,9 @@ class SermonService {
   }
 
   async incrementDownload(id) {
-    const sermon = await Sermon.findByIdAndUpdate(id, { $inc: { downloadCount: 1 } }, { returnDocument: 'after' });
-    if (!sermon) throw new AppError('Sermon not found', 404);
+    const sermon = await Sermon.findById(id);
+    if (!sermon || !sermon.isPublished) throw new AppError('Sermon not found', 404);
+    await Sermon.findByIdAndUpdate(id, { $inc: { downloadCount: 1 } });
     return sermon;
   }
 

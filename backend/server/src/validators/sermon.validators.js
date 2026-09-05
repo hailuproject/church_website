@@ -12,8 +12,10 @@ import {
 export const createSermonValidation = [
   requiredString('title', 'Title', { max: 250 }),
   optionalString('titleAm', { max: 250 }),
+  optionalString('titleTi', { max: 250 }),
   optionalString('description'),
   optionalString('descriptionAm'),
+  optionalString('descriptionTi'),
   optionalString('speaker', { max: 150 }),
   optionalString('scripture', { max: 200 }),
   enumValidator('category', SERMON_CATEGORIES),
@@ -26,8 +28,10 @@ export const createSermonValidation = [
 export const updateSermonValidation = [
   optionalString('title', { max: 250 }),
   optionalString('titleAm', { max: 250 }),
+  optionalString('titleTi', { max: 250 }),
   optionalString('description'),
   optionalString('descriptionAm'),
+  optionalString('descriptionTi'),
   optionalString('speaker', { max: 150 }),
   optionalString('scripture', { max: 200 }),
   enumValidator('category', SERMON_CATEGORIES),

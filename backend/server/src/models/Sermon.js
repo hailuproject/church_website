@@ -8,8 +8,10 @@ const sermonSchema = new Schema(
   {
     title: { type: String, required: [true, 'Title is required'], trim: true, maxlength: 250 },
     titleAm: { type: String, trim: true, default: '' },
+    titleTi: { type: String, trim: true, default: '' },
     description: { type: String, trim: true, default: '' },
     descriptionAm: { type: String, trim: true, default: '' },
+    descriptionTi: { type: String, trim: true, default: '' },
     speaker: { type: String, trim: true, default: '' },
     scripture: { type: String, trim: true, default: '' },
     category: { type: String, enum: SERMON_CATEGORIES, default: 'Sunday Sermon', index: true },
@@ -27,7 +29,7 @@ const sermonSchema = new Schema(
   { timestamps: true }
 );
 
-sermonSchema.index({ title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text', speaker: 'text' });
+sermonSchema.index({ title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text', titleTi: 'text', descriptionTi: 'text', speaker: 'text' });
 sermonSchema.index({ publishedAt: -1 });
 
 const Sermon = mongoose.model('Sermon', sermonSchema);

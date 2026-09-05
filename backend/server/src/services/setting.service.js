@@ -2,6 +2,25 @@ import Setting from '../models/Setting.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
+import { pickFields } from '../utils/pickFields.js';
+
+const SETTING_FIELDS = [
+  'churchName',
+  'churchNameAm',
+  'churchNameTi',
+  'tagline',
+  'taglineAm',
+  'taglineTi',
+  'address',
+  'addressAm',
+  'addressTi',
+  'phone',
+  'email',
+  'liveStreamURL',
+  'footerText',
+  'footerTextAm',
+  'footerTextTi',
+];
 
 const getSingleton = async () => {
   let setting = await Setting.findOne().sort({ createdAt: -1 });
@@ -38,7 +57,7 @@ class SettingService {
 
   async update(data, files = {}, actor, reqMeta) {
     const current = await getSingleton();
-    const payload = { ...data };
+    const payload = pickFields(data, SETTING_FIELDS);
 
     if (files.logo) {
       const uploaded = await uploadMedia(files.logo, { folder: CLOUDINARY_FOLDERS.LOGOS });

@@ -8,8 +8,10 @@ const eventSchema = new Schema(
   {
     title: { type: String, required: [true, 'Title is required'], trim: true, maxlength: 250 },
     titleAm: { type: String, trim: true, default: '' },
+    titleTi: { type: String, trim: true, default: '' },
     description: { type: String, trim: true, default: '' },
     descriptionAm: { type: String, trim: true, default: '' },
+    descriptionTi: { type: String, trim: true, default: '' },
     date: { type: Date, required: [true, 'Event date is required'], index: true },
     startTime: { type: String, trim: true, default: '' },
     endTime: { type: String, trim: true, default: '' },
@@ -25,7 +27,7 @@ const eventSchema = new Schema(
   { timestamps: true }
 );
 
-eventSchema.index({ title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text' });
+eventSchema.index({ title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text', titleTi: 'text', descriptionTi: 'text' });
 eventSchema.index({ date: 1, status: 1 });
 
 const Event = mongoose.model('Event', eventSchema);

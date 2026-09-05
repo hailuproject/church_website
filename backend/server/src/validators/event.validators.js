@@ -14,8 +14,10 @@ import {
 export const createEventValidation = [
   requiredString('title', 'Title', { max: 250 }),
   optionalString('titleAm', { max: 250 }),
+  optionalString('titleTi', { max: 250 }),
   optionalString('description'),
   optionalString('descriptionAm'),
+  optionalString('descriptionTi'),
   requiredDateValidator('date'),
   optionalString('startTime', { max: 20 }),
   optionalString('endTime', { max: 20 }),
@@ -29,8 +31,10 @@ export const createEventValidation = [
 export const updateEventValidation = [
   optionalString('title', { max: 250 }),
   optionalString('titleAm', { max: 250 }),
+  optionalString('titleTi', { max: 250 }),
   optionalString('description'),
   optionalString('descriptionAm'),
+  optionalString('descriptionTi'),
   optionalDateValidator('date'),
   optionalString('startTime', { max: 20 }),
   optionalString('endTime', { max: 20 }),

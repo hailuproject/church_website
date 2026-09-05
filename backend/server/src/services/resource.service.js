@@ -1,17 +1,29 @@
 import Resource from '../models/Resource.js';
 import AppError from '../utils/AppError.js';
 import { paginateModel } from '../utils/paginateModel.js';
+import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import { uploadMedia, deleteMedia } from '../utils/media.js';
 import { CLOUDINARY_FOLDERS } from '../constants/index.js';
 import { createAuditLog } from '../helpers/auditLogger.js';
+import { pickFields } from '../utils/pickFields.js';
+
+const RESOURCE_FIELDS = ['title', 'titleAm', 'titleTi', 'description', 'descriptionAm', 'descriptionTi', 'category', 'language', 'isPublished'];
 
 class ResourceService {
   async list(queryString) {
     return paginateModel(Resource, queryString, {
-      searchableFields: ['title', 'titleAm', 'description', 'descriptionAm'],
+      searchableFields: ['title', 'titleAm', 'titleTi', 'description', 'descriptionAm', 'descriptionTi'],
       filterWhitelist: ['category', 'language', 'isPublished', 'createdBy'],
       defaultSort: { createdAt: -1 },
     });
+  }
+
+  async listPublished(queryString) {
+    const { page, limit, skip } = parsePagination(queryString);
+    const filter = { isPublished: true };
+    const data = await Resource.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const total = await Resource.countDocuments(filter);
+    return { data, pagination: buildPaginationMeta({ total, page, limit }) };
   }
 
   async getById(id) {
@@ -21,7 +33,7 @@ class ResourceService {
   }
 
   async create(data, files = {}, actor, reqMeta) {
-    const payload = { ...data, createdBy: actor._id };
+    const payload = { ...pickFields(data, RESOURCE_FIELDS), createdBy: actor._id };
     if (files.thumbnail) {
       payload.thumbnail = await uploadMedia(files.thumbnail, { folder: CLOUDINARY_FOLDERS.RESOURCE_THUMBNAILS });
     }
@@ -47,7 +59,7 @@ class ResourceService {
     const existing = await Resource.findById(id);
     if (!existing) throw new AppError('Resource not found', 404);
 
-    const payload = { ...data };
+    const payload = pickFields(data, RESOURCE_FIELDS);
     if (files.thumbnail) {
       const uploaded = await uploadMedia(files.thumbnail, { folder: CLOUDINARY_FOLDERS.RESOURCE_THUMBNAILS });
       if (existing.thumbnail?.publicId) await deleteMedia(existing.thumbnail.publicId);
@@ -101,8 +113,9 @@ class ResourceService {
   }
 
   async incrementDownload(id) {
-    const resource = await Resource.findByIdAndUpdate(id, { $inc: { downloads: 1 } }, { returnDocument: 'after' });
-    if (!resource) throw new AppError('Resource not found', 404);
+    const resource = await Resource.findById(id);
+    if (!resource || !resource.isPublished) throw new AppError('Resource not found', 404);
+    await Resource.findByIdAndUpdate(id, { $inc: { downloads: 1 } });
     return resource;
   }
 

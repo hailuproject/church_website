@@ -8,8 +8,10 @@ const resourceSchema = new Schema(
   {
     title: { type: String, required: [true, 'Title is required'], trim: true, maxlength: 250 },
     titleAm: { type: String, trim: true, default: '' },
+    titleTi: { type: String, trim: true, default: '' },
     description: { type: String, trim: true, default: '' },
     descriptionAm: { type: String, trim: true, default: '' },
+    descriptionTi: { type: String, trim: true, default: '' },
     category: { type: String, enum: RESOURCE_CATEGORIES, default: 'Books', index: true },
     language: { type: String, enum: RESOURCE_LANGUAGES, default: 'English', index: true },
     thumbnail: { type: mediaObjectSchema, default: () => ({}) },
@@ -22,7 +24,7 @@ const resourceSchema = new Schema(
 );
 
 resourceSchema.index(
-  { title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text' },
+  { title: 'text', description: 'text', titleAm: 'text', descriptionAm: 'text', titleTi: 'text', descriptionTi: 'text' },
   { language_override: 'textLanguage' }
 );
 

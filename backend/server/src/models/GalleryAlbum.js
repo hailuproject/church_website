@@ -8,8 +8,10 @@ const galleryAlbumSchema = new Schema(
   {
     albumName: { type: String, required: [true, 'Album name is required'], trim: true, maxlength: 200 },
     albumNameAm: { type: String, trim: true, default: '' },
+    albumNameTi: { type: String, trim: true, default: '' },
     description: { type: String, trim: true, default: '' },
     descriptionAm: { type: String, trim: true, default: '' },
+    descriptionTi: { type: String, trim: true, default: '' },
     coverImage: { type: mediaObjectSchema, default: () => ({}) },
     category: { type: String, enum: GALLERY_CATEGORIES, default: 'Liturgy', index: true },
     images: mediaListSchema,
@@ -19,7 +21,7 @@ const galleryAlbumSchema = new Schema(
   { timestamps: true }
 );
 
-galleryAlbumSchema.index({ albumName: 'text', albumNameAm: 'text', description: 'text' });
+galleryAlbumSchema.index({ albumName: 'text', albumNameAm: 'text', albumNameTi: 'text', description: 'text' });
 
 const GalleryAlbum = mongoose.model('GalleryAlbum', galleryAlbumSchema);
 
